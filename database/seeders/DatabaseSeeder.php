@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\RoleUserSeeder;
 use Database\Seeders\KlasifikasiKegiatanSeeder;
 
 class DatabaseSeeder extends Seeder {
@@ -13,6 +14,6 @@ class DatabaseSeeder extends Seeder {
      */
     public function run() {
         $this->call(KlasifikasiKegiatanSeeder::class);
-
+        $this->call(RoleUserSeeder::class);
     }
 }
