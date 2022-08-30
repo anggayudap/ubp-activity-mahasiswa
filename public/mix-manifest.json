@@ -1,8 +1,14 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/css/master_styles.css": "/css/master_styles.css",
-    "/css/form_styles.css": "/css/form_styles.css",
-    "/js/master_scripts.js": "/js/master_scripts.js",
-    "/js/form_scripts.js": "/js/form_scripts.js"
+    "/css/hasil_combine.css": "/css/hasil_combine.css",
+    "/css/table.css": "/css/table.css",
+    "/css/form.css": "/css/form.css",
+    "/css/auth_styles.css": "/css/auth_styles.css",
+    "/css/chat_styles.css": "/css/chat_styles.css",
+    "/js/hasil_combine.js": "/js/hasil_combine.js",
+    "/js/table.js": "/js/table.js",
+    "/js/form.js": "/js/form.js",
+    "/js/auth_scripts.js": "/js/auth_scripts.js",
+    "/js/chat_scripts.js": "/js/chat_scripts.js"
 }
