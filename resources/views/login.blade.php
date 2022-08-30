@@ -35,7 +35,7 @@
                         <h2 class="brand-text text-primary ms-1">Vuexy</h2>
                     </a>
 
-                    <h4 class="card-title mb-1">UBP Activity Mahasiswa</h4>
+                    <h4 class="card-title mb-1">Sistem Informasi Kegiatan Mahasiswa</h4>
                     <p class="card-text mb-2">Silahkan login menggunakan akun SIPT anda</p>
 
                     <form class="auth-login-form mt-2" action="{{ route('login_submit') }}" method="POST">
