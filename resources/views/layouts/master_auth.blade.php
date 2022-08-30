@@ -13,10 +13,12 @@
     <link rel="apple-touch-icon" href="{{ URL::asset('vuexy/images/ico/apple-icon-120.png') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('vuexy/images/ico/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
-          rel="stylesheet">
+        rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/master_styles.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/form_styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/hasil_combine.css') }}">
+    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/auth_styles.css') }}" rel="stylesheet">
+
     @stack('styles')
     <script type="text/javascript">
         const current_url = "{{ url()->current() }}";
@@ -29,35 +31,38 @@
 
 
 <body class="vertical-layout vertical-menu-modern blank-page navbar-floating footer-static  " data-open="click"
-      data-menu="vertical-menu-modern" data-col="blank-page">
-<!-- BEGIN: Content-->
-<div class="app-content content ">
-    <div class="content-overlay"></div>
-    <div class="header-navbar-shadow"></div>
-    <div class="content-wrapper">
-        <div class="content-header row">
-        </div>
-        <div class="content-body">
-            @yield('content')
+    data-menu="vertical-menu-modern" data-col="blank-page">
+    @include('sweetalert::alert')
+    <!-- BEGIN: Content-->
+    <div class="app-content content ">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                @yield('content')
+            </div>
         </div>
     </div>
-</div>
-<!-- END: Content-->
+    <!-- END: Content-->
 
-<script href="{{ URL::asset('js/master_scripts.js') }}"></script>
-<script href="{{ URL::asset('js/form_scripts.js') }}"></script>
-@stack('scripts')
 
-<script>
-    $(window).on('load', function () {
-        if (feather) {
-            feather.replace({
-                width: 14,
-                height: 14
-            });
-        }
-    })
-</script>
+    <script src="{{ mix('js/hasil_combine.js') }}"></script>
+    <script src="{{ mix('js/form.js') }}"></script>
+
+    @stack('scripts')
+    <script>
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        })
+    </script>
+
 </body>
 <!-- END: Body-->
 
