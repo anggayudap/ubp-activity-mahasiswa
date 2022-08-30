@@ -79,7 +79,25 @@
                         data-feather="check-square"></i><span class="menu-title text-truncate"
                         data-i18n="Todo">Todo</span></a>
             </li>
-           
+
+            <li class=" navigation-header"><span data-i18n="Kegiatan">Kegiatan</span><i
+                    data-feather="more-horizontal"></i>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+                    <i data-feather="file-plus"></i>
+                    <span class="menu-title text-truncate" data-i18n="Input Kegiatan">Input Kegiatan</span></a>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+                    <i data-feather="clock"></i>
+                    <span class="menu-title text-truncate" data-i18n="History Kegiatan">History Kegiatan</span></a>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+                    <i data-feather="list"></i>
+                    <span class="menu-title text-truncate" data-i18n="List Kegiatan">List Kegiatan</span></a>
+            </li>
+            <li class=" navigation-header"><span data-i18n="Proposal">Proposal</span><i
+                    data-feather="more-horizontal"></i>
+            </li>
         </ul>
     </div>
 </div>
