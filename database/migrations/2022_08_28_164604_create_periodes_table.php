@@ -4,17 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKegiatansTable extends Migration
-{
+class CreatePeriodesTable extends Migration {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('kegiatans', function (Blueprint $table) {
+    public function up() {
+        Schema::create('periodes', function (Blueprint $table) {
             $table->id();
+            $table->string('periode_awal');
+            $table->string('periode_akhir');
             $table->timestamps();
         });
     }
@@ -24,8 +24,7 @@ class CreateKegiatansTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('kegiatans');
+    public function down() {
+        Schema::dropIfExists('periodes');
     }
 }

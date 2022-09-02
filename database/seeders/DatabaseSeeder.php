@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\PeriodeSeeder;
 use Database\Seeders\RoleUserSeeder;
 use Database\Seeders\KlasifikasiKegiatanSeeder;
 
@@ -13,7 +14,8 @@ class DatabaseSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        $this->call(KlasifikasiKegiatanSeeder::class);
         $this->call(RoleUserSeeder::class);
+        $this->call(PeriodeSeeder::class);
+        $this->call(KlasifikasiKegiatanSeeder::class);
     }
 }
