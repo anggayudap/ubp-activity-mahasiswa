@@ -6,6 +6,7 @@ use DataTables;
 use App\Models\Periode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PeriodeController extends Controller {
 
@@ -41,17 +42,17 @@ class PeriodeController extends Controller {
 
     public function store(Request $request) {
         $validated = $request->validate([
-            'name_site' => 'required',
-            'location' => 'required',
+            'periode_awal' => 'required',
+            'periode_akhir' => 'required',
         ]);
 
-        $post = Site::create([
-            'name_site' => $request->name_site,
-            'location' => $request->location,
+        $post = Periode::create([
+            'periode_awal' => $request->periode_awal,
+            'periode_akhir' => $request->periode_akhir,
         ]);
 
         if ($post) {
-            Alert::success('Berhasil!', 'Data site berhasil dibuat!');
+            Alert::success('Berhasil!', 'Data periode berhasil dibuat!');
             return redirect(route('master.periode.index'));
         } else {
             return redirect()
@@ -71,20 +72,19 @@ class PeriodeController extends Controller {
 
     public function update(Request $request, $id) {
         $this->validate($request, [
-            'name_site' => 'required',
-            'location' => 'required',
+            'periode_awal' => 'required',
+            'periode_akhir' => 'required',
         ]);
 
-        $site = Site::findOrFail($id);
+        $site = Periode::findOrFail($id);
 
         $site->update([
-            'name_site' => $request->name_site,
-            'location' => $request->location,
-            // 'location' => Str::slug($request->name_site)
+            'periode_awal' => $request->periode_awal,
+            'periode_akhir' => $request->periode_akhir,
         ]);
 
         if ($site) {
-            Alert::success('Berhasil!', 'Data site berhasil diupdate!');
+            Alert::success('Berhasil!', 'Data periode berhasil diupdate!');
             return redirect(route('master.periode.index'));
         } else {
             return redirect()
@@ -97,14 +97,14 @@ class PeriodeController extends Controller {
     }
 
     public function destroy($id) {
-        $site = Site::findOrFail($id);
-        $site->delete();
+        $periode = Periode::findOrFail($id);
+        $periode->delete();
 
-        if ($site) {
-            Alert::success('Berhasil!', 'Data site berhasil dihapus!');
+        if ($periode) {
+            Alert::success('Berhasil!', 'Data periode berhasil dihapus!');
             return redirect(route('master.periode.index'));
         } else {
-            Alert::error('Gagal!', 'Data site tidak dapat dihapus!');
+            Alert::error('Gagal!', 'Data periode tidak dapat dihapus!');
             return redirect(route('master.periode.index'));
         }
     }

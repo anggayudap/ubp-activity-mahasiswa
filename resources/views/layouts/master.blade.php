@@ -13,15 +13,14 @@
     <link rel="apple-touch-icon" href="{{ URL::asset('vuexy/images/ico/apple-icon-120.png') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('vuexy/images/ico/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
-          rel="stylesheet">
+        rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/hasil_combine.css') }}">
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     @stack('styles')
     <script type="text/javascript">
-        var user_theme = "{{ session('user_theme') }}";
-        var current_url = "{{ url()->current() }}";
-
+        let user_theme = "{{ session('user_theme') }}";
+        let current_url = "{{ url()->current() }}";
     </script>
 
 </head>
@@ -29,21 +28,22 @@
 
 <!-- BEGIN: Body-->
 
-<body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="">
-@include('sweetalert::alert')
+<body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click"
+    data-menu="vertical-menu-modern" data-col="">
+    @include('sweetalert::alert')
 
-<!-- BEGIN: Header-->
-@include('layouts.navbar')
+    <!-- BEGIN: Header-->
+    @include('layouts.navbar')
 
-<!-- END: Header-->
+    <!-- END: Header-->
 
 
-<!-- BEGIN: Main Menu-->
-@include('layouts.sidebar')
-<!-- END: Main Menu-->
+    <!-- BEGIN: Main Menu-->
+    @include('layouts.sidebar')
+    <!-- END: Main Menu-->
 
-<!-- BEGIN: Content-->
-<div class="app-content content ">
+    <!-- BEGIN: Content-->
+    <div class="app-content content ">
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
         <div class="content-wrapper container-xxl p-0">
@@ -51,25 +51,7 @@
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">
                         <div class="col-12">
-                            <h2 class="content-header-title float-left mb-0">Layout Empty</h2>
-                            <div class="breadcrumb-wrapper">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">Home</a>
-                                    </li>
-                                    <li class="breadcrumb-item"><a href="#">Layouts</a>
-                                    </li>
-                                    <li class="breadcrumb-item active">Layout Empty
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
-                    <div class="form-group breadcrumb-right">
-                        <div class="dropdown">
-                            <button class="btn-icon btn btn-primary btn-round btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="grid"></i></button>
-                            <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="app-todo.html"><i class="mr-1" data-feather="check-square"></i><span class="align-middle">Todo</span></a><a class="dropdown-item" href="app-chat.html"><i class="mr-1" data-feather="message-square"></i><span class="align-middle">Chat</span></a><a class="dropdown-item" href="app-email.html"><i class="mr-1" data-feather="mail"></i><span class="align-middle">Email</span></a><a class="dropdown-item" href="app-calendar.html"><i class="mr-1" data-feather="calendar"></i><span class="align-middle">Calendar</span></a></div>
+                            <h2 class="content-header-title float-left mb-0">@yield('title')</h2>
                         </div>
                     </div>
                 </div>
@@ -80,34 +62,36 @@
             </div>
         </div>
     </div>
-<!-- END: Content-->
+    <!-- END: Content-->
 
-<div class="sidenav-overlay"></div>
-<div class="drag-target"></div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
 
-<!-- BEGIN: Footer-->
-<footer class="footer footer-static footer-light">
-        <p class="clearfix mb-0"><span class="float-md-left d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2021<a class="ml-25" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a><span class="d-none d-sm-inline-block">, All rights Reserved</span></span><span class="float-md-right d-none d-md-block">Hand-crafted & Made with<i data-feather="heart"></i></span></p>
+    <!-- BEGIN: Footer-->
+    <footer class="footer footer-static footer-light">
+        <p class="clearfix mb-0"><span class="float-md-left d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2021<a
+                    class="ml-25" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a><span
+                    class="d-none d-sm-inline-block">, All rights Reserved</span></span><span
+                class="float-md-right d-none d-md-block">Hand-crafted & Made with<i data-feather="heart"></i></span></p>
     </footer>
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
     <!-- END: Footer-->
 
 
-<script src="{{ URL::asset('js/hasil_combine.js') }}"></script>
+    <script src="{{ URL::asset('js/hasil_combine.js') }}"></script>
 
-<script>
-    $(window).on('load', function () {
-        if (feather) {
-            feather.replace({
-                width: 14,
-                height: 14
-            });
-        }
-    })
+    <script>
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        })
+    </script>
 
-</script>
-
-@stack('scripts')
+    @stack('scripts')
 </body>
 <!-- END: Body-->
 

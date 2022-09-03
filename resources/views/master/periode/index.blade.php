@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
-@section('title', 'Master Periode')
-@section('menu-title', 'Kelola Data Periode')
+@section('title', 'Master Data Periode')
+@section('menu-title', 'Kelola Data Periode Kegiatan')
 
 
 @section('content')
@@ -10,7 +10,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header border-bottom">
-                        <h4 class="card-title">Periode data</h4>
+                        <h4 class="card-title">@yield('menu-title')</h4>
                     </div>
                     <div class="card-datatable">
                         <table class="datatables-ajax table dataTable" id="DataTables_Table_0">
