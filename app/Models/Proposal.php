@@ -15,7 +15,20 @@ class Proposal extends Model {
     ];
 
     protected $fillable = [
-
+        'nim',
+        'nama_mahasiswa',
+        'prodi',
+        'judul_proposal',
+        'ketua_pelaksana',
+        'anggaran_pengajuan',
+        'file_proposal',
+        'current_status',
+        'next_approval',
+        'fakultas_approval_date',
+        'rejected_fakultas',
+        'kemahasiswaan_approval_date',
+        'rejected_kemahasiswaan',
+        'rektor_approval_date',
         'created_at',
         'updated_at',
     ];

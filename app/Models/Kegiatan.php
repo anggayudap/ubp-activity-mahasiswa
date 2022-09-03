@@ -17,6 +17,7 @@ class Kegiatan extends Model {
     protected $fillable = [
         'nim',
         'nama_mahasiswa',
+        'prodi',
         'periode_id',
         'tahun_periode',
         'nama_kegiatan',
@@ -34,4 +35,17 @@ class Kegiatan extends Model {
         'created_at',
         'updated_at',
     ];
+
+    public function scopeSearch($query) {
+        if (request('name')) {
+            $query->where('name', 'like', '%' . request('name') . '%');
+        }
+        if (request('code')) {
+            $query->where('code', 'like', '%' . request('code') . '%');
+        }
+        if (request('cost_center')) {
+            $query->where('cost_center', 'like', '%' . request('cost_center') . '%');
+        }
+        return $query;
+    }
 }

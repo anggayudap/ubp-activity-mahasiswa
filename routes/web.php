@@ -1,7 +1,11 @@
 <?php
 
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProdiController;
+use App\Http\Controllers\PeriodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +21,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('layouts.master');
 })->middleware('auth');
+
+Route::prefix('master')->name('master.')->middleware('auth')->group(function () {
+    /* routing for master data*/
+    Route::resource('/prodi', ProdiController::class);
+    Route::resource('/periode', PeriodeController::class);
+    Route::resource('/user', UserController::class);
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

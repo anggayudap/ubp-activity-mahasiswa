@@ -1,8 +1,7 @@
 <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
-            <li class="nav-item mr-auto"><a class="navbar-brand"
-                    href="{{ route('dashboard') }}"><span class="brand-logo">
+            <li class="nav-item mr-auto"><a class="navbar-brand" href="{{ route('dashboard') }}"><span class="brand-logo">
                         <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
                             <defs>
@@ -49,7 +48,7 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class=" nav-item">
+            <li class="{{ request()->is('dashboard*') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="home"></i>
                     <span class="menu-title text-truncate" data-i18n="Dashboard">{{ __('Dashboard') }}</span>
                 </a>
@@ -59,12 +58,12 @@
             <li class=" navigation-header"><span data-i18n="Kegiatan">{{ __('Kegiatan Mahasiswa') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
-            <li class=" nav-item">
+            <li class="{{ request()->is('kegiatan/form*') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="file-plus"></i>
                     <span class="menu-title text-truncate" data-i18n="Input Kegiatan">{{ __('Input Kegiatan') }}</span>
                 </a>
             </li>
-            <li class=" nav-item">
+            <li class="{{ request()->is('kegiatan') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="list"></i>
                     <span class="menu-title text-truncate" data-i18n="List Kegiatan">{{ __('List Kegiatan') }}</span>
                 </a>
@@ -74,20 +73,43 @@
             <li class=" navigation-header"><span data-i18n="Proposal">{{ __('Proposal Kegiatan') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
-            <li class=" nav-item">
+            <li class="{{ request()->is('proposal/form*') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="file-plus"></i>
                     <span class="menu-title text-truncate"
                         data-i18n="Input Proposal">{{ __('Input Proposal') }}</span>
                 </a>
             </li>
-            <li class=" nav-item"><a class="d-flex align-items-center" href="#">
+            <li class="{{ request()->is('proposal/history*') ? 'active' : '' }} nav-item"><a class="d-flex align-items-center" href="#">
                     <i data-feather="clock"></i>
                     <span class="menu-title text-truncate"
                         data-i18n="History Proposal">{{ __('History Proposal') }}</span></a>
             </li>
-            <li class=" nav-item">
+            <li class="{{ request()->is('proposal') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="#"><i data-feather="list"></i>
                     <span class="menu-title text-truncate" data-i18n="List Proposal">{{ __('List Proposal') }}</span>
+                </a>
+            </li>
+
+
+            <li class=" navigation-header"><span data-i18n="Proposal">{{ __('Master Data') }}</span><i
+                    data-feather="more-horizontal"></i>
+            </li>
+            <li class="{{ request()->is('master/periode*') ? 'active' : '' }} nav-item">
+                <a class="d-flex align-items-center" href="{{ route('master.periode.index') }}"><i
+                        data-feather="database"></i>
+                    <span class="menu-title text-truncate" data-i18n="Periode">{{ __('Periode') }}</span>
+                </a>
+            </li>
+            <li class="{{ request()->is('master/prodi*') ? 'active' : '' }} nav-item">
+                <a class="d-flex align-items-center" href="{{ route('master.prodi.index') }}"><i
+                        data-feather="database"></i>
+                    <span class="menu-title text-truncate" data-i18n="Prodi">{{ __('Prodi') }}</span>
+                </a>
+            </li>
+            <li class="{{ request()->is('master/user*') ? 'active' : '' }} nav-item">
+                <a class="d-flex align-items-center" href="{{ route('master.user.index') }}"><i
+                        data-feather="database"></i>
+                    <span class="menu-title text-truncate" data-i18n="User">{{ __('User') }}</span>
                 </a>
             </li>
         </ul>
