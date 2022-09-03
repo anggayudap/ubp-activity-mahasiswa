@@ -15,6 +15,7 @@ class CreateKegiatansTable extends Migration {
             $table->id();
             $table->string('nim', 20);
             $table->string('nama_mahasiswa');
+            $table->string('prodi', 10);
             $table->foreignId('periode_id');
             $table->year('tahun_periode');
             $table->string('nama_kegiatan');
@@ -31,11 +32,17 @@ class CreateKegiatansTable extends Migration {
             $table->enum('decision_warek', ['reward', 'reprimand'])->nullable();
             $table->timestamps();
 
-            $table->foreign('klasifikasi_id')->references('id')->on('klasifikasi_kegiatans')
+            $table
+                ->foreign('klasifikasi_id')
+                ->references('id')
+                ->on('klasifikasi_kegiatans')
                 ->restrictOnUpdate()
                 ->restrictOnDelete();
 
-            $table->foreign('periode_id')->references('id')->on('periodes')
+            $table
+                ->foreign('periode_id')
+                ->references('id')
+                ->on('periodes')
                 ->restrictOnUpdate()
                 ->restrictOnDelete();
         });
