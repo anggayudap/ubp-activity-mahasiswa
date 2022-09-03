@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\RoleUser;
 use App\Models\User;
+use App\Models\Prodi;
+use App\Models\RoleUser;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -50,6 +51,15 @@ class LoginController extends Controller {
                 RoleUser::create([
                     'name' => $data_user['role'],
                     'description' => ucfirst($data_user['role']),
+                ]);
+            }
+
+            // register prodi
+            $cek_prodi = Prodi::where('kode_prodi', $data_user['prodi'])->first();
+            if (!$cek_prodi) {
+                Prodi::create([
+                    'kode_prodi' => $data_user['prodi'],
+                    'nama_prodi' => 'Prodi ' . $data_user['prodi'],
                 ]);
             }
 
