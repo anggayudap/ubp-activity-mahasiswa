@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Prodi;
 use App\Models\RoleUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -42,6 +43,11 @@ class LoginController extends Controller {
 
             // do login
             Auth::login($cek_user);
+
+            $cek_user->update([
+                'last_login_at' => Carbon::now()->toDateTimeString(),
+                'last_login_ip' => $request->getClientIp(),
+            ]);
 
             // save data to session
             $request->session()->put('user', $data_user);
