@@ -34,6 +34,7 @@ class LoginController extends Controller {
             if (!$cek_user) {
                 $cek_user = User::create([
                     'name' => $data_user['nama'],
+                    'role' => $data_user['role'],
                     'email' => $data_user['email'],
                     'password' => Hash::make('ubp2022'),
                 ]);
