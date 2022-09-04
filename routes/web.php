@@ -7,6 +7,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\RoleUserController;
+use App\Http\Controllers\KlasifikasiKegiatanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,7 @@ Route::prefix('master')->name('master.')->middleware('auth')->group(function () 
     Route::resource('/periode', PeriodeController::class);
     Route::resource('/user', UserController::class);
     Route::resource('/role', RoleUserController::class);
+    Route::resource('/klasifikasi', KlasifikasiKegiatanController::class);
 });
 
 Route::get('/dashboard', function () {
