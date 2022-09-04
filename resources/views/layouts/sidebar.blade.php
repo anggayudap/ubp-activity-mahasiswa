@@ -112,6 +112,12 @@
                     <span class="menu-title text-truncate" data-i18n="User">{{ __('User') }}</span>
                 </a>
             </li>
+            <li class="{{ request()->is('master/role*') ? 'active' : '' }} nav-item">
+                <a class="d-flex align-items-center" href="{{ route('master.role.index') }}"><i
+                        data-feather="database"></i>
+                    <span class="menu-title text-truncate" data-i18n="Role">{{ __('Role') }}</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>
