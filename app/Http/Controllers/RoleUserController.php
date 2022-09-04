@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\RoleUser;
 use DataTables;
+use App\Models\RoleUser;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class RoleUserController extends Controller {
@@ -17,7 +18,7 @@ class RoleUserController extends Controller {
                     $btn = '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
-                        <a href="' . route("master.role.edit", $row->id) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                        <a href="' . route("master.role.edit", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
                         <form action="' . route("master.role.destroy", [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">
                         ' . csrf_field() . '
                         ' . method_field("DELETE") . '
@@ -64,7 +65,7 @@ class RoleUserController extends Controller {
     }
 
     public function edit($id) {
-        $data = RoleUser::findOrFail($id);
+        $data = RoleUser::findOrFail(Crypt::decrypt($id));
 
         return view('master.role.form', compact('data'));
     }

@@ -6,6 +6,7 @@ use DataTables;
 use App\Models\Periode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PeriodeController extends Controller {
@@ -18,7 +19,7 @@ class PeriodeController extends Controller {
                     $btn = '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
-                        <a href="' . route("master.periode.edit", $row->id) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                        <a href="' . route("master.periode.edit", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
                         <form action="' . route("master.periode.destroy", [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">
                         ' . csrf_field() . '
                         ' . method_field("DELETE") . '
@@ -65,7 +66,7 @@ class PeriodeController extends Controller {
     }
 
     public function edit($id) {
-        $data = Periode::findOrFail($id);
+        $data = Periode::findOrFail(Crypt::decrypt($id));
 
         return view('master.periode.form', compact('data'));
     }
