@@ -38,7 +38,7 @@ if (!function_exists('get_date_time')) {
             $timestamp = strtotime($date);
             return date($format, $timestamp);
         }
-        return false;
+        return 'false';
     }
 
 }
@@ -53,7 +53,7 @@ if (!function_exists('convert_date_time')) {
     }
 
 }
-if(!function_exists('number')) {
+if (!function_exists('number')) {
 
     function number($val, $numod = false) {
         $numod = $numod or 0;
