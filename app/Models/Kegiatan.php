@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Periode;
+use App\Models\KlasifikasiKegiatan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kegiatan extends Model {
     use HasFactory;
@@ -29,23 +31,17 @@ class Kegiatan extends Model {
         'url_event',
         'bukti_sertifikat',
         'keterangan',
-        'checked_kemahasiswaan',
-        'checked_warek',
+        'status',
         'decision_warek',
         'created_at',
         'updated_at',
     ];
 
-    public function scopeSearch($query) {
-        if (request('name')) {
-            $query->where('name', 'like', '%' . request('name') . '%');
-        }
-        if (request('code')) {
-            $query->where('code', 'like', '%' . request('code') . '%');
-        }
-        if (request('cost_center')) {
-            $query->where('cost_center', 'like', '%' . request('cost_center') . '%');
-        }
-        return $query;
+    public function periode() {
+        return $this->belongsTo(Periode::class, 'periode_id');
+    }
+    
+    public function klasifikasi() {
+        return $this->belongsTo(KlasifikasiKegiatan::class, 'klasifikasi_id');
     }
 }

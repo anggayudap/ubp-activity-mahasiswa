@@ -27,8 +27,7 @@ class CreateKegiatansTable extends Migration {
             $table->text('url_event')->nullable();
             $table->text('bukti_sertifikat')->nullable();
             $table->text('keterangan')->nullable();
-            $table->tinyInteger('checked_kemahasiswaan')->default(0);
-            $table->tinyInteger('checked_warek')->default(0);
+            $table->enum('status', ['review', 'checked_dosen', 'checked_kemahasiswaan', 'completed']);
             $table->enum('decision_warek', ['reward', 'reprimand'])->nullable();
             $table->timestamps();
 

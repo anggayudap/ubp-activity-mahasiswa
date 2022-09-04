@@ -59,12 +59,13 @@
                     data-feather="more-horizontal"></i>
             </li>
             <li class="{{ request()->is('kegiatan/form*') ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="#"><i data-feather="file-plus"></i>
+                <a class="d-flex align-items-center" href="{{ route('kegiatan.create') }}"><i
+                        data-feather="file-plus"></i>
                     <span class="menu-title text-truncate" data-i18n="Input Kegiatan">{{ __('Input Kegiatan') }}</span>
                 </a>
             </li>
             <li class="{{ request()->is('kegiatan') ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="#"><i data-feather="list"></i>
+                <a class="d-flex align-items-center" href="{{ route('kegiatan.index') }}"><i data-feather="list"></i>
                     <span class="menu-title text-truncate" data-i18n="List Kegiatan">{{ __('List Kegiatan') }}</span>
                 </a>
             </li>
@@ -74,18 +75,21 @@
                     data-feather="more-horizontal"></i>
             </li>
             <li class="{{ request()->is('proposal/form*') ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="#"><i data-feather="file-plus"></i>
+                <a class="d-flex align-items-center" href="{{ route('proposal.create') }}"><i
+                        data-feather="file-plus"></i>
                     <span class="menu-title text-truncate"
                         data-i18n="Input Proposal">{{ __('Input Proposal') }}</span>
                 </a>
             </li>
-            <li class="{{ request()->is('proposal/history*') ? 'active' : '' }} nav-item"><a class="d-flex align-items-center" href="#">
+            <li class="{{ request()->is('proposal/history*') ? 'active' : '' }} nav-item"><a
+                    class="d-flex align-items-center" href="{{ route('proposal.history') }}">
                     <i data-feather="clock"></i>
                     <span class="menu-title text-truncate"
                         data-i18n="History Proposal">{{ __('History Proposal') }}</span></a>
             </li>
             <li class="{{ request()->is('proposal') ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="#"><i data-feather="list"></i>
+                <a class="d-flex align-items-center" href="{{ route('proposal.index') }}"><i
+                        data-feather="list"></i>
                     <span class="menu-title text-truncate" data-i18n="List Proposal">{{ __('List Proposal') }}</span>
                 </a>
             </li>
@@ -97,7 +101,8 @@
             <li class="{{ request()->is('master/klasifikasi*') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="{{ route('master.klasifikasi.index') }}"><i
                         data-feather="database"></i>
-                    <span class="menu-title text-truncate" data-i18n="Klasifikasi Kegiatan">{{ __('Klasifikasi Kegiatan') }}</span>
+                    <span class="menu-title text-truncate"
+                        data-i18n="Klasifikasi Kegiatan">{{ __('Klasifikasi Kegiatan') }}</span>
                 </a>
             </li>
             <li class="{{ request()->is('master/periode*') ? 'active' : '' }} nav-item">

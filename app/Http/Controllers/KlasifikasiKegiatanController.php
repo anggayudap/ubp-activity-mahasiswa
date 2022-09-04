@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\KlasifikasiKegiatan;
 use DataTables;
 use Illuminate\Http\Request;
+use App\Models\KlasifikasiKegiatan;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
 

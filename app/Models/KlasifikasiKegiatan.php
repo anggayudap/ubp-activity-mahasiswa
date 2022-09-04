@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Kegiatan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class KlasifikasiKegiatan extends Model {
     use HasFactory;
@@ -21,4 +22,8 @@ class KlasifikasiKegiatan extends Model {
         'created_at',
         'updated_at',
     ];
+
+    public function kegiatan() {
+        return $this->hasMany(Kegiatan::class);
+    }
 }

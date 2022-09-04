@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Kegiatan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Periode extends Model {
     use HasFactory;
@@ -20,4 +21,8 @@ class Periode extends Model {
         'created_at',
         'updated_at',
     ];
+
+    public function kegiatan() {
+        return $this->hasMany(Kegiatan::class);
+    }
 }

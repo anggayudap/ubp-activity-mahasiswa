@@ -1,14 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ProdiController;
-use App\Http\Controllers\PeriodeController;
-use App\Http\Controllers\RoleUserController;
+use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\KlasifikasiKegiatanController;
-
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\ProdiController;
+use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\RoleUserController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,17 @@ Route::get('/', function () {
     return view('layouts.master');
 })->middleware('auth');
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth')->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    /* routing for main menu */
+    Route::resource('/kegiatan', KegiatanController::class);
+    Route::resource('/proposal', ProposalController::class);
+    Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history');
+});
+
 Route::prefix('master')->name('master.')->middleware('auth')->group(function () {
     /* routing for master data*/
     Route::resource('/prodi', ProdiController::class);
@@ -33,10 +45,6 @@ Route::prefix('master')->name('master.')->middleware('auth')->group(function () 
     Route::resource('/role', RoleUserController::class);
     Route::resource('/klasifikasi', KlasifikasiKegiatanController::class);
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
 
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', function () {return view('login');})->name('login');
