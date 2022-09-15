@@ -97,11 +97,25 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
+                                        <label for="name">Keterangan</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <textarea id="keterangan" class="form-control " name="keterangan" required>
+                                            {{ isset($data) ? $data->keterangan : old('keterangan') }}
+                                            </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
                                         <label for="name">Surat Tugas</label>
                                     </div>
                                     <div class="col-sm-9">
+                                        <img id="surat-tugas-preview" class="img-fluid my-1 col-sm-5">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="surat_tugas"
+                                            <input type="file" class="custom-file-input" id="file-surat-tugas"
+                                                name="surat_tugas" onchange="javascript:previewImage('surat-tugas')"
                                                 accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps" />
                                             <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
@@ -114,9 +128,11 @@
                                         <label for="name">Foto Kegiatan</label>
                                     </div>
                                     <div class="col-sm-9">
+                                        <img id="foto-kegiatan-preview" class="img-fluid my-1 col-sm-5">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="foto_kegiatan"
-                                                accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps" />
+                                            <input type="file" class="custom-file-input" id="file-foto-kegiatan"
+                                                name="foto_kegiatan" onchange="javascript:previewImage('foto-kegiatan')"
+                                                accept="image/jpeg,image/gif,image/png,image/x-eps" />
                                             <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
                                     </div>
@@ -128,26 +144,16 @@
                                         <label for="name">Bukti Kegiatan (sertifikat, dll)</label>
                                     </div>
                                     <div class="col-sm-9">
+                                        <img id="bukti-kegiatan-preview" class="img-fluid my-1 col-sm-5">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="bukti_sertifikat"
-                                                accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps" />
+                                            <input type="file" class="custom-file-input" id="file-bukti-sertifikat"
+                                                name="bukti_sertifikat" />
                                             <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 col-form-label">
-                                        <label for="name">Keterangan</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="keterangan" class="form-control " name="keterangan"
-                                            placeholder="Keterangan"
-                                            value="{{ isset($data) ? $data->keterangan : old('keterangan') }}" required>
-                                    </div>
-                                </div>
-                            </div>
+
 
 
                             <div class="col-sm-9 offset-sm-3">
@@ -195,5 +201,22 @@
             }
             // console.log('nice');
         });
+
+        function previewImage(type = null) {
+            const image = document.querySelector('#file-' + type);
+            const imgPreview = document.querySelector('#' + type + '-preview');
+
+            imgPreview.style.display = 'block';
+
+            const oFReader = new FileReader();
+            oFReader.readAsDataURL(image.files[0]);
+
+            if (image.files[0].type.match('image.*')) {
+                oFReader.onload = function(oFREvent) {
+                    imgPreview.src = oFREvent.target.result;
+                }
+            }
+
+        }
     </script>
 @endpush
