@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@if (isset($data))
+@if (isset($data['kegiatan']))
     @section('title', 'Form Edit Kegiatan Mahasiswa')
 @else
     @section('title', 'Form Tambah Kegiatan Mahasiswa')
@@ -14,14 +14,31 @@
                 <div class="card-header">
                 </div>
                 <div class="card-body">
-                    <form action="{{ isset($data) ? route('kegiatan.update', $data->id) : route('kegiatan.store') }}"
-                        method="post" class="form form-horizontal need-validation" enctype="multipart/form-data" novalidate>
+                    <form action="{{ isset($data['kegiatan']) ? route('kegiatan.update', $data->id) : route('kegiatan.store') }}"
+                        method="post" class="form form-horizontal " enctype="multipart/form-data" novalidate>
                         @csrf
-                        @if (isset($data))
+                        @if (isset($data['kegiatan']))
                             @method('PUT')
                         @endif
 
                         <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Periode</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" name="periode_id" id="periode-id" required>
+                                            <option value="">Pilih Periode</option>
+                                                    @foreach ($data['periode'] as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->periode_awal . ' - ' . $value->periode_akhir }}
+                                                        </option>
+                                                    @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12"><hr></div>
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
@@ -30,7 +47,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" id="nama-kegiatan" class="form-control" name="nama_kegiatan"
                                             placeholder="Nama Kegiatan"
-                                            value="{{ isset($data) ? $data->nama_kegiatan : old('nama_kegiatan') }}"
+                                            value="{{ isset($data['kegiatan']) ? $data->nama_kegiatan : old('nama_kegiatan') }}"
                                             required>
                                     </div>
                                 </div>
@@ -43,7 +60,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" id="tanggal-mulai" class="form-control flatpickr-basic"
                                             name="tanggal_mulai" placeholder="Tanggal Mulai Kegiatan"
-                                            value="{{ isset($data) ? $data->tanggal_mulai : old('tanggal_mulai') }}"
+                                            value="{{ isset($data['kegiatan']) ? $data->tanggal_mulai : old('tanggal_mulai') }}"
                                             required>
                                     </div>
                                 </div>
@@ -56,7 +73,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" id="tanggal-akhir" class="form-control flatpickr-basic"
                                             name="tanggal_akhir" placeholder="Tanggal Akhir Kegiatan"
-                                            value="{{ isset($data) ? $data->tanggal_akhir : old('tanggal_akhir') }}"
+                                            value="{{ isset($data['kegiatan']) ? $data->tanggal_akhir : old('tanggal_akhir') }}"
                                             required>
                                     </div>
                                 </div>
@@ -68,11 +85,11 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <select class="form-control" name="klasifikasi_id" id="klasifikasi-id" required>
-                                            <option>Pilih Klasifikasi</option>
-                                            @foreach ($klasifikasi as $group => $item)
+                                            <option value="">Pilih Klasifikasi</option>
+                                            @foreach ($data['klasifikasi'] as $group => $item)
                                                 <optgroup label="{{ $group }}">
-                                                    @foreach ($klasifikasi[$group] as $data)
-                                                        <option value="{{ $data->id }}">{{ $data->name_kegiatan }}
+                                                    @foreach ($data['klasifikasi'][$group] as $value)
+                                                        <option value="{{ $value->id }}">{{ $value->name_kegiatan }}
                                                         </option>
                                                     @endforeach
                                                 </optgroup>
@@ -87,10 +104,8 @@
                                         <label for="name">URL/Link Pendaftaran</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <input type="text" id="tanggal-akhir" class="form-control " name="tanggal_akhir"
-                                            placeholder="URL/Link Pendaftaran"
-                                            value="{{ isset($data) ? $data->tanggal_akhir : old('tanggal_akhir') }}"
-                                            required>
+                                        <textarea type="text" id="url-event" class="form-control " name="url_event"
+                                            placeholder="URL/Link Pendaftaran" required>{{ isset($data['kegiatan']) ? $data->tanggal_akhir : old('tanggal_akhir') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -151,6 +166,11 @@
                                             <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <em>Ket : Upload file menggunakan format gambar / pdf. Maks. size 5mb.</em>
                                 </div>
                             </div>
 
