@@ -29,7 +29,7 @@ class Kegiatan extends Model {
         'surat_tugas',
         'foto_kegiatan',
         'url_event',
-        'bukti_sertifikat',
+        'bukti_kegiatan',
         'keterangan',
         'status',
         'decision_warek',

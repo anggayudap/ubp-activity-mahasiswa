@@ -14,7 +14,8 @@
                 <div class="card-header">
                 </div>
                 <div class="card-body">
-                    <form action="{{ isset($data['kegiatan']) ? route('kegiatan.update', $data->id) : route('kegiatan.store') }}"
+                    <form
+                        action="{{ isset($data['kegiatan']) ? route('kegiatan.update', $data['kegiatan']->id) : route('kegiatan.store') }}"
                         method="post" class="form form-horizontal " enctype="multipart/form-data" novalidate>
                         @csrf
                         @if (isset($data['kegiatan']))
@@ -30,54 +31,21 @@
                                     <div class="col-sm-9">
                                         <select class="form-control" name="periode_id" id="periode-id" required>
                                             <option value="">Pilih Periode</option>
-                                                    @foreach ($data['periode'] as $value)
-                                                        <option value="{{ $value->id }}">{{ $value->periode_awal . ' - ' . $value->periode_akhir }}
-                                                        </option>
-                                                    @endforeach
+                                            @foreach ($data['periode'] as $value)
+                                                <option
+                                                    {{ (isset($data['kegiatan']) ? $data['kegiatan']->periode_id : old('periode_id')) == $value->id ? 'selected' : '' }}
+                                                    value="{{ $value->id }}">
+                                                    {{ $value->periode_awal . ' - ' . $value->periode_akhir }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12"><hr></div>
                             <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 col-form-label">
-                                        <label for="name">Nama Kegiatan</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="nama-kegiatan" class="form-control" name="nama_kegiatan"
-                                            placeholder="Nama Kegiatan"
-                                            value="{{ isset($data['kegiatan']) ? $data->nama_kegiatan : old('nama_kegiatan') }}"
-                                            required>
-                                    </div>
-                                </div>
+                                <hr>
                             </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 col-form-label">
-                                        <label for="name">Tanggal Mulai Kegiatan</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="tanggal-mulai" class="form-control flatpickr-basic"
-                                            name="tanggal_mulai" placeholder="Tanggal Mulai Kegiatan"
-                                            value="{{ isset($data['kegiatan']) ? $data->tanggal_mulai : old('tanggal_mulai') }}"
-                                            required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 col-form-label">
-                                        <label for="name">Tanggal Akhir Kegiatan</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="tanggal-akhir" class="form-control flatpickr-basic"
-                                            name="tanggal_akhir" placeholder="Tanggal Akhir Kegiatan"
-                                            value="{{ isset($data['kegiatan']) ? $data->tanggal_akhir : old('tanggal_akhir') }}"
-                                            required>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
@@ -89,7 +57,9 @@
                                             @foreach ($data['klasifikasi'] as $group => $item)
                                                 <optgroup label="{{ $group }}">
                                                     @foreach ($data['klasifikasi'][$group] as $value)
-                                                        <option value="{{ $value->id }}">{{ $value->name_kegiatan }}
+                                                        <option
+                                                            {{ (isset($data['kegiatan']) ? $data['kegiatan']->klasifikasi_id : old('klasifikasi_id'))== $value->id ? 'selected' : '' }}
+                                                            value="{{ $value->id }}">{{ $value->name_kegiatan }}
                                                         </option>
                                                     @endforeach
                                                 </optgroup>
@@ -98,14 +68,59 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Nama Kegiatan</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="nama-kegiatan" class="form-control" name="nama_kegiatan"
+                                            placeholder="Nama Kegiatan"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->nama_kegiatan : old('nama_kegiatan') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Tanggal Mulai Kegiatan</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="tanggal-mulai" class="form-control flatpickr-basic"
+                                            name="tanggal_mulai" placeholder="Tanggal Mulai Kegiatan"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->tanggal_mulai : old('tanggal_mulai') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Tanggal Akhir Kegiatan</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="tanggal-akhir" class="form-control flatpickr-basic"
+                                            name="tanggal_akhir" placeholder="Tanggal Akhir Kegiatan"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->tanggal_akhir : old('tanggal_akhir') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
                                         <label for="name">URL/Link Pendaftaran</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <textarea type="text" id="url-event" class="form-control " name="url_event"
-                                            placeholder="URL/Link Pendaftaran" required>{{ isset($data['kegiatan']) ? $data->tanggal_akhir : old('tanggal_akhir') }}</textarea>
+                                        <input type="text" id="url-event" class="form-control " name="url_event"
+                                            placeholder="URL/Link Pendaftaran"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->url_event : old('url_event') }}"
+                                            required>
                                     </div>
                                 </div>
                             </div>
@@ -115,9 +130,7 @@
                                         <label for="name">Keterangan</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <textarea id="keterangan" class="form-control " name="keterangan" required>
-                                            {{ isset($data) ? $data->keterangan : old('keterangan') }}
-                                            </textarea>
+                                        <textarea id="keterangan" class="form-control " name="keterangan" required>{{ isset($data['kegiatan']) ? $data['kegiatan']->keterangan : old('keterangan') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +140,8 @@
                                         <label for="name">Surat Tugas</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <img id="surat-tugas-preview" class="img-fluid my-1 col-sm-5">
+                                        <img id="surat-tugas-preview" class="img-fluid my-1 col-sm-5"
+                                            {{ isset($data['kegiatan']) ? 'src=' . URL::asset($data['kegiatan']->surat_tugas) : '' }}>
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="file-surat-tugas"
                                                 name="surat_tugas" onchange="javascript:previewImage('surat-tugas')"
@@ -143,11 +157,12 @@
                                         <label for="name">Foto Kegiatan</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <img id="foto-kegiatan-preview" class="img-fluid my-1 col-sm-5">
+                                        <img id="foto-kegiatan-preview" class="img-fluid my-1 col-sm-5"
+                                            {{ isset($data['kegiatan']) ? 'src=' . URL::asset($data['kegiatan']->foto_kegiatan) : '' }}>
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="file-foto-kegiatan"
                                                 name="foto_kegiatan" onchange="javascript:previewImage('foto-kegiatan')"
-                                                accept="image/jpeg,image/gif,image/png,image/x-eps" />
+                                                accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps" />
                                             <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
                                     </div>
@@ -159,10 +174,12 @@
                                         <label for="name">Bukti Kegiatan (sertifikat, dll)</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <img id="bukti-kegiatan-preview" class="img-fluid my-1 col-sm-5">
+                                        <img id="bukti-kegiatan-preview" class="img-fluid my-1 col-sm-5"
+                                            {{ isset($data['kegiatan']) ? 'src=' . URL::asset($data['kegiatan']->bukti_kegiatan) : '' }}>
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="file-bukti-sertifikat"
-                                                name="bukti_sertifikat" />
+                                            <input type="file" class="custom-file-input" id="file-bukti-kegiatan"
+                                                name="bukti_kegiatan" onchange="javascript:previewImage('bukti-kegiatan')"
+                                                accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps" />
                                             <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
                                     </div>
@@ -235,6 +252,8 @@
                 oFReader.onload = function(oFREvent) {
                     imgPreview.src = oFREvent.target.result;
                 }
+            } else {
+                imgPreview.removeAttribute('src');
             }
 
         }
