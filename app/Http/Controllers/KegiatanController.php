@@ -38,16 +38,7 @@ class KegiatanController extends Controller {
                     return $kegiatan->klasifikasi->name_kegiatan;
                 })
                 ->editColumn('status', function (Kegiatan $kegiatan) {
-                    if ($kegiatan->status == 'completed') {
-                        return 'Selesai';
-                    }
-                    if ($kegiatan->status == 'checked_kemahasiswaan') {
-                        return 'Dilihat Kemahasiswaan';
-                    }
-                    if ($kegiatan->status == 'checked_dosen') {
-                        return 'Dilihat Dosen';
-                    }
-                    return 'Sedang Direview';
+                    return trans('serba.'.$kegiatan->status);
                 })
                 ->rawColumns(['action'])
                 ->removeColumn('id')

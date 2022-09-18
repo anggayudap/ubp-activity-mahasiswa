@@ -52,7 +52,7 @@
                     </tr>
                     <tr>
                         <td class="pr-1">Status</td>
-                        <td>{{ $output['kegiatan']->status }}</td>
+                        <td>{{ trans('serba.' . $output['kegiatan']->status) }}</td>
                     </tr>
                     <tr>
                         <td class="pr-1">Keputusan Warek</td>
