@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/kegiatan', KegiatanController::class);
     Route::resource('/proposal', ProposalController::class);
     Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history');
+
+    Route::get('/kegiatan/modal_detail/{id}', [KegiatanController::class, 'detail'])->name('kegiatan.detail');
 });
 
 Route::prefix('master')->name('master.')->middleware('auth')->group(function () {

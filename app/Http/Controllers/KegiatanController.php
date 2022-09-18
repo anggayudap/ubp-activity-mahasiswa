@@ -23,7 +23,7 @@ class KegiatanController extends Controller {
                     $btn = '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
-                        <a href="' . route("kegiatan.show", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>
+                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' . $row->id . ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>
                         <a href="' . route("kegiatan.edit", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
                         <form action="' . route("kegiatan.destroy", [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">
                         ' . csrf_field() . '
@@ -94,7 +94,7 @@ class KegiatanController extends Controller {
         }
 
         if ($request->file('bukti_kegiatan')) {
-            $bukti_kegiatan_path = $this->upload_file($request->file('bukti_kegiatan'), 'bukti_kegiatan');;
+            $bukti_kegiatan_path = $this->upload_file($request->file('bukti_kegiatan'), 'bukti_kegiatan');
         }
 
         $post = Kegiatan::create([
@@ -129,8 +129,25 @@ class KegiatanController extends Controller {
         }
     }
 
-    public function show($id) {
-        //
+    public function detail($id) {
+        // $output['permintaan'] = Permintaan::where('id', $id)->first();
+        // $output['permintaan_barang'] = PermintaanBarang::where('permintaan_id', $id)->with('barang.warehouse')->get();
+        $output['kegiatan'] = Kegiatan::where('id', $id)->with('klasifikasi', 'periode')->first();
+        // dd($output);
+        $checking_files = array('surat_tugas', 'bukti_kegiatan', 'foto_kegiatan');
+        foreach ($checking_files as $document) {
+            $output['is_pdf'][$document] = false;
+
+            $file_name = $output['kegiatan']->$document;
+            $str_pieces = explode(".", $file_name);
+            $extensions = end($str_pieces);
+
+            if ($extensions == 'pdf') {
+                $output['is_pdf'][$document] = true;
+            }
+        }
+
+        return view('kegiatan.modal_detail', compact('output'));
     }
 
     public function edit($id) {

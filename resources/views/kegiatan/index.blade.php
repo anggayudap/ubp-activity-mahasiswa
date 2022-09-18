@@ -29,6 +29,22 @@
             </div>
         </div>
     </section>
+
+    <div class="modal fade text-left" id="xlarge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel16">Detail Kegiatan Mahasiswa</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="detail-bpbdg">
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @push('styles')
@@ -102,6 +118,10 @@
                     return false;
                 }
             });
+        }
+
+        function detail(id) {
+            $('#detail-bpbdg').load(current_url + '/modal_detail/' + id);
         }
     </script>
 @endpush
