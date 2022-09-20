@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Http\Controllers\Controller;
 use App\Models\Prodi;
-use App\Models\RoleUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -35,10 +34,28 @@ class LoginController extends Controller {
             if (!$cek_user) {
                 $cek_user = User::create([
                     'name' => $data_user['nama'],
-                    'role' => $data_user['role'],
                     'email' => $data_user['email'],
                     'password' => Hash::make('ubp2022'),
                 ]);
+            }
+
+            // input id User model to session
+            $data_user['user_id'] = $cek_user->id;
+
+            // check assigned role
+            if ($cek_user->getRoleNames()->isEmpty()) {
+                // assign user with role. check if mahasiswa
+                if ($output['data']['role'] == 'mahasiswa') {
+                    $cek_user->assignRole('mahasiswa');
+                } else {
+                    $user_access_list = $output['data']['user_access'];
+                    // check if kemahasiswaan
+                    if (strpos($user_access_list, 'kemahasiswaan') !== false) {
+                        $cek_user->assignRole('kemahasiswaan');
+                    }
+
+                    $cek_user->assignRole('dosen');
+                }
             }
 
             // do login
@@ -51,15 +68,6 @@ class LoginController extends Controller {
 
             // save data to session
             $request->session()->put('user', $data_user);
-
-            // update data role
-            $cek_role = RoleUser::where('name', $data_user['role'])->first();
-            if (!$cek_role) {
-                RoleUser::create([
-                    'name' => $data_user['role'],
-                    'description' => ucfirst($data_user['role']),
-                ]);
-            }
 
             // register prodi
             $cek_prodi = Prodi::where('kode_prodi', $data_user['prodi'])->first();

@@ -43,7 +43,7 @@
                     </tr>
                     <tr>
                         <td class="pr-1">Tanggal Kegiatan</td>
-                        <td>{{ get_indo_date($output['kegiatan']->tanggal_mulai) . ' s/d ' . get_indo_date($output['kegiatan']->tanggal_akhir) }}</td>
+                        <td>{{ $output['kegiatan']->tanggal_mulai . ' s/d ' . $output['kegiatan']->tanggal_akhir }}</td>
                     </tr>
 
                     <tr>

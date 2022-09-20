@@ -13,6 +13,7 @@ class CreateProposalsTable extends Migration {
     public function up() {
         Schema::create('proposals', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->string('nim', 20);
             $table->string('nama_mahasiswa');
             $table->string('prodi', 10);

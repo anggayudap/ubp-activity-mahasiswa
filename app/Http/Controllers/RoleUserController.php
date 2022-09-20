@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use DataTables;
-use App\Models\RoleUser;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -12,21 +13,19 @@ use RealRashid\SweetAlert\Facades\Alert;
 class RoleUserController extends Controller {
     public function index(Request $request) {
         if ($request->ajax()) {
-            $data = RoleUser::select(['id', 'name', 'description']);
+            $data = Role::select(['id', 'name', 'guard_name']);
             return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
-                        <a href="' . route("master.role.edit", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
-                        <form action="' . route("master.role.destroy", [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">
-                        ' . csrf_field() . '
-                        ' . method_field("DELETE") . '
-                        <a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
-                        </form>
+                        <em class="dropdown-item">No action required.</em>
                         </div>
                         </div>';
                     return $btn;
+                })
+                ->editColumn('name', function (Role $role) {
+                    return Str::ucfirst($role->name);
                 })
                 ->rawColumns(['action'])
                 ->removeColumn('id')
@@ -43,12 +42,12 @@ class RoleUserController extends Controller {
     public function store(Request $request) {
         $validated = $request->validate([
             'name' => 'required',
-            'description' => 'required',
+            'guard_name' => 'required',
         ]);
 
-        $post = RoleUser::create([
+        $post = Role::create([
             'name' => $request->name,
-            'description' => $request->description,
+            'guard_name' => $request->guard_name,
         ]);
 
         if ($post) {
@@ -65,7 +64,7 @@ class RoleUserController extends Controller {
     }
 
     public function edit($id) {
-        $data = RoleUser::findOrFail(Crypt::decrypt($id));
+        $data = Role::findOrFail(Crypt::decrypt($id));
 
         return view('master.role.form', compact('data'));
     }
@@ -73,14 +72,14 @@ class RoleUserController extends Controller {
     public function update(Request $request, $id) {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required',
+            'guard_name' => 'required',
         ]);
 
-        $role = RoleUser::findOrFail($id);
+        $role = Role::findOrFail($id);
 
         $role->update([
             'name' => $request->name,
-            'description' => $request->description,
+            'guard_name' => $request->guard_name,
         ]);
 
         if ($role) {
@@ -97,7 +96,7 @@ class RoleUserController extends Controller {
     }
 
     public function destroy($id) {
-        $role = RoleUser::findOrFail($id);
+        $role = Role::findOrFail($id);
         $role->delete();
 
         if ($role) {

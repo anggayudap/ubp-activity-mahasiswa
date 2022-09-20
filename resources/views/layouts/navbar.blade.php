@@ -1,4 +1,5 @@
-<nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
+<nav
+    class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
     <div class="navbar-container d-flex content">
         <div class="bookmark-wrapper d-flex align-items-center">
             <ul class="nav navbar-nav d-xl-none">
@@ -17,6 +18,14 @@
 
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
+                    @php
+                        $user = Auth::user();
+                    @endphp
+                    @foreach ($user->getRoleNames() as $role)
+                        <span class="dropdown-item"><i class="mr-50" data-feather="check-circle"></i>
+                            {{ Str::ucfirst($role) }}</span>
+                    @endforeach
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="page-profile.html"><i class="mr-50" data-feather="user"></i>
                         Profile</a>
                     <a class="dropdown-item" href="{{ route('logout') }}"><i class="mr-50" data-feather="power"></i>

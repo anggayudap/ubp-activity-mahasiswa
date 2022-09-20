@@ -15,6 +15,7 @@ class Proposal extends Model {
     ];
 
     protected $fillable = [
+        'date',
         'nim',
         'nama_mahasiswa',
         'prodi',

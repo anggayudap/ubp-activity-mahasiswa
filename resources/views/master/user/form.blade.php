@@ -51,13 +51,18 @@
                                         <label for="code">{{ __('Role User') }}</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <select class="form-control" name="role" id="role">
-                                            @foreach ($data['role'] as $item)
-                                                <option {{ $data['user']->role == $item->name ? 'selected' : '' }}
-                                                    value="{{ $item->name }}">{{ $item->description }}</option>
+                                        <div class="demo-inline-spacing">
+                                            @foreach ($data['role'] as $id => $role_name)
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                        id="role-{{ $id }}" name="role[]"
+                                                        value="{{ $role_name->name }}"
+                                                        {{ $data['assigned_role']->contains($role_name->name) ? 'checked' : '' }} />
+                                                    <label class="custom-control-label"
+                                                        for="role-{{ $id }}">{{ Str::ucfirst($role_name->name) }}</label>
+                                                </div>
                                             @endforeach
-                                            <option></option>
-                                        </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

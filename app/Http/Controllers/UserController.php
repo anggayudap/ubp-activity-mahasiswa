@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\RoleUser;
-use App\Models\User;
 use DataTables;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -30,7 +30,10 @@ class UserController extends Controller {
                     return $btn;
                 })
                 ->editColumn('last_login_at', function (User $user) {
-                    return get_date_time($user->last_login_at);
+                    return ($user->last_login_at) ? get_date_time($user->last_login_at) : 'No login records';
+                })
+                ->editColumn('role', function (User $user) {
+                    return  $user->getRoleNames()->implode(', ');
                 })
                 ->rawColumns(['action'])
                 ->removeColumn('id')
@@ -42,7 +45,9 @@ class UserController extends Controller {
 
     public function edit($id) {
         $data['user'] = User::findOrFail(Crypt::decrypt($id));
-        $data['role'] = RoleUser::all();
+        $data['role'] = Role::all();
+        $data['assigned_role'] = $data['user']->getRoleNames();
+
 
         return view('master.user.form', compact('data'));
     }
@@ -54,9 +59,13 @@ class UserController extends Controller {
 
         $user = User::findOrFail($id);
 
-        $user->update([
-            'role' => $request->role,
-        ]);
+        // clear assigned role
+        $user->roles()->detach();
+        
+        // assign the roles
+        foreach($request->role as $role) {
+            $user->assignRole($role);
+        }
 
         if ($user) {
             Alert::success('Berhasil!', 'Data user berhasil diupdate!');

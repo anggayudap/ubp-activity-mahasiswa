@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
-@section('title', 'Master Data Role')
-@section('menu-title', 'Kelola Data Role User')
+@section('title', 'Proposal Kegiatan')
+@section('menu-title', 'List Proposal Kegiatan')
 
 
 @section('content')
@@ -16,8 +16,10 @@
                         <table class="datatables-ajax table dataTable" id="DataTables_Table_0">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Name') }}</th>
-                                    <th>{{ __('Guard Name') }}</th>
+                                    <th>{{ __('Tanggal') }}</th>
+                                    <th>{{ __('Judul Proposal') }}</th>
+                                    <th>{{ __('Nama Mahasiswa') }}</th>
+                                    <th>{{ __('Ketua Pelaksana') }}</th>
                                     <th>{{ __('Aksi') }}</th>
                                 </tr>
                             </thead>
@@ -27,6 +29,22 @@
             </div>
         </div>
     </section>
+
+    <div class="modal fade text-left" id="xlarge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel16">Detail Proposal Kegiatan</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="detail-proposal">
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @push('styles')
@@ -42,14 +60,23 @@
         var table = $('.datatables-ajax').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('master.role.index') }}",
-            columns: [{
-                    data: 'name',
-                    name: 'name'
+            ajax: "{{ route('proposal.index') }}",
+            columns: [
+                {
+                    data: 'date',
+                    name: 'date'
                 },
                 {
-                    data: 'guard_name',
-                    name: 'guard_name'
+                    data: 'judul_proposal',
+                    name: 'judul_proposal'
+                },
+                {
+                    data: 'nama_mahasiswa',
+                    name: 'nama_mahasiswa'
+                },
+                {
+                    data: 'ketua_pelaksana',
+                    name: 'ketua_pelaksana'
                 },
                 {
                     data: 'action',
@@ -92,6 +119,10 @@
                     return false;
                 }
             });
+        }
+
+        function detail(id) {
+            $('#detail-proposal').load(current_url + '/modal_detail/' + id);
         }
     </script>
 @endpush

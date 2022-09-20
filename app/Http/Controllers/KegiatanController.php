@@ -108,7 +108,7 @@ class KegiatanController extends Controller {
         ]);
 
         if ($post) {
-            Alert::success('Berhasil!', 'Data klasifikasi kegiatan berhasil dibuat!');
+            Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil dibuat!');
             return redirect(route('kegiatan.index'));
         } else {
             return redirect()
@@ -227,7 +227,7 @@ class KegiatanController extends Controller {
         $kegiatan->update($update_params);
 
         if ($kegiatan) {
-            Alert::success('Berhasil!', 'Data klasifikasi kegiatan berhasil diupdate!');
+            Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil diupdate!');
             return redirect(route('kegiatan.index'));
         } else {
             return redirect()
@@ -244,10 +244,10 @@ class KegiatanController extends Controller {
         $klasifikasi->delete();
 
         if ($klasifikasi) {
-            Alert::success('Berhasil!', 'Data klasifikasi kegiatan berhasil dihapus!');
+            Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil dihapus!');
             return redirect(route('kegiatan.index'));
         } else {
-            Alert::error('Gagal!', 'Data klasifikasi kegiatan tidak dapat dihapus!');
+            Alert::error('Gagal!', 'Data kegiatan mahasiswa tidak dapat dihapus!');
             return redirect(route('kegiatan.index'));
         }
     }
