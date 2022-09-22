@@ -213,14 +213,19 @@ class ProposalController extends Controller {
     }
 
     public function destroy($id) {
-        $klasifikasi = Kegiatan::findOrFail($id);
-        $klasifikasi->delete();
+        $proposal = Proposal::findOrFail($id);
+        $proposal->delete();
 
-        if ($klasifikasi) {
-            Alert::success('Berhasil!', 'Data klasifikasi kegiatan berhasil dihapus!');
+        $prev_file = public_path($proposal->file_proposal);
+            if (file_exists($prev_file)) {
+                unlink($prev_file);
+            }
+
+        if ($proposal) {
+            Alert::success('Berhasil!', 'Data proposal kegiatan berhasil dihapus!');
             return redirect(route('proposal.index'));
         } else {
-            Alert::error('Gagal!', 'Data klasifikasi kegiatan tidak dapat dihapus!');
+            Alert::error('Gagal!', 'Data proposal kegiatan tidak dapat dihapus!');
             return redirect(route('proposal.index'));
         }
     }
