@@ -243,6 +243,21 @@ class KegiatanController extends Controller {
         $klasifikasi = Kegiatan::findOrFail($id);
         $klasifikasi->delete();
 
+        $surat_tugas = public_path($klasifikasi->surat_tugas);
+            if (file_exists($surat_tugas)) {
+                unlink($surat_tugas);
+            }
+
+            $foto_kegiatan = public_path($klasifikasi->foto_kegiatan);
+            if (file_exists($foto_kegiatan)) {
+                unlink($foto_kegiatan);
+            }
+
+            $bukti_kegiatan = public_path($klasifikasi->bukti_kegiatan);
+            if (file_exists($bukti_kegiatan)) {
+                unlink($bukti_kegiatan);
+            }
+
         if ($klasifikasi) {
             Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil dihapus!');
             return redirect(route('kegiatan.index'));
