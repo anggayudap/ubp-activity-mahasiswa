@@ -81,21 +81,50 @@
                         data-i18n="Input Proposal">{{ __('Input Proposal') }}</span>
                 </a>
             </li>
-            <li class="{{ request()->is('proposal/history*') ? 'active' : '' }} nav-item"><a
-                    class="d-flex align-items-center" href="{{ route('proposal.history') }}">
-                    <i data-feather="clock"></i>
-                    <span class="menu-title text-truncate"
-                        data-i18n="History Proposal">{{ __('History Proposal') }}</span></a>
-            </li>
+            @role('mahasiswa')
+                <li class="{{ request()->is('proposal/history*') ? 'active' : '' }} nav-item"><a
+                        class="d-flex align-items-center" href="{{ route('proposal.history') }}">
+                        <i data-feather="clock"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="History Proposal">{{ __('History Proposal') }}</span></a>
+                </li>
+            @endrole
             <li class="{{ request()->is('proposal') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="{{ route('proposal.index') }}"><i
                         data-feather="list"></i>
                     <span class="menu-title text-truncate" data-i18n="List Proposal">{{ __('List Proposal') }}</span>
                 </a>
             </li>
+            @hasanyrole('dosen|kemahasiswaan')
+                <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i
+                            data-feather="check"></i><span class="menu-title text-truncate"
+                            data-i18n="Approval">Approval</span></a>
+                    <ul class="menu-content">
+                        @role('dosen')
+                            <li class="{{ request()->is('proposal/approval_fakultas*') ? 'active' : '' }}">
+                                <a class="d-flex align-items-center" href="{{ route('proposal.approval_fakultas') }}"><i
+                                        data-feather="circle"></i>
+                                    <span class="menu-item text-truncate" data-i18n="Fakultas">Fakultas</span>
+                                </a>
+                            </li>
+                        @endrole
+                        @role('kemahasiswaan')
+                            <li class="{{ request()->is('proposal/approval_kemahasiswaan*') ? 'active' : '' }}">
+                                <a class="d-flex align-items-center" href="{{ route('proposal.approval_kemahasiswaan') }}">
+                                    <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                        data-i18n="Kemahasiswaan">Kemahasiswaan</span>
+                                    {{-- <span class="badge badge-light-danger badge-pill ml-auto mr-2">2</span> --}}
+                                </a>
+                            </li>
+                        @endrole
+                    </ul>
+                </li>
+            @endhasanyrole
 
 
-            <li class=" navigation-header"><span data-i18n="Proposal">{{ __('Master Data') }}</span><i
+
+
+            <li class=" navigation-header"><span data-i18n="Master">{{ __('Master Data') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
             <li class="{{ request()->is('master/klasifikasi*') ? 'active' : '' }} nav-item">

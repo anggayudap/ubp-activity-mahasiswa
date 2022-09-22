@@ -18,6 +18,11 @@
 
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-user">
+                    <div class="media d-flex align-items-center">
+                        <h6 class="font-weight-bolder mr-auto mb-0">Role anda:</h6>
+
+                    </div>
+                    
                     @php
                         $user = Auth::user();
                     @endphp
@@ -26,7 +31,7 @@
                             {{ Str::ucfirst($role) }}</span>
                     @endforeach
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="page-profile.html"><i class="mr-50" data-feather="user"></i>
+                    <a class="dropdown-item" href="{{ route('profile_user') }}"><i class="mr-50" data-feather="user"></i>
                         Profile</a>
                     <a class="dropdown-item" href="{{ route('logout') }}"><i class="mr-50" data-feather="power"></i>
                         Logout</a>

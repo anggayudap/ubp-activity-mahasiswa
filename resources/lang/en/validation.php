@@ -159,6 +159,12 @@ return [
         'surat_tugas' => 'Surat Tugas',
         'foto_kegiatan' => 'Foto Kegiatan',
         'bukti_kegiatan' => 'Bukti Kegiatan',
+        
+        'date' => 'Tanggal',
+        'judul_proposal' => 'Judul Proposal',
+        'ketua_pelaksana' => 'Ketua Pelaksana',
+        'anggaran_pengajuan' => 'Anggaran Pengajuan',
+        'file_proposal' => 'File Proposal',
     ],
 
 ];

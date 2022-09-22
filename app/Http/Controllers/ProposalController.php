@@ -52,22 +52,20 @@ class ProposalController extends Controller {
 
     public function store(Request $request) {
 
+        
         $validated = $request->validate([
             'date' => 'required',
             'judul_proposal' => 'required',
-            'ketua_pelakasana' => 'required',
+            'ketua_pelaksana' => 'required',
             'anggaran_pengajuan' => 'required|numeric',
             'file_proposal' => 'required|file|max:5120',
         ]);
 
-        // dd($request);
         $file_proposal_path = null;
 
-        if ($request->file('surat_tugas')) {
+        if ($request->file('file_proposal')) {
             $file_proposal_path = $this->upload_file($request->file('file_proposal'), 'file_proposal');
         }
-
-        
 
         $post = Proposal::create([
             'nim' => session('user.id'),
@@ -78,8 +76,8 @@ class ProposalController extends Controller {
             'ketua_pelaksana' => $request->ketua_pelaksana,
             'anggaran_pengajuan' => $request->anggaran_pengajuan,
             'file_proposal' => $file_proposal_path,
-            'current_status' => '',
-            'next_approval' => '',
+            'current_status' => 'pending',
+            'next_approval' => 'fakultas',
         ]);
 
         if ($post) {

@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\KegiatanController;
-use App\Http\Controllers\KlasifikasiKegiatanController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProdiController;
+use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\RoleUserController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileUserController;
+use App\Http\Controllers\KlasifikasiKegiatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,10 +35,13 @@ Route::middleware('auth')->group(function () {
     /* routing for main menu */
     Route::resource('/kegiatan', KegiatanController::class);
     Route::resource('/proposal', ProposalController::class);
-    Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history');
 
     Route::get('/kegiatan/modal_detail/{id}', [KegiatanController::class, 'detail'])->name('kegiatan.detail');
     Route::get('/proposal/modal_detail/{id}', [ProposalController::class, 'detail'])->name('proposal.detail');
+    
+    Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history');
+    Route::get('/proposal/approval_fakultas', [ProposalController::class, 'approval_fakultas'])->name('proposal.approval_fakultas');
+    Route::get('/proposal/approval_kemahasiswaan', [ProposalController::class, 'approval_kemahasiswaan'])->name('proposal.approval_kemahasiswaan');
 });
 
 Route::prefix('master')->name('master.')->middleware('auth')->group(function () {
@@ -54,6 +58,8 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/login', 'authenticate')->name('login_submit');
     Route::get('/logout', 'logout')->name('logout');
 });
+
+Route::get('profile/', [ProfileUserController::class, 'index'])->name('profile_user');
 
 Route::get('/clear', function () {
     \Artisan::call('cache:clear');
