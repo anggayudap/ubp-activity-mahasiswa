@@ -58,12 +58,15 @@
             <li class=" navigation-header"><span data-i18n="Kegiatan">{{ __('Kegiatan Mahasiswa') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
+            @hasrole('mahasiswa')
             <li class="{{ request()->is('kegiatan/form*') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="{{ route('kegiatan.create') }}"><i
                         data-feather="file-plus"></i>
                     <span class="menu-title text-truncate" data-i18n="Input Kegiatan">{{ __('Input Kegiatan') }}</span>
                 </a>
             </li>
+            @endhasrole
+            
             <li class="{{ request()->is('kegiatan') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="{{ route('kegiatan.index') }}"><i data-feather="list"></i>
                     <span class="menu-title text-truncate" data-i18n="List Kegiatan">{{ __('List Kegiatan') }}</span>
@@ -74,27 +77,30 @@
             <li class=" navigation-header"><span data-i18n="Proposal">{{ __('Proposal Kegiatan') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
-            <li class="{{ request()->is('proposal/form*') ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="{{ route('proposal.create') }}"><i
-                        data-feather="file-plus"></i>
-                    <span class="menu-title text-truncate"
-                        data-i18n="Input Proposal">{{ __('Input Proposal') }}</span>
-                </a>
-            </li>
-            @role('mahasiswa')
+            @hasrole('mahasiswa')
+                <li class="{{ request()->is('proposal/form*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('proposal.create') }}"><i
+                            data-feather="file-plus"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="Input Proposal">{{ __('Input Proposal') }}</span>
+                    </a>
+                </li>
                 <li class="{{ request()->is('proposal/history*') ? 'active' : '' }} nav-item"><a
                         class="d-flex align-items-center" href="{{ route('proposal.history') }}">
                         <i data-feather="clock"></i>
                         <span class="menu-title text-truncate"
                             data-i18n="History Proposal">{{ __('History Proposal') }}</span></a>
                 </li>
-            @endrole
-            <li class="{{ request()->is('proposal') ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="{{ route('proposal.index') }}"><i
-                        data-feather="list"></i>
-                    <span class="menu-title text-truncate" data-i18n="List Proposal">{{ __('List Proposal') }}</span>
-                </a>
-            </li>
+            @endhasrole('mahasiswa')
+
+            @hasanyrole('dosen|kemahasiswaan')
+                <li class="{{ request()->is('proposal') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('proposal.list') }}"><i data-feather="list"></i>
+                        <span class="menu-title text-truncate" data-i18n="List Proposal">{{ __('List Proposal') }}</span>
+                    </a>
+                </li>
+            @endhasanyrole
+
             @hasanyrole('dosen|kemahasiswaan')
                 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i
                             data-feather="check"></i><span class="menu-title text-truncate"
