@@ -12,13 +12,19 @@ return [
     'selesai' => '<div class="badge badge-secondary">Selesai</div>',
     'reject' => '<div class="badge badge-danger">Rejected</div>',
 
-    'completed' => 'Selesai',
-    'checked_kemahasiswaan' => 'Ditinjau Kemahasiswaan',
-    'checked_dosen' => ' Ditinjau Dosen',
-    'review' => 'Sedang Direview',
+    'checked_kemahasiswaan' => '<div class="badge badge-success">Ditinjau Kemahasiswaan</div>',
+    'checked_dosen' => '<div class="badge badge-success">Ditinjau Dosen</div>',
+    'review' => '<div class="badge badge-warning">Sedang Direview</div>',
 
     'yes' => 'Ya',
     'no' => 'Tidak',
+    
+    'reward' => '<div class="badge badge-success"><i data-feather="award" class="mr-25"></i><span>Reward</span></div>',
+    'reprimand' => '<div class="badge badge-warning"><i data-feather="alert-triangle" class="mr-25"></i><span>Surat Teguran</span></div>',
+
+    'fakultas' => '<div class="badge badge-warning">Menunggu Fakultas</div>',
+    'kemahasiswaan' => '<div class="badge badge-warning">Menunggu Kemahasiswaan<div class="badge badge-warning">',
+    'completed' => '<div class="badge badge-secondary">Selesai</div>',
 
 
 ];

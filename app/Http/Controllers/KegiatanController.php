@@ -8,29 +8,58 @@ use App\Models\KlasifikasiKegiatan;
 use App\Models\Periode;
 use DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class KegiatanController extends Controller {
-
     public function index(Request $request) {
         if ($request->ajax()) {
             $data = Kegiatan::select(['id', 'nama_kegiatan', 'nama_mahasiswa', 'klasifikasi_id', 'status']);
-            // dd($data);
-            return Datatables::of($data)->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
+            $user = Auth::user();
+
+            if ($user->hasRole('mahasiswa')) {
+                // if role == mahasiswa
+                $data->where('nim', session('user.id'));
+            } elseif (!$user->hasRole('kemahasiswaan')) {
+                // if role == dosen only
+                $data->where('prodi', session('user.prodi'));
+            }
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) use ($user) {
+                    // dd($row);
+                    $btn =
+                    '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
-                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' . $row->id . ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>
-                        <a href="' . route("kegiatan.edit", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
-                        <form action="' . route("kegiatan.destroy", [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">
-                        ' . csrf_field() . '
-                        ' . method_field("DELETE") . '
-                        <a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
-                        </form>
-                        </div>
+                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
+                    $row->id .
+                        ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
+                    if ($row->status == 'review' && $user->hasRole('mahasiswa')) {
+                        $btn .=
+                        '<a href="' .
+                        route('kegiatan.edit', Crypt::encrypt($row->id)) .
+                        '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                                <form action="' .
+                        route('kegiatan.destroy', [$row->id]) .
+                        '" method="POST" id="form-delete-' .
+                        $row->id .
+                        '" style="display: inline">
+                                ' .
+                        csrf_field() .
+                        '
+                                ' .
+                        method_field('DELETE') .
+                        '
+                                <a href="#" onclick="submit_delete(' .
+                        $row->id .
+                            ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
+                                </form>';
+                    }
+                    $btn .= '</div>
                         </div>';
                     return $btn;
                 })
@@ -38,9 +67,9 @@ class KegiatanController extends Controller {
                     return $kegiatan->klasifikasi->name_kegiatan;
                 })
                 ->editColumn('status', function (Kegiatan $kegiatan) {
-                    return trans('serba.'.$kegiatan->status);
+                    return trans('serba.' . $kegiatan->status);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['status', 'action'])
                 ->removeColumn('id')
                 ->make(true);
         }
@@ -57,7 +86,6 @@ class KegiatanController extends Controller {
     }
 
     public function store(Request $request) {
-
         $validated = $request->validate([
             'periode_id' => 'required',
             'nama_kegiatan' => 'required',
@@ -121,16 +149,33 @@ class KegiatanController extends Controller {
     }
 
     public function detail($id) {
-        // $output['permintaan'] = Permintaan::where('id', $id)->first();
-        // $output['permintaan_barang'] = PermintaanBarang::where('permintaan_id', $id)->with('barang.warehouse')->get();
-        $output['kegiatan'] = Kegiatan::where('id', $id)->with('klasifikasi', 'periode')->first();
-        // dd($output);
-        $checking_files = array('surat_tugas', 'bukti_kegiatan', 'foto_kegiatan');
+        $output['kegiatan'] = Kegiatan::where('id', $id)
+            ->with('klasifikasi', 'periode')
+            ->first();
+
+        // update status if role dosen or kemahasiswaan
+        $user = Auth::user();
+        if ($user->hasAnyRole(['kemahasiswaan', 'dosen']) && $output['kegiatan']->status != 'completed') {
+            $param = false;
+            if ($user->hasRole('kemahasiswaan')) {
+                $param = ['status' => 'checked_kemahasiswaan'];
+            } else if ($user->hasRole('dosen')) {
+                if ($output['kegiatan']->status == 'review') {
+                    $param = ['status' => 'checked_dosen'];
+                }
+            }
+
+            if ($param) {
+                $output['kegiatan']->update($param);
+            }
+        }
+
+        $checking_files = ['surat_tugas', 'bukti_kegiatan', 'foto_kegiatan'];
         foreach ($checking_files as $document) {
             $output['is_pdf'][$document] = false;
 
             $file_name = $output['kegiatan']->$document;
-            $str_pieces = explode(".", $file_name);
+            $str_pieces = explode('.', $file_name);
             $extensions = end($str_pieces);
 
             if ($extensions == 'pdf') {
@@ -244,19 +289,19 @@ class KegiatanController extends Controller {
         $klasifikasi->delete();
 
         $surat_tugas = public_path($klasifikasi->surat_tugas);
-            if (file_exists($surat_tugas)) {
-                unlink($surat_tugas);
-            }
+        if (file_exists($surat_tugas)) {
+            unlink($surat_tugas);
+        }
 
-            $foto_kegiatan = public_path($klasifikasi->foto_kegiatan);
-            if (file_exists($foto_kegiatan)) {
-                unlink($foto_kegiatan);
-            }
+        $foto_kegiatan = public_path($klasifikasi->foto_kegiatan);
+        if (file_exists($foto_kegiatan)) {
+            unlink($foto_kegiatan);
+        }
 
-            $bukti_kegiatan = public_path($klasifikasi->bukti_kegiatan);
-            if (file_exists($bukti_kegiatan)) {
-                unlink($bukti_kegiatan);
-            }
+        $bukti_kegiatan = public_path($klasifikasi->bukti_kegiatan);
+        if (file_exists($bukti_kegiatan)) {
+            unlink($bukti_kegiatan);
+        }
 
         if ($klasifikasi) {
             Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil dihapus!');
@@ -264,6 +309,36 @@ class KegiatanController extends Controller {
         } else {
             Alert::error('Gagal!', 'Data kegiatan mahasiswa tidak dapat dihapus!');
             return redirect(route('kegiatan.index'));
+        }
+    }
+
+    public function decision(Request $request) {
+        if ($request->ajax()) {
+            $kegiatan = Kegiatan::findOrFail($request->id);
+
+            switch ($request->decision) {
+                case 'teguran':
+                    $decision = 'reprimand';
+                    break;
+                case 'reward':
+                    $decision = 'reward';
+                    break;
+                default:
+                    $decision = null;
+                    break;
+            }
+            // dd($decision);
+            $kegiatan->update([
+                'status' => 'completed',
+                'decision_warek' => $decision,
+            ]);
+
+            if ($kegiatan) {
+                return response()->json(array('success' => true, 'message' =>  'Penilaian berhasil disimpan', 'redirect' => route('kegiatan.index')));
+            } else {
+                return response()->json(array('success' => true, 'message' =>  'Terjadi error. Harap hub. administrator anda.'));
+            }
+
         }
     }
 

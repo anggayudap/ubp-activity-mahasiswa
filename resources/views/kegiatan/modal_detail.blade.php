@@ -43,20 +43,27 @@
                     </tr>
                     <tr>
                         <td class="pr-1">Tanggal Kegiatan</td>
-                        <td>{{ get_indo_date($output['kegiatan']->tanggal_mulai) . ' s/d ' . get_indo_date($output['kegiatan']->tanggal_akhir) }}</td>
+                        <td>{{ get_indo_date($output['kegiatan']->tanggal_mulai) . ' s/d ' . get_indo_date($output['kegiatan']->tanggal_akhir) }}
+                        </td>
                     </tr>
 
                     <tr>
                         <td class="pr-1">Link Event</td>
-                        <td>{{ $output['kegiatan']->url_event }}</td>
+                        <td>
+                            <a href="{{ $output['kegiatan']->url_event }}" target="_blank" type="button"
+                                class="btn btn-flat-success">
+                                <i data-feather="link" class="mr-25"></i>
+                                <span>Buka Link</span>
+                            </a>
+                        </td>
                     </tr>
                     <tr>
                         <td class="pr-1">Status</td>
-                        <td>{{ trans('serba.' . $output['kegiatan']->status) }}</td>
+                        <td>{!! trans('serba.' . $output['kegiatan']->status) !!}</td>
                     </tr>
                     <tr>
                         <td class="pr-1">Keputusan Warek</td>
-                        <td>{{ $output['kegiatan']->decision_warek }}</td>
+                        <td>{!! $output['kegiatan']->decision_warek ? trans('serba.' . $output['kegiatan']->decision_warek) : '' !!}</td>
                     </tr>
                 </tbody>
             </table>
@@ -108,3 +115,59 @@
     @endif
 
 </div>
+@hasrole('kemahasiswaan')
+    @if (!$output['kegiatan']->decision_warek)
+        <div class="card-footer">
+            <button type="button" class="btn btn-warning" onclick="javascript:warek_decision('teguran');"><i data-feather="alert-triangle"
+                    class="mr-25"></i>Surat Teguran</button>
+            <button type="button" class="btn btn-success" onclick="javascript:warek_decision('reward');"><i data-feather="award"
+                    class="mr-25"></i>Reward</button>
+        </div>
+    @endif
+@endhasrole
+
+<script type="text/javascript">
+    if (feather) {
+        feather.replace({
+            width: 14,
+            height: 14
+        });
+    }
+
+    function warek_decision(value) {
+        Swal.fire({
+            // width: 680,
+            title: 'Konfirmasi penilaian akhir : '+value+'?',
+            // text: "Konfirmasi approve?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "{{ route('kegiatan.decision') }}",
+                method: 'POST',
+                data: {
+                    id: {{ $output['kegiatan']->id }},
+                    decision : value,
+                },
+                success: function (data) {
+
+                    if (data.success) {
+                        successMessage(data.message, data.redirect);
+
+                    } else {
+                        errorMessage(data.message);
+                    }
+                }
+            });
+        });
+    }
+</script>

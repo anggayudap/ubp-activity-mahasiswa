@@ -55,6 +55,7 @@
 @push('scripts')
     {{-- write js script here --}}
     <script src="{{ URL::asset('js/table.js') }}"></script>
+    <script src="{{ URL::asset('js/app.js') }}"></script>
     <script type="text/javascript">
         // kalau pake yajra
         var table = $('.datatables-ajax').DataTable({
