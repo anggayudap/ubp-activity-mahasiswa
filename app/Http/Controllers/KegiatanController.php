@@ -37,24 +37,10 @@ class KegiatanController extends Controller {
                         ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
                     if ($row->status == 'review') {
                         $btn .=
-                        '<a href="' .
-                        route('kegiatan.edit', Crypt::encrypt($row->id)) .
-                        '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
-                                <form action="' .
-                        route('kegiatan.destroy', [$row->id]) .
-                        '" method="POST" id="form-delete-' .
-                        $row->id .
-                        '" style="display: inline">
-                                ' .
+                        '<form action="' . route('kegiatan.destroy', [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">' .
                         csrf_field() .
-                        '
-                                ' .
                         method_field('DELETE') .
-                        '
-                                <a href="#" onclick="submit_delete(' .
-                        $row->id .
-                            ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
-                                </form>';
+                        ' <a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a> </form>';
                     }
                     $btn .= '</div>
                         </div>';
@@ -96,25 +82,11 @@ class KegiatanController extends Controller {
                     $row->id .
                         ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
                     if ($row->status == 'review') {
-                        $btn .=
-                        '<a href="' .
-                        route('kegiatan.edit', Crypt::encrypt($row->id)) .
-                        '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
-                                <form action="' .
-                        route('kegiatan.destroy', [$row->id]) .
-                        '" method="POST" id="form-delete-' .
-                        $row->id .
-                        '" style="display: inline">
-                                ' .
+                        $btn .= '<a href="' . route('kegiatan.edit', Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                                <form action="' . route('kegiatan.destroy', [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline"> ' .
                         csrf_field() .
-                        '
-                                ' .
                         method_field('DELETE') .
-                        '
-                                <a href="#" onclick="submit_delete(' .
-                        $row->id .
-                            ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
-                                </form>';
+                        '<a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a> </form>';
                     }
                     $btn .= '</div>
                         </div>';
