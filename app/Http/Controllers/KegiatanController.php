@@ -14,22 +14,19 @@ use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class KegiatanController extends Controller {
-    public function index(Request $request) {
+    public function list(Request $request) {
         if ($request->ajax()) {
             $data = Kegiatan::select(['id', 'nama_kegiatan', 'nama_mahasiswa', 'klasifikasi_id', 'status']);
-            $user = Auth::user();
 
-            if ($user->hasRole('mahasiswa')) {
-                // if role == mahasiswa
-                $data->where('nim', session('user.id'));
-            } elseif (!$user->hasRole('kemahasiswaan')) {
+            $user = Auth::user();
+            if (!$user->hasRole('kemahasiswaan')) {
                 // if role == dosen only
                 $data->where('prodi', session('user.prodi'));
             }
 
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function ($row) use ($user) {
+                ->addColumn('action', function ($row) {
                     // dd($row);
                     $btn =
                     '<div class="dropdown">
@@ -38,7 +35,7 @@ class KegiatanController extends Controller {
                         <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
                     $row->id .
                         ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
-                    if ($row->status == 'review' && $user->hasRole('mahasiswa')) {
+                    if ($row->status == 'review') {
                         $btn .=
                         '<a href="' .
                         route('kegiatan.edit', Crypt::encrypt($row->id)) .
@@ -74,7 +71,70 @@ class KegiatanController extends Controller {
                 ->make(true);
         }
 
-        return view('kegiatan.index');
+        $data['heading'] = 'List Kegiatan Mahasiswa';
+        $data['datasource'] = 'kegiatan.list';
+
+        return view('kegiatan.index', compact('data'));
+    }
+
+    public function history(Request $request) {
+        if ($request->ajax()) {
+            $data = Kegiatan::select(['id', 'nama_kegiatan', 'nama_mahasiswa', 'klasifikasi_id', 'status']);
+
+            // if role == mahasiswa
+            $data->where('nim', session('user.id'));
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    // dd($row);
+                    $btn =
+                    '<div class="dropdown">
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right" style="">
+                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
+                    $row->id .
+                        ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
+                    if ($row->status == 'review') {
+                        $btn .=
+                        '<a href="' .
+                        route('kegiatan.edit', Crypt::encrypt($row->id)) .
+                        '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                                <form action="' .
+                        route('kegiatan.destroy', [$row->id]) .
+                        '" method="POST" id="form-delete-' .
+                        $row->id .
+                        '" style="display: inline">
+                                ' .
+                        csrf_field() .
+                        '
+                                ' .
+                        method_field('DELETE') .
+                        '
+                                <a href="#" onclick="submit_delete(' .
+                        $row->id .
+                            ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
+                                </form>';
+                    }
+                    $btn .= '</div>
+                        </div>';
+                    return $btn;
+                })
+                ->editColumn('klasifikasi_id', function (Kegiatan $kegiatan) {
+                    return $kegiatan->klasifikasi->name_kegiatan;
+                })
+                ->editColumn('status', function (Kegiatan $kegiatan) {
+                    return trans('serba.' . $kegiatan->status);
+                })
+                ->rawColumns(['status', 'action'])
+                ->removeColumn('id')
+                ->make(true);
+        }
+
+        $data['heading'] = 'History Kegiatan Mahasiswa';
+        $data['datasource'] = 'kegiatan.history';
+
+        return view('kegiatan.index', compact('data'));
     }
 
     public function create() {
@@ -137,7 +197,7 @@ class KegiatanController extends Controller {
 
         if ($post) {
             Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil dibuat!');
-            return redirect(route('kegiatan.index'));
+            return redirect(route('kegiatan.history'));
         } else {
             return redirect()
                 ->back()
@@ -159,7 +219,7 @@ class KegiatanController extends Controller {
             $param = false;
             if ($user->hasRole('kemahasiswaan')) {
                 $param = ['status' => 'checked_kemahasiswaan'];
-            } else if ($user->hasRole('dosen')) {
+            } elseif ($user->hasRole('dosen')) {
                 if ($output['kegiatan']->status == 'review') {
                     $param = ['status' => 'checked_dosen'];
                 }
@@ -273,7 +333,7 @@ class KegiatanController extends Controller {
 
         if ($kegiatan) {
             Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil diupdate!');
-            return redirect(route('kegiatan.index'));
+            return redirect(route('kegiatan.history'));
         } else {
             return redirect()
                 ->back()
@@ -305,10 +365,10 @@ class KegiatanController extends Controller {
 
         if ($klasifikasi) {
             Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil dihapus!');
-            return redirect(route('kegiatan.index'));
+            return redirect(route('kegiatan.history'));
         } else {
             Alert::error('Gagal!', 'Data kegiatan mahasiswa tidak dapat dihapus!');
-            return redirect(route('kegiatan.index'));
+            return redirect(route('kegiatan.history'));
         }
     }
 
@@ -317,15 +377,15 @@ class KegiatanController extends Controller {
             $kegiatan = Kegiatan::findOrFail($request->id);
 
             switch ($request->decision) {
-                case 'teguran':
-                    $decision = 'reprimand';
-                    break;
-                case 'reward':
-                    $decision = 'reward';
-                    break;
-                default:
-                    $decision = null;
-                    break;
+            case 'teguran':
+                $decision = 'reprimand';
+                break;
+            case 'reward':
+                $decision = 'reward';
+                break;
+            default:
+                $decision = null;
+                break;
             }
             // dd($decision);
             $kegiatan->update([
@@ -334,11 +394,10 @@ class KegiatanController extends Controller {
             ]);
 
             if ($kegiatan) {
-                return response()->json(array('success' => true, 'message' =>  'Penilaian berhasil disimpan', 'redirect' => route('kegiatan.index')));
+                return response()->json(['success' => true, 'message' => 'Penilaian berhasil disimpan', 'redirect' => route('kegiatan.list')]);
             } else {
-                return response()->json(array('success' => true, 'message' =>  'Terjadi error. Harap hub. administrator anda.'));
+                return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
             }
-
         }
     }
 

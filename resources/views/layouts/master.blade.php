@@ -20,6 +20,7 @@
     @stack('styles')
     <script type="text/javascript">
         let user_theme = "{{ session('user_theme') }}";
+        let base_url = "{{ url('/') }}";
         let current_url = "{{ url()->current() }}";
     </script>
 

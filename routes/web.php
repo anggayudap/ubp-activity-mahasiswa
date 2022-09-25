@@ -33,12 +33,14 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     /* routing for main menu */
+    Route::get('/kegiatan/list', [KegiatanController::class, 'list'])->name('kegiatan.list')->middleware('role:dosen|kemahasiswaan');
+    Route::get('/kegiatan/history', [KegiatanController::class, 'history'])->name('kegiatan.history')->middleware('role:mahasiswa');
     Route::get('/kegiatan/modal_detail/{id}', [KegiatanController::class, 'detail'])->name('kegiatan.detail');
     Route::post('/kegiatan/decision', [KegiatanController::class, 'decision'])->name('kegiatan.decision');
     
-    Route::get('/proposal/modal_detail/{id}', [ProposalController::class, 'detail'])->name('proposal.detail');
     Route::get('/proposal/list', [ProposalController::class, 'list'])->name('proposal.list')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history')->middleware('role:mahasiswa');
+    Route::get('/proposal/modal_detail/{id}', [ProposalController::class, 'detail'])->name('proposal.detail');
     Route::get('/proposal/approval_fakultas', [ProposalController::class, 'approval_fakultas'])->name('proposal.approval_fakultas')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/approval_kemahasiswaan', [ProposalController::class, 'approval_kemahasiswaan'])->name('proposal.approval_kemahasiswaan')->middleware('role:dosen|kemahasiswaan');
 

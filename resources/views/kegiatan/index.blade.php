@@ -61,7 +61,7 @@
         var table = $('.datatables-ajax').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('kegiatan.index') }}",
+            ajax: "{{ route($data['datasource']) }}",
             columns: [{
                     data: 'nama_kegiatan',
                     name: 'nama_kegiatan'
@@ -122,7 +122,7 @@
         }
 
         function detail(id) {
-            $('#detail-bpbdg').load(current_url + '/modal_detail/' + id);
+            $('#detail-bpbdg').load(base_url + '/kegiatan/modal_detail/' + id);
         }
     </script>
 @endpush
