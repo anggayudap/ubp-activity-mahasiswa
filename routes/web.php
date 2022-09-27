@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/proposal/modal_detail/{id}', [ProposalController::class, 'detail'])->name('proposal.detail');
     Route::get('/proposal/approval_fakultas', [ProposalController::class, 'approval_fakultas'])->name('proposal.approval_fakultas')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/approval_kemahasiswaan', [ProposalController::class, 'approval_kemahasiswaan'])->name('proposal.approval_kemahasiswaan')->middleware('role:dosen|kemahasiswaan');
+    Route::post('/proposal/approve', [ProposalController::class,'approve'])->name('proposal.approve');
+    Route::post('/proposal_head_user/reject', [ProposalController::class, 'reject'])->name('proposal.reject');
 
     Route::resource('/kegiatan', KegiatanController::class);
     Route::resource('/proposal', ProposalController::class);
@@ -63,7 +65,9 @@ Route::controller(LoginController::class)->group(function () {
     Route::get('/logout', 'logout')->name('logout');
 });
 
-Route::get('profile/', [ProfileUserController::class, 'index'])->name('profile_user');
+Route::get('/profile', function () {
+    return view('profile');
+})->name('profile_user');
 
 Route::get('/clear', function () {
     \Artisan::call('cache:clear');

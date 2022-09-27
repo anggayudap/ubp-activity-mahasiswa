@@ -17,7 +17,7 @@ class ProposalController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval']);
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status']);
             $user = Auth::user();
 
             if (!$user->hasRole('kemahasiswaan')) {
@@ -62,6 +62,9 @@ class ProposalController extends Controller
                     return $btn;
                 })
                 ->editColumn('next_approval', function (Proposal $proposal) {
+                    if ($proposal->current_status == 'reject') {
+                        return trans('serba.reject');
+                    }
                     return trans('serba.' . $proposal->next_approval);
                 })
                 ->rawColumns(['action', 'next_approval'])
@@ -78,7 +81,7 @@ class ProposalController extends Controller
     public function history(Request $request)
     {
         if ($request->ajax()) {
-            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval'])->where('nim', session('user.id'));
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status'])->where('nim', session('user.id'));
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -116,6 +119,9 @@ class ProposalController extends Controller
                     return $btn;
                 })
                 ->editColumn('next_approval', function (Proposal $proposal) {
+                    if ($proposal->current_status == 'reject') {
+                        return trans('serba.reject');
+                    }
                     return trans('serba.' . $proposal->next_approval);
                 })
                 ->rawColumns(['action', 'next_approval'])
@@ -129,11 +135,158 @@ class ProposalController extends Controller
         return view('proposal.index', compact('data'));
     }
 
-    public function approval_kemahasiswaan()
+    public function approval_fakultas(Request $request)
     {
+        if ($request->ajax()) {
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status'])
+                ->where('prodi', session('user.prodi')) /** prodi equals with prodi user */
+                ->where('current_status', 'pending')
+                ->where('next_approval', 'fakultas');
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn =
+                        '<div class="dropdown">
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right" style="">
+                        <a href="#" data-toggle="modal" data-target="#approval-modal" onclick="javascript:approval(' .
+                        $row->id .
+                        ');" class="dropdown-item"><i data-feather="check"></i> Approval Fakultas</a>';
+
+                    $btn .= '</div>
+                        </div>';
+
+                    return $btn;
+                })
+                ->editColumn('next_approval', function (Proposal $proposal) {
+                    if ($proposal->current_status == 'reject') {
+                        return trans('serba.reject');
+                    }
+                    return trans('serba.' . $proposal->next_approval);
+                })
+                ->rawColumns(['action', 'next_approval'])
+                ->removeColumn('id')
+                ->make(true);
+        }
+
+        $data['heading'] = 'Approval Fakultas';
+        $data['datasource'] = 'proposal.approval_fakultas';
+        $data['approval'] = 'fakultas';
+
+        return view('proposal.index', compact('data'));
     }
-    public function approval_fakultas()
+    public function approval_kemahasiswaan(Request $request)
     {
+        if ($request->ajax()) {
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status'])
+                ->where('current_status', 'pending')
+                ->where('next_approval', 'kemahasiswaan');
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn =
+                        '<div class="dropdown">
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right" style="">
+                        <a href="#" data-toggle="modal" data-target="#approval-modal" onclick="javascript:approval(' .
+                        $row->id .
+                        ');" class="dropdown-item"><i data-feather="check"></i> Approval Kemahasiswaan</a>';
+
+                    $btn .= '</div>
+                        </div>';
+
+                    return $btn;
+                })
+                ->editColumn('next_approval', function (Proposal $proposal) {
+                    if ($proposal->current_status == 'reject') {
+                        return trans('serba.reject');
+                    }
+                    return trans('serba.' . $proposal->next_approval);
+                })
+                ->rawColumns(['action', 'next_approval'])
+                ->removeColumn('id')
+                ->make(true);
+        }
+
+        $data['heading'] = 'Approval Kemahasiswaan';
+        $data['datasource'] = 'proposal.approval_kemahasiswaan';
+        $data['approval'] = 'kemahasiswaan';
+
+        return view('proposal.index', compact('data'));
+    }
+
+    public function approve(Request $request)
+    {
+        if ($request->ajax()) {
+            $proposal = Proposal::findOrFail($request->id);
+            $param = [];
+
+            if ($request->type == 'fakultas') {
+                $param = [
+                    'next_approval' => 'kemahasiswaan',
+                    'current_status' => 'pending',
+                    'fakultas_approval_date' => date('Y-m-d H:i:s'),
+                    'rejected_fakultas' => '0',
+                    'is_editable' => '0',
+                    'reject_note' => null,
+                ];
+            } elseif ($request->type == 'kemahasiswaan') {
+                $param = [
+                    'next_approval' => 'completed',
+                    'current_status' => 'completed',
+                    'kemahasiswaan_approval_date' => date('Y-m-d H:i:s'),
+                    'rejected_kemahasiswaan' => '0',
+                    'is_editable' => '0',
+                    'reject_note' => null,
+                ];
+            }
+
+            // update to table
+            $proposal->update($param);
+
+            if ($proposal) {
+                return response()->json(['success' => true, 'message' => 'Proposal berhasil di approve', 'redirect' => route('proposal.list')]);
+            } else {
+                return response()->json(['success' => true, 'message' => 'Terjadi error saat approve. Harap hub. administrator anda.']);
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
+    }
+
+    public function reject(Request $request)
+    {
+        if ($request->ajax()) {
+            $proposal = Proposal::findOrFail($request->id);
+            $param = [];
+
+            if ($request->type == 'fakultas') {
+                $param = [
+                    'current_status' => 'reject',
+                    'rejected_fakultas' => '1',
+                    'is_editable' => '1',
+                    'reject_note' => $request->note,
+                ];
+            } elseif ($request->type == 'kemahasiswaan') {
+                $param = [
+                    'current_status' => 'reject',
+                    'rejected_kemahasiswaan' => '1',
+                    'is_editable' => '1',
+                    'reject_note' => $request->note,
+                ];
+            }
+
+            // update to table
+            $proposal->update($param);
+
+            if ($proposal) {
+                return response()->json(['success' => true, 'message' => 'Proposal berhasil di reject', 'redirect' => route('proposal.list')]);
+            } else {
+                return response()->json(['success' => true, 'message' => 'Terjadi error saat reject. Harap hub. administrator anda.']);
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
     }
 
     public function create()
@@ -187,29 +340,16 @@ class ProposalController extends Controller
     public function detail($id)
     {
         $output['proposal'] = Proposal::where('id', $id)->first();
-        // dd($output);
-        // $checking_files = array('surat_tugas', 'bukti_kegiatan', 'foto_kegiatan');
-        // foreach ($checking_files as $document) {
-        //     $output['is_pdf'][$document] = false;
-
-        //     $file_name = $output['kegiatan']->$document;
-        //     $str_pieces = explode(".", $file_name);
-        //     $extensions = end($str_pieces);
-
-        //     if ($extensions == 'pdf') {
-        //         $output['is_pdf'][$document] = true;
-        //     }
-        // }
 
         $output['is_pdf']['file_proposal'] = false;
 
-            $file_name = $output['proposal']->file_proposal;
-            $str_pieces = explode('.', $file_name);
-            $extensions = end($str_pieces);
+        $file_name = $output['proposal']->file_proposal;
+        $str_pieces = explode('.', $file_name);
+        $extensions = end($str_pieces);
 
-            if ($extensions == 'pdf') {
-                $output['is_pdf']['file_proposal'] = true;
-            }
+        if ($extensions == 'pdf') {
+            $output['is_pdf']['file_proposal'] = true;
+        }
 
         return view('proposal.modal_detail', compact('output'));
     }
@@ -224,80 +364,39 @@ class ProposalController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'periode_id' => 'required',
-            'nama_kegiatan' => 'required',
-            'tanggal_mulai' => 'required',
-            'tanggal_akhir' => 'required',
-            'klasifikasi_id' => 'required',
-            'keterangan' => 'required',
-            'url_event' => 'required|url',
-            'surat_tugas' => 'nullable|file|max:5120',
-            'foto_kegiatan' => 'nullable|file|max:5120',
-            'bukti_kegiatan' => 'nullable|file|max:5120',
+            'date' => 'required',
+            'judul_proposal' => 'required',
+            'ketua_pelaksana' => 'required',
+            'anggaran_pengajuan' => 'required|numeric',
+            'file_proposal' => 'nullable|file|max:5120',
         ]);
 
-        $kegiatan = Kegiatan::findOrFail($id);
-        $surat_tugas_path = null;
-        $foto_kegiatan_path = null;
-        $bukti_kegiatan_path = null;
+        $proposal = Proposal::findOrFail($id);
+        $file_proposal_path = null;
 
-        if ($request->file('surat_tugas')) {
-            $surat_tugas_path = $this->upload_file($request->file('surat_tugas'), 'surat_tugas');
-
-            // delete previous file
-            $prev_file = public_path($kegiatan->surat_tugas);
-            if (file_exists($prev_file)) {
-                unlink($prev_file);
-            }
-        }
-
-        if ($request->file('foto_kegiatan')) {
-            $foto_kegiatan_path = $this->upload_file($request->file('foto_kegiatan'), 'foto_kegiatan');
-
-            // delete previous file
-            $prev_file = public_path($kegiatan->foto_kegiatan);
-            if (file_exists($prev_file)) {
-                unlink($prev_file);
-            }
-        }
-
-        if ($request->file('bukti_kegiatan')) {
-            $bukti_kegiatan_path = $this->upload_file($request->file('bukti_kegiatan'), 'bukti_kegiatan');
-
-            // delete previous file
-            $prev_file = public_path($kegiatan->bukti_kegiatan);
-            if (file_exists($prev_file)) {
-                unlink($prev_file);
-            }
+        if ($request->file('file_proposal')) {
+            $file_proposal_path = $this->upload_file($request->file('file_proposal'), 'file_proposal');
         }
 
         $update_params = [
-            'periode_id' => $request->periode_id,
-            'tahun_periode' => date('Y'),
-            'nama_kegiatan' => $request->nama_kegiatan,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_akhir' => $request->tanggal_akhir,
-            'klasifikasi_id' => $request->klasifikasi_id,
-            'url_event' => $request->url_event,
-            'keterangan' => $request->keterangan,
+            'nim' => session('user.id'),
+            'nama_mahasiswa' => session('user.nama'),
+            'prodi' => session('user.prodi'),
+            'date' => $request->date,
+            'judul_proposal' => $request->judul_proposal,
+            'ketua_pelaksana' => $request->ketua_pelaksana,
+            'anggaran_pengajuan' => $request->anggaran_pengajuan,
+            'current_status' => 'pending',
         ];
 
-        if ($surat_tugas_path) {
-            $update_params['surat_tugas'] = $surat_tugas_path;
+        if ($file_proposal_path) {
+            $update_params['file_proposal'] = $file_proposal_path;
         }
 
-        if ($foto_kegiatan_path) {
-            $update_params['foto_kegiatan'] = $foto_kegiatan_path;
-        }
+        $proposal->update($update_params);
 
-        if ($bukti_kegiatan_path) {
-            $update_params['bukti_kegiatan'] = $bukti_kegiatan_path;
-        }
-
-        $kegiatan->update($update_params);
-
-        if ($kegiatan) {
-            Alert::success('Berhasil!', 'Data klasifikasi kegiatan berhasil diupdate!');
+        if ($proposal) {
+            Alert::success('Berhasil!', 'Data proposal berhasil diupdate!');
             return redirect(route('proposal.history'));
         } else {
             return redirect()

@@ -30,6 +30,8 @@ class Proposal extends Model {
         'kemahasiswaan_approval_date',
         'rejected_kemahasiswaan',
         'rektor_approval_date',
+        'is_editable',
+        'reject_note',
         'created_at',
         'updated_at',
     ];

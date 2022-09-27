@@ -45,6 +45,29 @@
             </div>
         </div>
     </div>
+    <div class="modal fade text-left" id="approval-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel16">Approval Proposal Kegiatan</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="approval-proposal">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success waves-effect waves-float waves-light"
+                        onclick="approveConfirm('{{ isset($data['approval']) ? $data['approval'] : '' }}');">
+                        <i data-feather="check" class="mr-25"></i>Approve Proposal</button>
+                    <button type="button" class="btn btn-danger waves-effect waves-float waves-light"
+                        onclick="rejectConfirm('{{ isset($data['approval']) ? $data['approval'] : '' }}');">
+                        <i data-feather="x" class="mr-25"></i>Reject Proposal</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @push('styles')
@@ -62,8 +85,7 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route($data['datasource']) }}",
-            columns: [
-                {
+            columns: [{
                     data: 'date',
                     name: 'date'
                 },
@@ -128,6 +150,90 @@
 
         function detail(id) {
             $('#detail-proposal').load(base_url + '/proposal/modal_detail/' + id);
+        }
+
+        function approval(id) {
+            $('#approval-proposal').load(base_url + '/proposal/modal_detail/' + id);
+        }
+
+        function approveConfirm(approval) {
+            const id = document.getElementsByName("proposal_id")[0].value;
+            console.log(approval);
+            event.preventDefault();
+            Swal.fire({
+                width: 680,
+                title: 'Anda yakin approve proposal ini?',
+                // text: "Data yang sudah di hapus tidak bisa dikembalikan!",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('proposal.approve') }}",
+                    method: 'POST',
+                    data: {
+                        id: id,
+                        type: approval,
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            successMessage(data.message, data.redirect);
+                        } else {
+                            errorMessage(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function rejectConfirm(approval) {
+            const id = document.getElementsByName("proposal_id")[0].value;
+            event.preventDefault();
+            
+            $('#approval-modal').modal('hide');
+
+            Swal.fire({
+                width: 680,
+                title: 'Anda yakin reject proposal ini?',
+                text: 'Silahkan input note reject',
+                input: 'text',
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+
+            
+            }).then((result) => {
+                
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('proposal.reject') }}",
+                    method: 'POST',
+                    data: {
+                        id: id,
+                        type: approval,
+                        note: result.value,
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            successMessage(data.message, data.redirect);
+                        } else {
+                            errorMessage(data.message);
+                        }
+                    }
+                });
+            });
+
         }
     </script>
 @endpush

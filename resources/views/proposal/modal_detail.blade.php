@@ -3,6 +3,7 @@
     <div class="row invoice-spacing">
         <div class="col-xl-6 p-0 mt-xl-0 mt-2">
             <h4>Data Mahasiswa</h4>
+            <input type="hidden" name="proposal_id" value="{{ $output['proposal']->id }}">
             <table class="table table-borderless">
                 <tbody>
                     <tr>
@@ -45,13 +46,22 @@
 
                     <tr>
                         <td class="pr-1">Status</td>
-                        <td>{!! trans('serba.'.$output['proposal']->current_status) !!}</td>
+                        <td>{!! trans('serba.' . $output['proposal']->current_status) !!}</td>
                     </tr>
 
-                    <tr>
-                        <td class="pr-1">Approval Berikutnya</td>
-                        <td>{{ ucfirst($output['proposal']->next_approval) }}</td>
-                    </tr>
+                    @if ($output['proposal']->next_approval != 'completed')
+                        <tr>
+                            <td class="pr-1">Approval Berikutnya</td>
+                            <td>{{ ucfirst($output['proposal']->next_approval) }}</td>
+                        </tr>
+                    @endif
+                    
+                    @if ($output['proposal']->reject_note)
+                        <tr>
+                            <td class="pr-1">Note</td>
+                            <td>{{ $output['proposal']->reject_note }}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
