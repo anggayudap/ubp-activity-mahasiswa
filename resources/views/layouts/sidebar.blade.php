@@ -75,7 +75,7 @@
             @endhasrole
 
             @hasanyrole('dosen|kemahasiswaan')
-                <li class="{{ request()->is('kegiatan') ? 'active' : '' }} nav-item">
+                <li class="{{ request()->is('kegiatan/list*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kegiatan.list') }}"><i data-feather="list"></i>
                         <span class="menu-title text-truncate" data-i18n="List Kegiatan">{{ __('List Kegiatan') }}</span>
                     </a>
@@ -103,7 +103,7 @@
             @endhasrole('mahasiswa')
 
             @hasanyrole('dosen|kemahasiswaan')
-                <li class="{{ request()->is('proposal') ? 'active' : '' }} nav-item">
+                <li class="{{ request()->is('proposal/list*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('proposal.list') }}"><i data-feather="list"></i>
                         <span class="menu-title text-truncate" data-i18n="List Proposal">{{ __('List Proposal') }}</span>
                     </a>
@@ -138,7 +138,7 @@
 
 
 
-            @hasrole('kemahasiswaan')
+            @hasanyrole('kemahasiswaan|admin')
                 <li class=" navigation-header"><span data-i18n="Master">{{ __('Master Data') }}</span><i
                         data-feather="more-horizontal"></i>
                 </li>
@@ -173,7 +173,7 @@
                         <span class="menu-title text-truncate" data-i18n="Role">{{ __('Role') }}</span>
                     </a>
                 </li>
-            @endhasrole
+            @endhasanyrole
         </ul>
     </div>
 </div>
