@@ -67,7 +67,7 @@ Route::controller(LoginController::class)->group(function () {
 
 Route::get('/profile', function () {
     return view('profile');
-})->name('profile_user');
+})->middleware('auth')->name('profile_user');
 
 Route::get('/clear', function () {
     \Artisan::call('cache:clear');
