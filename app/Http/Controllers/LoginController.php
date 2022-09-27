@@ -25,7 +25,6 @@ class LoginController extends Controller {
 
         $output = $response->json();
 
-        // dd($output);
 
         if ($output['status_code'] == 000) {
             // login success
