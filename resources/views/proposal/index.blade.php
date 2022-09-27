@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @section('title', 'Proposal Kegiatan')
-@section('menu-title', 'List Proposal Kegiatan')
 
 
 @section('content')
@@ -10,7 +9,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header border-bottom">
-                        <h4 class="card-title">@yield('menu-title')</h4>
+                        <h4 class="card-title">{{ $data['heading'] }}</h4>
                     </div>
                     <div class="card-datatable">
                         <table class="datatables-ajax table dataTable" id="DataTables_Table_0">
@@ -20,6 +19,7 @@
                                     <th>{{ __('Judul Proposal') }}</th>
                                     <th>{{ __('Nama Mahasiswa') }}</th>
                                     <th>{{ __('Ketua Pelaksana') }}</th>
+                                    <th>{{ __('Status Approval') }}</th>
                                     <th>{{ __('Aksi') }}</th>
                                 </tr>
                             </thead>
@@ -55,12 +55,13 @@
 @push('scripts')
     {{-- write js script here --}}
     <script src="{{ URL::asset('js/table.js') }}"></script>
+    <script src="{{ URL::asset('js/app.js') }}"></script>
     <script type="text/javascript">
         // kalau pake yajra
         var table = $('.datatables-ajax').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('proposal.index') }}",
+            ajax: "{{ route($data['datasource']) }}",
             columns: [
                 {
                     data: 'date',
@@ -77,6 +78,10 @@
                 {
                     data: 'ketua_pelaksana',
                     name: 'ketua_pelaksana'
+                },
+                {
+                    data: 'next_approval',
+                    name: 'next_approval'
                 },
                 {
                     data: 'action',
@@ -122,7 +127,7 @@
         }
 
         function detail(id) {
-            $('#detail-proposal').load(current_url + '/modal_detail/' + id);
+            $('#detail-proposal').load(base_url + '/proposal/modal_detail/' + id);
         }
     </script>
 @endpush

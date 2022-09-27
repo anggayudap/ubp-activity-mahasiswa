@@ -7,56 +7,50 @@
                 <tbody>
                     <tr>
                         <td class="pr-1">Nama Mahasiswa</td>
-                        <td><span class="font-weight-bold">{{ $output['kegiatan']->nama_mahasiswa }}</span></td>
+                        <td><span class="font-weight-bold">{{ $output['proposal']->nama_mahasiswa }}</span></td>
                     </tr>
                     <tr>
                         <td class="pr-1">NIM</td>
-                        <td><span class="font-weight-bold">{{ $output['kegiatan']->nim }}</span></td>
+                        <td><span class="font-weight-bold">{{ $output['proposal']->nim }}</span></td>
                     </tr>
                     <tr>
                         <td class="pr-1">Prodi</td>
-                        <td>{{ $output['kegiatan']->prodi }}</td>
+                        <td>{{ $output['proposal']->prodi }}</td>
                     </tr>
                     <tr>
-                        <td class="pr-1">Periode Kegiatan</td>
-                        <td>{{ $output['kegiatan']->periode->periode_awal . '-' . $output['kegiatan']->periode->periode_akhir }}
+                        <td class="pr-1">Tanggal</td>
+                        <td>{{ get_indo_date($output['proposal']->date) }}
                         </td>
                     </tr>
-                    <tr>
-                        <td class="pr-1">Tahun Kegiatan</td>
-                        <td>{{ $output['kegiatan']->tahun_periode }}</td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
         <div class="col-xl-6 p-0 mt-xl-0 mt-2">
-            <h4>Data Kegiatan</h4>
+            <h4>Data Proposal</h4>
             <table class="table table-borderless">
                 <tbody>
                     <tr>
-                        <td class="pr-1">Klasifikasi Kegiatan</td>
-                        <td>{{ $output['kegiatan']->klasifikasi->name_kegiatan }}</td>
+                        <td class="pr-1">Judul Proposal</td>
+                        <td>{{ $output['proposal']->judul_proposal }}</td>
                     </tr>
                     <tr>
-                        <td class="pr-1">Nama Kegiatan</td>
-                        <td>{{ $output['kegiatan']->nama_kegiatan }}</td>
+                        <td class="pr-1">Ketua Pelaksana</td>
+                        <td>{{ $output['proposal']->ketua_pelaksana }}</td>
                     </tr>
                     <tr>
-                        <td class="pr-1">Tanggal Kegiatan</td>
-                        <td>{{ $output['kegiatan']->tanggal_mulai . ' s/d ' . $output['kegiatan']->tanggal_akhir }}</td>
+                        <td class="pr-1">Anggaran Pengajuan</td>
+                        <td>{{ rupiah($output['proposal']->anggaran_pengajuan) }}</td>
                     </tr>
 
                     <tr>
-                        <td class="pr-1">Link Event</td>
-                        <td>{{ $output['kegiatan']->url_event }}</td>
-                    </tr>
-                    <tr>
                         <td class="pr-1">Status</td>
-                        <td>{{ trans('serba.' . $output['kegiatan']->status) }}</td>
+                        <td>{!! trans('serba.'.$output['proposal']->current_status) !!}</td>
                     </tr>
+
                     <tr>
-                        <td class="pr-1">Keputusan Warek</td>
-                        <td>{{ $output['kegiatan']->decision_warek }}</td>
+                        <td class="pr-1">Approval Berikutnya</td>
+                        <td>{{ ucfirst($output['proposal']->next_approval) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -64,46 +58,16 @@
     </div>
 </div>
 <div class="card-body">
-    <h4>Surat Tugas</h4>
+    <h4>Proposal</h4>
 
-    @if ($output['is_pdf']['surat_tugas'])
-        <object data="{{ URL::asset($output['kegiatan']->surat_tugas) }}" type="application/pdf" frameborder="0"
+    @if ($output['is_pdf']['file_proposal'])
+        <object data="{{ URL::asset($output['proposal']->file_proposal) }}" type="application/pdf" frameborder="0"
             width="100%" height="600px" style="padding: 20px;">
             <p>Oops! Your browser doesn't support PDFs!</p>
-            <p><a href="{{ URL::asset($output['kegiatan']->surat_tugas) }}">Download Instead</a></p>
+            <p><a href="{{ URL::asset($output['proposal']->file_proposal) }}">Download Instead</a></p>
         </object>
     @else
-        <img src="{{ URL::asset($output['kegiatan']->surat_tugas) }}" class="img-fluid" style="max-height: 100%"
-            alt="image surat tugas">
-    @endif
-
-</div>
-<div class="card-body">
-    <h4>Foto Kegiatan</h4>
-
-    @if ($output['is_pdf']['foto_kegiatan'])
-        <object data="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}" type="application/pdf" frameborder="0"
-            width="100%" height="600px" style="padding: 20px;">
-            <p>Oops! Your browser doesn't support PDFs!</p>
-            <p><a href="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}">Download Instead</a></p>
-        </object>
-    @else
-        <img src="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}" class="img-fluid" style="max-height: 100%"
-            alt="image surat tugas">
-    @endif
-
-</div>
-<div class="card-body">
-    <h4>Bukti Kegiatan</h4>
-
-    @if ($output['is_pdf']['bukti_kegiatan'])
-        <object data="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}" type="application/pdf" frameborder="0"
-            width="100%" height="600px" style="padding: 20px;">
-            <p>Oops! Your browser doesn't support PDFs!</p>
-            <p><a href="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}">Download Instead</a></p>
-        </object>
-    @else
-        <img src="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}" class="img-fluid" style="max-height: 100%"
+        <img src="{{ URL::asset($output['proposal']->file_proposal) }}" class="img-fluid" style="max-height: 100%"
             alt="image surat tugas">
     @endif
 

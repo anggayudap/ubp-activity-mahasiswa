@@ -2,57 +2,147 @@
 
 namespace App\Http\Controllers;
 
-use DataTables;
-use App\Models\Proposal;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Kegiatan;
+use App\Models\Proposal;
+use DataTables;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class ProposalController extends Controller {
-    
-    public function index(Request $request) {
+class ProposalController extends Controller
+{
+    public function list(Request $request)
+    {
         if ($request->ajax()) {
-            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana']);
-            return Datatables::of($data)->addIndexColumn()
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval']);
+            $user = Auth::user();
+
+            if (!$user->hasRole('kemahasiswaan')) {
+                // if role only dosen
+                $data->where('prodi', session('user.prodi'));
+            }
+
+            return Datatables::of($data)
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
+                    $btn =
+                        '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
-                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' . $row->id . ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>
-                        <a href="' . route("proposal.edit", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
-                        <form action="' . route("proposal.destroy", [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">
-                        ' . csrf_field() . '
-                        ' . method_field("DELETE") . '
-                        <a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
-                        </form>
-                        </div>
+                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
+                        $row->id .
+                        ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
+                    if ($row->is_editable) {
+                        $btn .=
+                            '<a href="' .
+                            route('proposal.edit', Crypt::encrypt($row->id)) .
+                            '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                            <form action="' .
+                            route('proposal.destroy', [$row->id]) .
+                            '" method="POST" id="form-delete-' .
+                            $row->id .
+                            '" style="display: inline">
+                            ' .
+                            csrf_field() .
+                            '
+                            ' .
+                            method_field('DELETE') .
+                            '
+                            <a href="#" onclick="submit_delete(' .
+                            $row->id .
+                            ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
+                            </form>';
+                    }
+                    $btn .= '</div>
                         </div>';
+
                     return $btn;
                 })
-                // ->editColumn('klasifikasi_id', function (Proposal $porposal) {
-                //     return $porposal->klasifikasi->name_kegiatan;
-                // })
-                // ->editColumn('status', function (Proposal $porposal) {
-                //     return trans('serba.'.$porposal->status);
-                // })
-                ->rawColumns(['action'])
+                ->editColumn('next_approval', function (Proposal $proposal) {
+                    return trans('serba.' . $proposal->next_approval);
+                })
+                ->rawColumns(['action', 'next_approval'])
                 ->removeColumn('id')
                 ->make(true);
         }
 
-        return view('proposal.index');
+        $data['heading'] = 'List Proposal Kegiatan';
+        $data['datasource'] = 'proposal.list';
+
+        return view('proposal.index', compact('data'));
     }
 
-    
-    public function create() {
+    public function history(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval'])->where('nim', session('user.id'));
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn =
+                        '<div class="dropdown">
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right" style="">
+                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
+                        $row->id .
+                        ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
+                    if ($row->is_editable) {
+                        $btn .=
+                            '<a href="' .
+                            route('proposal.edit', Crypt::encrypt($row->id)) .
+                            '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                            <form action="' .
+                            route('proposal.destroy', [$row->id]) .
+                            '" method="POST" id="form-delete-' .
+                            $row->id .
+                            '" style="display: inline">
+                            ' .
+                            csrf_field() .
+                            '
+                            ' .
+                            method_field('DELETE') .
+                            '
+                            <a href="#" onclick="submit_delete(' .
+                            $row->id .
+                            ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
+                            </form>';
+                    }
+                    $btn .= '</div>
+                        </div>';
+
+                    return $btn;
+                })
+                ->editColumn('next_approval', function (Proposal $proposal) {
+                    return trans('serba.' . $proposal->next_approval);
+                })
+                ->rawColumns(['action', 'next_approval'])
+                ->removeColumn('id')
+                ->make(true);
+        }
+
+        $data['heading'] = 'History Proposal Kegiatan';
+        $data['datasource'] = 'proposal.history';
+
+        return view('proposal.index', compact('data'));
+    }
+
+    public function approval_kemahasiswaan()
+    {
+    }
+    public function approval_fakultas()
+    {
+    }
+
+    public function create()
+    {
         return view('proposal.form');
     }
 
-    public function store(Request $request) {
-
-        
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'date' => 'required',
             'judul_proposal' => 'required',
@@ -78,11 +168,12 @@ class ProposalController extends Controller {
             'file_proposal' => $file_proposal_path,
             'current_status' => 'pending',
             'next_approval' => 'fakultas',
+            'is_editable' => '0',
         ]);
 
         if ($post) {
             Alert::success('Berhasil!', 'Data proposal kegiatan berhasil dibuat!');
-            return redirect(route('proposal.index'));
+            return redirect(route('proposal.history'));
         } else {
             return redirect()
                 ->back()
@@ -93,39 +184,45 @@ class ProposalController extends Controller {
         }
     }
 
-    public function detail($id) {
-        // $output['permintaan'] = Permintaan::where('id', $id)->first();
-        // $output['permintaan_barang'] = PermintaanBarang::where('permintaan_id', $id)->with('barang.warehouse')->get();
-        $output['kegiatan'] = Kegiatan::where('id', $id)->with('klasifikasi', 'periode')->first();
+    public function detail($id)
+    {
+        $output['proposal'] = Proposal::where('id', $id)->first();
         // dd($output);
-        $checking_files = array('surat_tugas', 'bukti_kegiatan', 'foto_kegiatan');
-        foreach ($checking_files as $document) {
-            $output['is_pdf'][$document] = false;
+        // $checking_files = array('surat_tugas', 'bukti_kegiatan', 'foto_kegiatan');
+        // foreach ($checking_files as $document) {
+        //     $output['is_pdf'][$document] = false;
 
-            $file_name = $output['kegiatan']->$document;
-            $str_pieces = explode(".", $file_name);
+        //     $file_name = $output['kegiatan']->$document;
+        //     $str_pieces = explode(".", $file_name);
+        //     $extensions = end($str_pieces);
+
+        //     if ($extensions == 'pdf') {
+        //         $output['is_pdf'][$document] = true;
+        //     }
+        // }
+
+        $output['is_pdf']['file_proposal'] = false;
+
+            $file_name = $output['proposal']->file_proposal;
+            $str_pieces = explode('.', $file_name);
             $extensions = end($str_pieces);
 
             if ($extensions == 'pdf') {
-                $output['is_pdf'][$document] = true;
+                $output['is_pdf']['file_proposal'] = true;
             }
-        }
 
         return view('proposal.modal_detail', compact('output'));
     }
 
-    public function edit($id) {
-        $klasifikasi = KlasifikasiKegiatan::all();
+    public function edit($id)
+    {
+        $data['proposal'] = Proposal::findOrFail(Crypt::decrypt($id));
 
-        $data['kegiatan'] = Kegiatan::findOrFail(Crypt::decrypt($id));
-        $data['klasifikasi'] = $klasifikasi->groupBy('group_kegiatan');
-        $data['periode'] = Periode::all();
-
-        // dd($data);
         return view('proposal.form', compact('data'));
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $this->validate($request, [
             'periode_id' => 'required',
             'nama_kegiatan' => 'required',
@@ -201,7 +298,7 @@ class ProposalController extends Controller {
 
         if ($kegiatan) {
             Alert::success('Berhasil!', 'Data klasifikasi kegiatan berhasil diupdate!');
-            return redirect(route('proposal.index'));
+            return redirect(route('proposal.history'));
         } else {
             return redirect()
                 ->back()
@@ -212,25 +309,27 @@ class ProposalController extends Controller {
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $proposal = Proposal::findOrFail($id);
         $proposal->delete();
 
         $prev_file = public_path($proposal->file_proposal);
-            if (file_exists($prev_file)) {
-                unlink($prev_file);
-            }
+        if (file_exists($prev_file)) {
+            unlink($prev_file);
+        }
 
         if ($proposal) {
             Alert::success('Berhasil!', 'Data proposal kegiatan berhasil dihapus!');
-            return redirect(route('proposal.index'));
+            return redirect(route('proposal.history'));
         } else {
             Alert::error('Gagal!', 'Data proposal kegiatan tidak dapat dihapus!');
-            return redirect(route('proposal.index'));
+            return redirect(route('proposal.history'));
         }
     }
 
-    private function upload_file($request_file, $prefix) {
+    private function upload_file($request_file, $prefix)
+    {
         $file = $request_file;
 
         $random_string = Str::random(7);

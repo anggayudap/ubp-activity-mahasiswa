@@ -28,6 +28,7 @@ class CreateProposalsTable extends Migration {
             $table->dateTime('kemahasiswaan_approval_date')->nullable();
             $table->tinyInteger('rejected_kemahasiswaan')->default(0);
             $table->dateTime('rektor_approval_date')->nullable();
+            $table->tinyInteger('is_editable')->default(0);
             $table->timestamps();
         });
     }
