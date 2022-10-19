@@ -139,7 +139,7 @@ class ProposalController extends Controller
     {
         if ($request->ajax()) {
             $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status'])
-                ->where('prodi', session('user.prodi')) /** prodi equals with prodi user */
+                // ->where('prodi', session('user.prodi')) /** prodi equals with prodi user */
                 ->where('current_status', 'pending')
                 ->where('next_approval', 'fakultas');
             return Datatables::of($data)

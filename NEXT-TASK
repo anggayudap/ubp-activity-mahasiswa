@@ -1,0 +1,28 @@
+OUTPUT API
+nama kegiatan
+nim
+id_kegiatan
+klasifikasi
+link bukti/sertifikat
+
+*yang statusnya hanya approve
+
+
+- kemahasiswaan bisa input kegiatan
+- id/nama dpm dan kemahsiswaan yg approval
+- input localization kegiatan pada kemahasiswaan (local/nasional/internasional)
+
+- tambah input prestasi di input kegiatan
+
+
+menu proposal
+input kegiatan : tanggal proposal -> tanggal kegiatan
+
+
+editable di approval kemahasiswaan
+tanggal
+judul proposal
+ketua pelaksana
+anggaran
+
+tambahkan approved by siapa di kegiatan dan di proposal

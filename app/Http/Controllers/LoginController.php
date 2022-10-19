@@ -35,6 +35,7 @@ class LoginController extends Controller {
                     'name' => $data_user['nama'],
                     'email' => $data_user['email'],
                     'password' => Hash::make('ubp2022'),
+                    'user_id' => $data_user['id'],
                 ]);
             }
 

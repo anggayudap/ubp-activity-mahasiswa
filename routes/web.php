@@ -9,7 +9,8 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\RoleUserController;
-use App\Http\Controllers\ProfileUserController;
+use App\Http\Controllers\ReportKegiatanController;
+use App\Http\Controllers\ReportProposalController;
 use App\Http\Controllers\KlasifikasiKegiatanController;
 
 /*
@@ -37,17 +38,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/kegiatan/history', [KegiatanController::class, 'history'])->name('kegiatan.history')->middleware('role:mahasiswa');
     Route::get('/kegiatan/modal_detail/{id}', [KegiatanController::class, 'detail'])->name('kegiatan.detail');
     Route::post('/kegiatan/decision', [KegiatanController::class, 'decision'])->name('kegiatan.decision');
-    
+
     Route::get('/proposal/list', [ProposalController::class, 'list'])->name('proposal.list')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history')->middleware('role:mahasiswa');
     Route::get('/proposal/modal_detail/{id}', [ProposalController::class, 'detail'])->name('proposal.detail');
     Route::get('/proposal/approval_fakultas', [ProposalController::class, 'approval_fakultas'])->name('proposal.approval_fakultas')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/approval_kemahasiswaan', [ProposalController::class, 'approval_kemahasiswaan'])->name('proposal.approval_kemahasiswaan')->middleware('role:dosen|kemahasiswaan');
-    Route::post('/proposal/approve', [ProposalController::class,'approve'])->name('proposal.approve');
+    Route::post('/proposal/approve', [ProposalController::class, 'approve'])->name('proposal.approve');
     Route::post('/proposal_head_user/reject', [ProposalController::class, 'reject'])->name('proposal.reject');
 
     Route::resource('/kegiatan', KegiatanController::class);
     Route::resource('/proposal', ProposalController::class);
+});
+
+Route::prefix('report')->name('report.')->middleware('auth', 'role:admin|kemahasiswaan')->group(function () {
+    Route::get('/report/proposal', [ReportProposalController::class, 'index'])->name('proposal');
+    Route::post('/report/proposal/submit', [ReportProposalController::class, 'submit'])->name('proposal.submit');
+
+    Route::get('/report/kegiatan', [ReportKegiatanController::class, 'index'])->name('kegiatan');
+    Route::post('/report/kegiatan/submit', [ReportKegiatanController::class, 'submit'])->name('kegiatan.submit');
 });
 
 Route::prefix('master')->name('master.')->middleware('auth')->group(function () {

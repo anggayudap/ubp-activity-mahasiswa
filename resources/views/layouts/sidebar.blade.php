@@ -66,8 +66,7 @@
                     </a>
                 </li>
                 <li class="{{ request()->is('kegiatan/history*') ? 'active' : '' }} nav-item">
-                    <a class="d-flex align-items-center" href="{{ route('kegiatan.history') }}"><i
-                            data-feather="clock"></i>
+                    <a class="d-flex align-items-center" href="{{ route('kegiatan.history') }}"><i data-feather="clock"></i>
                         <span class="menu-title text-truncate"
                             data-i18n="History Kegiatan">{{ __('History Kegiatan') }}</span>
                     </a>
@@ -139,6 +138,24 @@
 
 
             @hasanyrole('kemahasiswaan|admin')
+                {{-- <li class=" navigation-header"><span data-i18n="Report">{{ __('Report') }}</span><i
+                        data-feather="more-horizontal"></i>
+                </li>
+                <li class="{{ request()->is('report/kegiatan*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('report.kegiatan') }}"><i
+                            data-feather="file-text"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="Kegiatan Mahasiswa">{{ __('Kegiatan Mahasiswa') }}</span>
+                    </a>
+                </li>
+                <li class="{{ request()->is('report/proposal*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('report.proposal') }}"><i
+                            data-feather="file-text"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="Proposal Kegiatan">{{ __('Proposal Kegiatan') }}</span>
+                    </a>
+                </li> --}}
+
                 <li class=" navigation-header"><span data-i18n="Master">{{ __('Master Data') }}</span><i
                         data-feather="more-horizontal"></i>
                 </li>
