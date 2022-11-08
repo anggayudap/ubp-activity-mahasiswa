@@ -339,9 +339,12 @@ class ProposalController extends Controller
 
     public function detail($id)
     {
-        $output['proposal'] = Proposal::where('id', $id)->first();
+        $output['proposal'] = Proposal::where('id', $id)
+            ->with(['prodi_mahasiswa'])
+            ->first();
 
         $output['is_pdf']['file_proposal'] = false;
+        $output['is_editable'] = false;
 
         $file_name = $output['proposal']->file_proposal;
         $str_pieces = explode('.', $file_name);
@@ -349,6 +352,12 @@ class ProposalController extends Controller
 
         if ($extensions == 'pdf') {
             $output['is_pdf']['file_proposal'] = true;
+        }
+
+        if ($output['proposal']->current_status == 'pending') {
+            if ($output['proposal']->next_approval == 'kemahasiswaan') {
+                $output['is_editable'] = true;
+            }
         }
 
         return view('proposal.modal_detail', compact('output'));

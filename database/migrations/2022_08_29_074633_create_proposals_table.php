@@ -23,6 +23,10 @@ class CreateProposalsTable extends Migration {
             $table->string('file_proposal');
             $table->enum('current_status', ['pending', 'reject', 'completed'])->nullable();
             $table->enum('next_approval', ['fakultas', 'kemahasiswaan', 'completed'])->nullable();
+            $table->unsignedBigInteger('fakultas_user_id')->nullable();
+            $table->string('fakultas_user_name')->nullable();
+            $table->unsignedBigInteger('kemahasiswaan_user_id')->nullable();
+            $table->string('kemahasiswaan_user_name')->nullable();
             $table->dateTime('fakultas_approval_date')->nullable();
             $table->tinyInteger('rejected_fakultas')->default(0);
             $table->dateTime('kemahasiswaan_approval_date')->nullable();

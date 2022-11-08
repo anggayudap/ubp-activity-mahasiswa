@@ -48,8 +48,8 @@
     <!-- END: Content-->
 
 
-    <script src="{{ mix('js/hasil_combine.js') }}"></script>
-    <script src="{{ mix('js/form.js') }}"></script>
+    <script src="{{ URL::asset('js/hasil_combine.js') }}"></script>
+    <script src="{{ URL::asset('js/form.js') }}"></script>
 
     @stack('scripts')
     <script>

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Prodi;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Proposal extends Model {
     use HasFactory;
@@ -35,4 +36,8 @@ class Proposal extends Model {
         'created_at',
         'updated_at',
     ];
+
+    public function prodi_mahasiswa() {
+        return $this->belongsTo(Prodi::class, 'prodi', 'kode_prodi');
+    }
 }

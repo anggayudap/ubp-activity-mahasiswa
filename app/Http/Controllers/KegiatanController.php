@@ -182,7 +182,7 @@ class KegiatanController extends Controller {
 
     public function detail($id) {
         $output['kegiatan'] = Kegiatan::where('id', $id)
-            ->with('klasifikasi', 'periode')
+            ->with(['klasifikasi', 'periode', 'prodi_mahasiswa'])
             ->first();
 
         // update status if role dosen or kemahasiswaan

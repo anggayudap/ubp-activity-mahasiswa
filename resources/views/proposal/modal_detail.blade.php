@@ -1,7 +1,14 @@
 <div class="card-body">
 
     <div class="row invoice-spacing">
+       
         <div class="col-xl-6 p-0 mt-xl-0 mt-2">
+            @if ($output['is_editable'])
+            <form action="{{ '#' }}"method="post" class="form"
+                enctype="multipart/form-data" novalidate>
+                @csrf
+                @method('PUT')
+        @endif
             <h4>Data Mahasiswa</h4>
             <input type="hidden" name="proposal_id" value="{{ $output['proposal']->id }}">
             <table class="table table-borderless">
@@ -16,11 +23,17 @@
                     </tr>
                     <tr>
                         <td class="pr-1">Prodi</td>
-                        <td>{{ $output['proposal']->prodi }}</td>
+                        <td>{{ $output['proposal']->prodi_mahasiswa->nama_prodi }}</td>
                     </tr>
                     <tr>
                         <td class="pr-1">Tanggal</td>
-                        <td>{{ get_indo_date($output['proposal']->date) }}
+                        <td>
+                            @if ($output['is_editable'])
+                                <input type="text" id="date" class="form-control flatpickr-basic"
+                                    value="{{ $output['proposal']->date }}" required>
+                            @else
+                                {{ get_indo_date($output['proposal']->date) }}
+                            @endif
                         </td>
                     </tr>
 
@@ -33,15 +46,40 @@
                 <tbody>
                     <tr>
                         <td class="pr-1">Judul Proposal</td>
-                        <td>{{ $output['proposal']->judul_proposal }}</td>
+                        <td>
+                            @if ($output['is_editable'])
+                                <input type="text" id="judul-proposal" class="form-control" name="judul_proposal"
+                                    placeholder="Judul Proposal" value="{{ $output['proposal']->judul_proposal }}"
+                                    required>
+                            @else
+                                {{ $output['proposal']->judul_proposal }}
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <td class="pr-1">Ketua Pelaksana</td>
-                        <td>{{ $output['proposal']->ketua_pelaksana }}</td>
+                        <td>
+                            @if ($output['is_editable'])
+                                <input type="text" id="ketua-pelaksana" class="form-control" name="ketua_pelaksana"
+                                    placeholder="Ketua Pelaksana" value="{{ $output['proposal']->ketua_pelaksana }}"
+                                    required>
+                            @else
+                                {{ $output['proposal']->ketua_pelaksana }}
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <td class="pr-1">Anggaran Pengajuan</td>
-                        <td>{{ rupiah($output['proposal']->anggaran_pengajuan) }}</td>
+                        <td>
+                            @if ($output['is_editable'])
+                                <input type="number" id="anggaran-pengajuan" class="form-control"
+                                    name="anggaran_pengajuan" placeholder="Anggaran Pengajuan"
+                                    value="{{ $output['proposal']->anggaran_pengajuan }}" required>
+                            @else
+                                {{ rupiah($output['proposal']->anggaran_pengajuan) }}
+                            @endif
+
+                        </td>
                     </tr>
 
                     <tr>
@@ -55,7 +93,7 @@
                             <td>{{ ucfirst($output['proposal']->next_approval) }}</td>
                         </tr>
                     @endif
-                    
+
                     @if ($output['proposal']->reject_note)
                         <tr>
                             <td class="pr-1">Note</td>
@@ -64,6 +102,9 @@
                     @endif
                 </tbody>
             </table>
+            @if ($output['is_editable'])
+                </form>
+            @endif
         </div>
     </div>
 </div>

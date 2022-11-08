@@ -58,7 +58,7 @@
             <li class=" navigation-header"><span data-i18n="Kegiatan">{{ __('Kegiatan Mahasiswa') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
-            @hasrole('mahasiswa')
+            @hasanyrole('mahasiswa|kemahasiswaan')
                 <li class="{{ request()->is('kegiatan/create*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kegiatan.create') }}"><i
                             data-feather="file-plus"></i>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Prodi;
 use App\Models\Periode;
 use App\Models\KlasifikasiKegiatan;
 use Illuminate\Database\Eloquent\Model;
@@ -43,5 +44,9 @@ class Kegiatan extends Model {
     
     public function klasifikasi() {
         return $this->belongsTo(KlasifikasiKegiatan::class, 'klasifikasi_id');
+    }
+
+    public function prodi_mahasiswa() {
+        return $this->belongsTo(Prodi::class, 'prodi', 'kode_prodi');
     }
 }

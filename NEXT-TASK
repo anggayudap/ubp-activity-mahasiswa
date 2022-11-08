@@ -8,11 +8,15 @@ link bukti/sertifikat
 *yang statusnya hanya approve
 
 
-- kemahasiswaan bisa input kegiatan
-- id/nama dpm dan kemahsiswaan yg approval
-- input localization kegiatan pada kemahasiswaan (local/nasional/internasional)
 
-- tambah input prestasi di input kegiatan
+- kemahasiswaan bisa input kegiatan : half DONE
+
+- id/nama dpm dan kemahsiswaan yg approval : half done
+--> tambahkan approved by siapa di kegiatan dan di proposal
+
+- input localization kegiatan pada kemahasiswaan (local/nasional/internasional) : half DONE
+
+- tambah input prestasi di input kegiatan : half DONE
 
 
 menu proposal
@@ -25,4 +29,7 @@ judul proposal
 ketua pelaksana
 anggaran
 
-tambahkan approved by siapa di kegiatan dan di proposal
+
+perbaikan tampilan kode prodi ke nama prodi di detail mobile : DONE
+
+periode di tentukan oleh tanggal akhir kegiatan

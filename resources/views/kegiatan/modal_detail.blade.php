@@ -15,7 +15,7 @@
                     </tr>
                     <tr>
                         <td class="pr-1">Prodi</td>
-                        <td>{{ $output['kegiatan']->prodi }}</td>
+                        <td>{{ $output['kegiatan']->prodi_mahasiswa->nama_prodi }}</td>
                     </tr>
                     <tr>
                         <td class="pr-1">Periode Kegiatan</td>

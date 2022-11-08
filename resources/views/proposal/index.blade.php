@@ -149,10 +149,12 @@
         }
 
         function detail(id) {
+            $('#detail-proposal').remove();
             $('#detail-proposal').load(base_url + '/proposal/modal_detail/' + id);
         }
 
         function approval(id) {
+            $('#approve-proposal').remove();
             $('#approval-proposal').load(base_url + '/proposal/modal_detail/' + id);
         }
 

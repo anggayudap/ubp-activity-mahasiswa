@@ -8,7 +8,7 @@
             <!-- Login basic -->
             <div class="card mb-0">
                 <div class="card-body">
-                    <h4 class="card-title mb-1">Sistem Pengajuan Proposal dan Kegiatan Mahasiswa</h4>
+                    <h4 class="card-title mb-1 text-center">Sistem Pengajuan Proposal dan Kegiatan Mahasiswa</h4>
                     <p class="card-text mb-2">Silahkan login menggunakan akun SIPT anda</p>
 
                     <form class="auth-login-form mt-2" action="{{ route('login_submit') }}" method="POST">
@@ -42,13 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" id="remember-me" tabindex="3" />
-                                <label class="custom-control-label" for="remember-me"> Remember Me </label>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-block" tabindex="4">Sign in</button>
+                        <button class="btn btn-primary btn-block" tabindex="4">LOGIN</button>
 
                     </form>
 
