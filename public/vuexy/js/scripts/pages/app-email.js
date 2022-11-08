@@ -44,7 +44,7 @@ $(function () {
     overlay = $('.body-content-overlay'),
     isRtl = $('html').attr('data-textdirection') === 'rtl';
 
-    var assetPath = '../vuexy/';
+    var assetPath = 'vuexy/';
 
   if ($('body').attr('data-framework') === 'laravel') {
     assetPath = $('body').attr('data-asset-path');

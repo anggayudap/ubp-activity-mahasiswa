@@ -108,7 +108,7 @@ $(function () {
   /*** DEFINED TABLE VARIABLE ***/
   var gridTable = document.getElementById('myGrid');
 
-  var assetPath = '../vuexy/';
+  var assetPath = 'vuexy/';
   if ($('body').attr('data-framework') === 'laravel') {
     assetPath = $('body').attr('data-asset-path');
   }
