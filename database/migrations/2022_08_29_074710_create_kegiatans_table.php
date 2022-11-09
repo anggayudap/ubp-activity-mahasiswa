@@ -4,19 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKegiatansTable extends Migration {
+class CreateKegiatansTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('kegiatans', function (Blueprint $table) {
             $table->id();
             $table->string('nim', 20);
             $table->string('nama_mahasiswa');
             $table->string('prodi', 10);
-            $table->foreignId('periode_id');
+            $table->foreignId('periode_id')->nullable();
             $table->year('tahun_periode');
             $table->string('nama_kegiatan');
             $table->date('tanggal_mulai')->nullable();
@@ -30,7 +32,9 @@ class CreateKegiatansTable extends Migration {
             $table->string('prestasi')->nullable();
             $table->enum('cakupan', ['lokal', 'nasional', 'internasional'])->nullable();
             $table->enum('status', ['review', 'checked_dosen', 'checked_kemahasiswaan', 'completed']);
-            $table->enum('decision_warek', ['reward', 'reprimand'])->nullable();
+            $table->enum('approval', ['approve', 'reject'])->nullable();
+            $table->foreignId('kemahasiswaan_user_id')->nullable();
+            $table->string('kemahasiswaan_user_name')->nullable();
             $table->timestamps();
 
             $table
@@ -46,6 +50,13 @@ class CreateKegiatansTable extends Migration {
                 ->on('periodes')
                 ->restrictOnUpdate()
                 ->restrictOnDelete();
+
+            $table
+                ->foreign('kemahasiswaan_user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('no action')
+                ->onDelete('no action');
         });
     }
 
@@ -54,7 +65,8 @@ class CreateKegiatansTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('kegiatans');
     }
 }

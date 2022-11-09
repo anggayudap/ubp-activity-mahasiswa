@@ -26,29 +26,6 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
-                                        <label for="name">Periode</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <select class="form-control" name="periode_id" id="periode-id" required>
-                                            <option value="">Pilih Periode</option>
-                                            @foreach ($data['periode'] as $value)
-                                                <option
-                                                    {{ (isset($data['kegiatan']) ? $data['kegiatan']->periode_id : old('periode_id')) == $value->id ? 'selected' : '' }}
-                                                    value="{{ $value->id }}">
-                                                    {{ $value->periode_awal . ' - ' . $value->periode_akhir }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <hr>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 col-form-label">
                                         <label for="name">Klasifikasi Kegiatan</label>
                                     </div>
                                     <div class="col-sm-9">
@@ -58,12 +35,34 @@
                                                 <optgroup label="{{ $group }}">
                                                     @foreach ($data['klasifikasi'][$group] as $value)
                                                         <option
-                                                            {{ (isset($data['kegiatan']) ? $data['kegiatan']->klasifikasi_id : old('klasifikasi_id'))== $value->id ? 'selected' : '' }}
+                                                            {{ (isset($data['kegiatan']) ? $data['kegiatan']->klasifikasi_id : old('klasifikasi_id')) == $value->id ? 'selected' : '' }}
                                                             value="{{ $value->id }}">{{ $value->name_kegiatan }}
                                                         </option>
                                                     @endforeach
                                                 </optgroup>
                                             @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Cakupan Kegiatan</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" name="cakupan" id="cakupan" required>
+                                            <option value="">Pilih Cakupan</option>
+                                            <option
+                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('klasifikasi_id')) == 'lokal' ? 'selected' : '' }}
+                                                value="lokal">Lokal/Daerah</option>
+                                            <option
+                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('klasifikasi_id')) == 'nasional' ? 'selected' : '' }}
+                                                value="nasional">Nasional</option>
+                                            <option
+                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('klasifikasi_id')) == 'internasional' ? 'selected' : '' }}
+                                                value="internasional">Internasional</option>
                                         </select>
                                     </div>
                                 </div>
@@ -124,6 +123,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
@@ -134,6 +134,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
@@ -151,6 +152,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
@@ -168,6 +170,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
@@ -185,13 +188,26 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <em>Ket : Upload file menggunakan format gambar / pdf. Maks. size 5mb.</em>
                                 </div>
                             </div>
 
-
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Prestasi</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="prestasi" class="form-control " name="prestasi"
+                                            placeholder="Prestasi"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->prestasi : old('prestasi') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="col-sm-9 offset-sm-3">
                                 <button type="submit"

@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class KegiatanController extends Controller {
-    public function list(Request $request) {
+class KegiatanController extends Controller
+{
+    public function list(Request $request)
+    {
         if ($request->ajax()) {
-            $data = Kegiatan::select(['id', 'nama_kegiatan', 'nama_mahasiswa', 'klasifikasi_id', 'status']);
+            $data = Kegiatan::select(['id', 'nama_kegiatan', 'nama_mahasiswa', 'klasifikasi_id', 'status', 'approval']);
 
             $user = Auth::user();
             if (!$user->hasRole('kemahasiswaan')) {
@@ -29,18 +31,14 @@ class KegiatanController extends Controller {
                 ->addColumn('action', function ($row) {
                     // dd($row);
                     $btn =
-                    '<div class="dropdown">
+                        '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
-                    $row->id .
+                        $row->id .
                         ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
                     if ($row->status == 'review') {
-                        $btn .=
-                        '<form action="' . route('kegiatan.destroy', [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">' .
-                        csrf_field() .
-                        method_field('DELETE') .
-                        ' <a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a> </form>';
+                        $btn .= '<form action="' . route('kegiatan.destroy', [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">' . csrf_field() . method_field('DELETE') . ' <a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a> </form>';
                     }
                     $btn .= '</div>
                         </div>';
@@ -52,7 +50,14 @@ class KegiatanController extends Controller {
                 ->editColumn('status', function (Kegiatan $kegiatan) {
                     return trans('serba.' . $kegiatan->status);
                 })
-                ->rawColumns(['status', 'action'])
+                ->editColumn('approval', function (Kegiatan $kegiatan) {
+                    if ($kegiatan->approval) {
+                        return trans('serba.' . $kegiatan->approval);
+                    }
+
+                    return 'Belum Dinilai';
+                })
+                ->rawColumns(['status', 'approval', 'action'])
                 ->removeColumn('id')
                 ->make(true);
         }
@@ -63,9 +68,10 @@ class KegiatanController extends Controller {
         return view('kegiatan.index', compact('data'));
     }
 
-    public function history(Request $request) {
+    public function history(Request $request)
+    {
         if ($request->ajax()) {
-            $data = Kegiatan::select(['id', 'nama_kegiatan', 'nama_mahasiswa', 'klasifikasi_id', 'status']);
+            $data = Kegiatan::select(['id', 'nama_kegiatan', 'nama_mahasiswa', 'klasifikasi_id', 'status', 'approval']);
 
             // if role == mahasiswa
             $data->where('nim', session('user.id'));
@@ -75,18 +81,27 @@ class KegiatanController extends Controller {
                 ->addColumn('action', function ($row) {
                     // dd($row);
                     $btn =
-                    '<div class="dropdown">
+                        '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
-                    $row->id .
+                        $row->id .
                         ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
                     if ($row->status == 'review') {
-                        $btn .= '<a href="' . route('kegiatan.edit', Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
-                                <form action="' . route('kegiatan.destroy', [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline"> ' .
-                        csrf_field() .
-                        method_field('DELETE') .
-                        '<a href="#" onclick="submit_delete(' . $row->id . ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a> </form>';
+                        $btn .=
+                            '<a href="' .
+                            route('kegiatan.edit', Crypt::encrypt($row->id)) .
+                            '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
+                                <form action="' .
+                            route('kegiatan.destroy', [$row->id]) .
+                            '" method="POST" id="form-delete-' .
+                            $row->id .
+                            '" style="display: inline"> ' .
+                            csrf_field() .
+                            method_field('DELETE') .
+                            '<a href="#" onclick="submit_delete(' .
+                            $row->id .
+                            ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a> </form>';
                     }
                     $btn .= '</div>
                         </div>';
@@ -98,7 +113,14 @@ class KegiatanController extends Controller {
                 ->editColumn('status', function (Kegiatan $kegiatan) {
                     return trans('serba.' . $kegiatan->status);
                 })
-                ->rawColumns(['status', 'action'])
+                ->editColumn('approval', function (Kegiatan $kegiatan) {
+                    if ($kegiatan->approval) {
+                        return trans('serba.' . $kegiatan->approval);
+                    }
+
+                    return 'Belum Dinilai';
+                })
+                ->rawColumns(['status', 'approval', 'action'])
                 ->removeColumn('id')
                 ->make(true);
         }
@@ -109,7 +131,8 @@ class KegiatanController extends Controller {
         return view('kegiatan.index', compact('data'));
     }
 
-    public function create() {
+    public function create()
+    {
         $klasifikasi = KlasifikasiKegiatan::all();
         $data['klasifikasi'] = $klasifikasi->groupBy('group_kegiatan');
         $data['periode'] = Periode::all();
@@ -117,18 +140,20 @@ class KegiatanController extends Controller {
         return view('kegiatan.form', compact('data'));
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validated = $request->validate([
-            'periode_id' => 'required',
             'nama_kegiatan' => 'required',
             'tanggal_mulai' => 'required',
             'tanggal_akhir' => 'required',
             'klasifikasi_id' => 'required',
+            'cakupan' => 'required',
+            'prestasi' => 'nullable',
             'keterangan' => 'required',
             'url_event' => 'required|url',
-            'surat_tugas' => 'required|file|max:5120',
-            'foto_kegiatan' => 'required|file|max:5120',
-            'bukti_kegiatan' => 'required|file|max:5120',
+            'surat_tugas' => 'required|mimes:pdf,png,jpg,jpeg|max:5120',
+            'foto_kegiatan' => 'required|mimes:pdf,png,jpg,jpeg|max:5120',
+            'bukti_kegiatan' => 'required|mimes:pdf,png,jpg,jpeg|max:5120',
         ]);
 
         // dd($request);
@@ -152,19 +177,20 @@ class KegiatanController extends Controller {
             'nim' => session('user.id'),
             'nama_mahasiswa' => session('user.nama'),
             'prodi' => session('user.prodi'),
-            'periode_id' => $request->periode_id,
             'tahun_periode' => date('Y'),
             'nama_kegiatan' => $request->nama_kegiatan,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_akhir' => $request->tanggal_akhir,
             'klasifikasi_id' => $request->klasifikasi_id,
+            'cakupan' => $request->cakupan,
+            'prestasi' => $request->prestasi,
             'url_event' => $request->url_event,
             'surat_tugas' => $surat_tugas_path,
             'foto_kegiatan' => $foto_kegiatan_path,
             'bukti_kegiatan' => $bukti_kegiatan_path,
             'keterangan' => $request->keterangan,
             'status' => 'review',
-            'decision_warek' => null,
+            'approval' => null,
         ]);
 
         if ($post) {
@@ -180,7 +206,8 @@ class KegiatanController extends Controller {
         }
     }
 
-    public function detail($id) {
+    public function detail($id)
+    {
         $output['kegiatan'] = Kegiatan::where('id', $id)
             ->with(['klasifikasi', 'periode', 'prodi_mahasiswa'])
             ->first();
@@ -218,7 +245,8 @@ class KegiatanController extends Controller {
         return view('kegiatan.modal_detail', compact('output'));
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $klasifikasi = KlasifikasiKegiatan::all();
 
         $data['kegiatan'] = Kegiatan::findOrFail(Crypt::decrypt($id));
@@ -229,18 +257,20 @@ class KegiatanController extends Controller {
         return view('kegiatan.form', compact('data'));
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $this->validate($request, [
-            'periode_id' => 'required',
             'nama_kegiatan' => 'required',
             'tanggal_mulai' => 'required',
             'tanggal_akhir' => 'required',
             'klasifikasi_id' => 'required',
+            'cakupan' => 'required',
+            'prestasi' => 'nullable',
             'keterangan' => 'required',
             'url_event' => 'required|url',
-            'surat_tugas' => 'nullable|file|max:5120',
-            'foto_kegiatan' => 'nullable|file|max:5120',
-            'bukti_kegiatan' => 'nullable|file|max:5120',
+            'surat_tugas' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
+            'foto_kegiatan' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
+            'bukti_kegiatan' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
         ]);
 
         $kegiatan = Kegiatan::findOrFail($id);
@@ -279,12 +309,12 @@ class KegiatanController extends Controller {
         }
 
         $update_params = [
-            'periode_id' => $request->periode_id,
             'tahun_periode' => date('Y'),
             'nama_kegiatan' => $request->nama_kegiatan,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_akhir' => $request->tanggal_akhir,
             'klasifikasi_id' => $request->klasifikasi_id,
+            'cakupan' => $request->cakupan,
             'url_event' => $request->url_event,
             'keterangan' => $request->keterangan,
         ];
@@ -316,7 +346,8 @@ class KegiatanController extends Controller {
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $klasifikasi = Kegiatan::findOrFail($id);
         $klasifikasi->delete();
 
@@ -344,36 +375,43 @@ class KegiatanController extends Controller {
         }
     }
 
-    public function decision(Request $request) {
+    public function decision(Request $request)
+    {
         if ($request->ajax()) {
             $kegiatan = Kegiatan::findOrFail($request->id);
 
-            switch ($request->decision) {
-            case 'teguran':
-                $decision = 'reprimand';
-                break;
-            case 'reward':
-                $decision = 'reward';
-                break;
-            default:
-                $decision = null;
-                break;
+            $timestamp_tanggal_akhir = strtotime($kegiatan->tanggal_akhir);
+            $month = date('n', $timestamp_tanggal_akhir);
+
+            $periodes = Periode::all();
+            $periode_id = null;
+            foreach ($periodes as $periode) {
+                foreach (json_decode($periode->range_bulan) as $month_number) {
+                    if ($month == $month_number) {
+                        $periode_id = $periode->id;
+                        break;
+                    }
+                }
             }
-            // dd($decision);
+
             $kegiatan->update([
+                'periode_id' => $periode_id,
                 'status' => 'completed',
-                'decision_warek' => $decision,
+                'approval' => $request->decision,
+                'kemahasiswaan_user_id' => session('user.user_id'),
+                'kemahasiswaan_user_name' => session('user.nama'),
             ]);
 
             if ($kegiatan) {
-                return response()->json(['success' => true, 'message' => 'Penilaian berhasil disimpan', 'redirect' => route('kegiatan.list')]);
+                return response()->json(['success' => true, 'message' => 'Approval berhasil disimpan', 'redirect' => route('kegiatan.list')]);
             } else {
                 return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
             }
         }
     }
 
-    private function upload_file($request_file, $prefix) {
+    private function upload_file($request_file, $prefix)
+    {
         $file = $request_file;
 
         $random_string = Str::random(7);

@@ -159,6 +159,8 @@ return [
         'surat_tugas' => 'Surat Tugas',
         'foto_kegiatan' => 'Foto Kegiatan',
         'bukti_kegiatan' => 'Bukti Kegiatan',
+        'cakupan' => 'Cakupan Kegitan',
+        'prestasi' => 'Prestasi',
         
         'date' => 'Tanggal',
         'judul_proposal' => 'Judul Proposal',

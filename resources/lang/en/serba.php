@@ -19,8 +19,8 @@ return [
     'yes' => 'Ya',
     'no' => 'Tidak',
     
-    'reward' => '<div class="badge badge-success"><i data-feather="award" class="mr-25"></i><span>Reward</span></div>',
-    'reprimand' => '<div class="badge badge-warning"><i data-feather="alert-triangle" class="mr-25"></i><span>Surat Teguran</span></div>',
+    'approve' => '<div class="badge badge-success"><i data-feather="check" class="mr-25"></i><span>Sudah di Approve</span></div>',
+    'reject' => '<div class="badge badge-danger"><i data-feather="x" class="mr-25"></i><span>Reject</span></div>',
 
     'fakultas' => '<div class="badge badge-warning">Menunggu Fakultas</div>',
     'kemahasiswaan' => '<div class="badge badge-warning">Menunggu Kemahasiswaan<div class="badge badge-warning">',

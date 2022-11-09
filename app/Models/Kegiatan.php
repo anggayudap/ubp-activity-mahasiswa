@@ -33,7 +33,11 @@ class Kegiatan extends Model {
         'bukti_kegiatan',
         'keterangan',
         'status',
-        'decision_warek',
+        'prestasi',
+        'cakupan',
+        'approval',
+        'kemahasiswaan_user_id',
+        'kemahasiswaan_user_name',
         'created_at',
         'updated_at',
     ];

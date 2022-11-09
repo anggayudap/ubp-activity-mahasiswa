@@ -20,6 +20,7 @@
                                     <th>{{ __('Nama Mahasiswa') }}</th>
                                     <th>{{ __('Klasifikasi') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Penilaian') }}</th>
                                     <th>{{ __('Aksi') }}</th>
                                 </tr>
                             </thead>
@@ -77,6 +78,12 @@
                 {
                     data: 'status',
                     name: 'status'
+                },
+                {
+                    data: 'approval',
+                    name: 'approval',
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: 'action',

@@ -15,6 +15,7 @@ class CreatePeriodesTable extends Migration {
             $table->id();
             $table->string('periode_awal');
             $table->string('periode_akhir');
+            $table->string('range_bulan');
             $table->timestamps();
         });
     }

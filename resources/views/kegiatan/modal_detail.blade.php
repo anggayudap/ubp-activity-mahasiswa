@@ -17,15 +17,29 @@
                         <td class="pr-1">Prodi</td>
                         <td>{{ $output['kegiatan']->prodi_mahasiswa->nama_prodi }}</td>
                     </tr>
-                    <tr>
-                        <td class="pr-1">Periode Kegiatan</td>
-                        <td>{{ $output['kegiatan']->periode->periode_awal . '-' . $output['kegiatan']->periode->periode_akhir }}
-                        </td>
-                    </tr>
+                    @if ($output['kegiatan']->periode)
+                        <tr>
+                            <td class="pr-1">Periode Kegiatan</td>
+                            <td>{{ $output['kegiatan']->periode->periode_awal . '-' . $output['kegiatan']->periode->periode_akhir }}
+                            </td>
+                        </tr>
+                    @endif
                     <tr>
                         <td class="pr-1">Tahun Kegiatan</td>
                         <td>{{ $output['kegiatan']->tahun_periode }}</td>
                     </tr>
+                    <tr>
+                        <td class="pr-1">Status</td>
+                        <td>{!! trans('serba.' . $output['kegiatan']->status) !!}</td>
+                    </tr>
+                    <tr>
+                        <td class="pr-1">Penilaian Akhir</td>
+                        <td>{!! $output['kegiatan']->approval ? trans('serba.' . $output['kegiatan']->approval) : '' !!}</td>
+                    </tr>
+                    @if ($output['kegiatan']->kemahasiswaan_user_name)
+                        <td class="pr-1">Dinilai Oleh</td>
+                        <td>{{ $output['kegiatan']->kemahasiswaan_user_name }}</td>
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -35,12 +49,20 @@
                 <tbody>
                     <tr>
                         <td class="pr-1">Klasifikasi Kegiatan</td>
-                        <td>{{ $output['kegiatan']->klasifikasi->name_kegiatan }}</td>
+                        <td>{{ $output['kegiatan']->klasifikasi->name_kegiatan . ($output['kegiatan']->klasifikasi->alternate_name_kegiatan ? ' / ' . $output['kegiatan']->klasifikasi->alternate_name_kegiatan : '') }}
+                        </td>
                     </tr>
+
+                    <tr>
+                        <td class="pr-1">Cakupan</td>
+                        <td>{{ ucfirst($output['kegiatan']->cakupan) }}</td>
+                    </tr>
+
                     <tr>
                         <td class="pr-1">Nama Kegiatan</td>
                         <td>{{ $output['kegiatan']->nama_kegiatan }}</td>
                     </tr>
+
                     <tr>
                         <td class="pr-1">Tanggal Kegiatan</td>
                         <td>{{ get_indo_date($output['kegiatan']->tanggal_mulai) . ' s/d ' . get_indo_date($output['kegiatan']->tanggal_akhir) }}
@@ -57,14 +79,12 @@
                             </a>
                         </td>
                     </tr>
+
                     <tr>
-                        <td class="pr-1">Status</td>
-                        <td>{!! trans('serba.' . $output['kegiatan']->status) !!}</td>
+                        <td class="pr-1">Prestasi</td>
+                        <td>{{ $output['kegiatan']->prestasi }}</td>
                     </tr>
-                    <tr>
-                        <td class="pr-1">Keputusan Warek</td>
-                        <td>{!! $output['kegiatan']->decision_warek ? trans('serba.' . $output['kegiatan']->decision_warek) : '' !!}</td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -116,12 +136,12 @@
 
 </div>
 @hasrole('kemahasiswaan')
-    @if (!$output['kegiatan']->decision_warek)
+    @if (!$output['kegiatan']->approval)
         <div class="card-footer">
-            <button type="button" class="btn btn-warning" onclick="javascript:warek_decision('teguran');"><i data-feather="alert-triangle"
-                    class="mr-25"></i>Surat Teguran</button>
-            <button type="button" class="btn btn-success" onclick="javascript:warek_decision('reward');"><i data-feather="award"
-                    class="mr-25"></i>Reward</button>
+            <button type="button" class="btn btn-danger" onclick="javascript:approval_kegiatan('reject');"><i
+                    data-feather="x" class="mr-25"></i>Reject</button>
+            <button type="button" class="btn btn-success" onclick="javascript:approval_kegiatan('approve');"><i
+                    data-feather="check" class="mr-25"></i>Approve</button>
         </div>
     @endif
 @endhasrole
@@ -134,10 +154,10 @@
         });
     }
 
-    function warek_decision(value) {
+    function approval_kegiatan(value) {
         Swal.fire({
             // width: 680,
-            title: 'Konfirmasi penilaian akhir : '+value+'?',
+            title: 'Konfirmasi penilaian akhir : ' + value + '?',
             // text: "Konfirmasi approve?",
             icon: 'question',
             showCancelButton: true,
@@ -146,28 +166,29 @@
             confirmButtonText: 'Ya',
             cancelButtonText: 'Tidak'
         }).then((result) => {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: "{{ route('kegiatan.decision') }}",
-                method: 'POST',
-                data: {
-                    id: {{ $output['kegiatan']->id }},
-                    decision : value,
-                },
-                success: function (data) {
-
-                    if (data.success) {
-                        successMessage(data.message, data.redirect);
-
-                    } else {
-                        errorMessage(data.message);
+            if (result.value) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                }
-            });
+                });
+                $.ajax({
+                    url: "{{ route('kegiatan.decision') }}",
+                    method: 'POST',
+                    data: {
+                        id: "{{ $output['kegiatan']->id }}",
+                        decision: value,
+                    },
+                    success: function(data) {
+
+                        if (data.success) {
+                            successMessage(data.message, data.redirect);
+                        } else {
+                            errorMessage(data.message);
+                        }
+                    }
+                });
+            }
         });
     }
 </script>

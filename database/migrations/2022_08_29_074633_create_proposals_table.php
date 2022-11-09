@@ -4,13 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProposalsTable extends Migration {
+class CreateProposalsTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('proposals', function (Blueprint $table) {
             $table->id();
             $table->date('date');
@@ -23,9 +25,9 @@ class CreateProposalsTable extends Migration {
             $table->string('file_proposal');
             $table->enum('current_status', ['pending', 'reject', 'completed'])->nullable();
             $table->enum('next_approval', ['fakultas', 'kemahasiswaan', 'completed'])->nullable();
-            $table->unsignedBigInteger('fakultas_user_id')->nullable();
+            $table->foreignId('fakultas_user_id')->nullable();
             $table->string('fakultas_user_name')->nullable();
-            $table->unsignedBigInteger('kemahasiswaan_user_id')->nullable();
+            $table->foreignId('kemahasiswaan_user_id')->nullable();
             $table->string('kemahasiswaan_user_name')->nullable();
             $table->dateTime('fakultas_approval_date')->nullable();
             $table->tinyInteger('rejected_fakultas')->default(0);
@@ -35,6 +37,20 @@ class CreateProposalsTable extends Migration {
             $table->tinyInteger('is_editable')->default(0);
             $table->string('reject_note')->nullable();
             $table->timestamps();
+
+            $table
+                ->foreign('fakultas_user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('no action')
+                ->onDelete('no action');
+
+            $table
+                ->foreign('kemahasiswaan_user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('no action')
+                ->onDelete('no action');
         });
     }
 
@@ -43,7 +59,8 @@ class CreateProposalsTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('proposals');
     }
 }

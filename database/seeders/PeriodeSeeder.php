@@ -16,18 +16,22 @@ class PeriodeSeeder extends Seeder {
             [
                 'periode_awal' => 'September',
                 'periode_akhir' => 'November',
+                'range_bulan' => '["9","10","11"]',
             ],
             [
                 'periode_awal' => 'Desember',
                 'periode_akhir' => 'Februari',
+                'range_bulan' => '["12","1","2"]',
             ],
             [
                 'periode_awal' => 'Maret',
                 'periode_akhir' => 'Mei',
+                'range_bulan' => '["3","4","5"]',
             ],
             [
                 'periode_awal' => 'Juni',
                 'periode_akhir' => 'Agustus',
+                'range_bulan' => '["6","7","8"]',
             ],
         ];
 
