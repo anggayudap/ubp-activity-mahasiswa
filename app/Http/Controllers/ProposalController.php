@@ -289,6 +289,72 @@ class ProposalController extends Controller
         return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
     }
 
+    public function submit_approval(Request $request)
+    {
+        if ($request->ajax()) {
+            $proposal = Proposal::findOrFail($request->data['proposal_id']);
+            $param = [];
+
+            if ($request->approval == 'fakultas') {
+                if ($request->type == 'approve') {
+                    $param = [
+                        'fakultas_user_id' => session('user.user_id'),
+                        'fakultas_user_name' => session('user.nama'),
+                        'next_approval' => 'kemahasiswaan',
+                        'current_status' => 'pending',
+                        'fakultas_approval_date' => date('Y-m-d H:i:s'),
+                        'rejected_fakultas' => '0',
+                        'is_editable' => '0',
+                        'reject_note' => null,
+                    ];
+                } elseif ($request->type == 'reject') {
+                    $param = [
+                        'current_status' => 'reject',
+                        'rejected_fakultas' => '1',
+                        'is_editable' => '1',
+                        'reject_note' => $request->note,
+                    ];
+                }
+
+            } elseif ($request->approval == 'kemahasiswaan') {
+                if ($request->type == 'approve') {
+                    $param = [
+                        'kemahasiswaan_user_id' => session('user.user_id'),
+                        'kemahasiswaan_user_name' => session('user.nama'),
+                        'next_approval' => 'completed',
+                        'current_status' => 'completed',
+                        'kemahasiswaan_approval_date' => date('Y-m-d H:i:s'),
+                        'rejected_kemahasiswaan' => '0',
+                        'is_editable' => '0',
+                        'reject_note' => null,
+                    ];
+                } elseif ($request->type == 'reject') {
+                    $param = [
+                        'current_status' => 'reject',
+                        'rejected_kemahasiswaan' => '1',
+                        'is_editable' => '1',
+                        'reject_note' => $request->note,
+                    ];
+                }
+
+                $param['judul_proposal'] = $request->data['judul_proposal'];
+                $param['ketua_pelaksana'] = $request->data['ketua_pelaksana'];
+                $param['anggaran_pengajuan'] = $request->data['anggaran_pengajuan'];
+            }
+
+            // update to table
+            $proposal->update($param);
+
+            if ($proposal) {
+                return response()->json(['success' => true, 'message' => 'Proposal berhasil di approve', 'redirect' => route('proposal.list')]);
+            } else {
+                return response()->json(['success' => true, 'message' => 'Terjadi error saat approve. Harap hub. administrator anda.']);
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
+    }
+
     public function create()
     {
         return view('proposal.form');
@@ -339,12 +405,25 @@ class ProposalController extends Controller
 
     public function detail($id)
     {
+        $output = $this->fetch_detail_proposal($id);
+
+        return view('proposal.modal_detail', compact('output'));
+    }
+
+    public function approval($id)
+    {
+        $output = $this->fetch_detail_proposal($id);
+
+        return view('proposal.modal_approval', compact('output'));
+    }
+
+    private function fetch_detail_proposal($id)
+    {
         $output['proposal'] = Proposal::where('id', $id)
             ->with(['prodi_mahasiswa'])
             ->first();
 
         $output['is_pdf']['file_proposal'] = false;
-        $output['is_editable'] = false;
 
         $file_name = $output['proposal']->file_proposal;
         $str_pieces = explode('.', $file_name);
@@ -354,13 +433,7 @@ class ProposalController extends Controller
             $output['is_pdf']['file_proposal'] = true;
         }
 
-        if ($output['proposal']->current_status == 'pending') {
-            if ($output['proposal']->next_approval == 'kemahasiswaan') {
-                $output['is_editable'] = true;
-            }
-        }
-
-        return view('proposal.modal_detail', compact('output'));
+        return $output;
     }
 
     public function edit($id)

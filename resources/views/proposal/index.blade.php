@@ -47,7 +47,7 @@
     </div>
     <div class="modal fade text-left" id="approval-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel16">Approval Proposal Kegiatan</h4>
@@ -71,17 +71,19 @@
 @stop
 
 @push('styles')
-    {{-- write css script here --}}
     <link rel="stylesheet" href="{{ URL::asset('css/table.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('css/form.css') }}">
 @endpush
 
 @push('scripts')
     {{-- write js script here --}}
     <script src="{{ URL::asset('js/table.js') }}"></script>
     <script src="{{ URL::asset('js/app.js') }}"></script>
+    <script src="{{ URL::asset('js/form.js') }}"></script>
+
     <script type="text/javascript">
         // kalau pake yajra
-        var table = $('.datatables-ajax').DataTable({
+        let table = $('.datatables-ajax').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ route($data['datasource']) }}",
@@ -149,18 +151,16 @@
         }
 
         function detail(id) {
-            $('#detail-proposal').remove();
+            // $('#detail-proposal').remove();
             $('#detail-proposal').load(base_url + '/proposal/modal_detail/' + id);
         }
 
         function approval(id) {
-            $('#approve-proposal').remove();
-            $('#approval-proposal').load(base_url + '/proposal/modal_detail/' + id);
+            // $('#approval-proposal').remove();
+            $('#approval-proposal').load(base_url + '/proposal/approval/' + id);
         }
 
         function approveConfirm(approval) {
-            const id = document.getElementsByName("proposal_id")[0].value;
-            console.log(approval);
             event.preventDefault();
             Swal.fire({
                 width: 680,
@@ -173,17 +173,20 @@
                 confirmButtonText: 'Ya',
                 cancelButtonText: 'Tidak'
             }).then((result) => {
+                const json_param = formConverter($('form').serializeArray());
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
                 $.ajax({
-                    url: "{{ route('proposal.approve') }}",
+                    url: "{{ route('proposal.submit_approval') }}",
                     method: 'POST',
                     data: {
-                        id: id,
-                        type: approval,
+                        data: json_param,
+                        type: 'approve',
+                        approval : approval,
                     },
                     success: function(data) {
                         if (data.success) {
@@ -197,9 +200,8 @@
         }
 
         function rejectConfirm(approval) {
-            const id = document.getElementsByName("proposal_id")[0].value;
             event.preventDefault();
-            
+
             $('#approval-modal').modal('hide');
 
             Swal.fire({
@@ -210,20 +212,22 @@
                 showCancelButton: true,
                 confirmButtonText: 'Ya',
 
-            
+
             }).then((result) => {
-                
+                const json_param = formConverter($('form').serializeArray());
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
                 $.ajax({
-                    url: "{{ route('proposal.reject') }}",
+                    url: "{{ route('proposal.submit_approval') }}",
                     method: 'POST',
                     data: {
-                        id: id,
-                        type: approval,
+                        data: json_param,
+                        type: 'reject',
+                        approval : approval,
                         note: result.value,
                     },
                     success: function(data) {
@@ -236,6 +240,15 @@
                 });
             });
 
+        }
+
+        function formConverter(form) {
+            const json = {};
+            $.each(form, function() {
+                json[this.name] = this.value || "";
+            });
+
+            return json;
         }
     </script>
 @endpush
