@@ -136,6 +136,13 @@ class KegiatanController extends Controller
         $klasifikasi = KlasifikasiKegiatan::all();
         $data['klasifikasi'] = $klasifikasi->groupBy('group_kegiatan');
         $data['periode'] = Periode::all();
+        $data['is_mahasiswa'] = true;
+        
+        $user = Auth::user();
+        if (!$user->hasRole('mahasiswa')) {
+            // if role is kemahasiswaan
+            $data['is_mahasiswa'] = false;
+        }
 
         return view('kegiatan.form', compact('data'));
     }
@@ -174,8 +181,8 @@ class KegiatanController extends Controller
         }
 
         $post = Kegiatan::create([
-            'nim' => session('user.id'),
-            'nama_mahasiswa' => session('user.nama'),
+            'nim' => $request->nim ?? session('user.id'),
+            'nama_mahasiswa' => $request->nama_mahasiswa ?? session('user.nama'),
             'prodi' => session('user.prodi'),
             'tahun_periode' => date('Y'),
             'nama_kegiatan' => $request->nama_kegiatan,
@@ -309,6 +316,8 @@ class KegiatanController extends Controller
         }
 
         $update_params = [
+            'nim' => $request->nim ?? session('user.id'),
+            'nama_mahasiswa' => $request->nama_mahasiswa ?? session('user.nama'),
             'tahun_periode' => date('Y'),
             'nama_kegiatan' => $request->nama_kegiatan,
             'tanggal_mulai' => $request->tanggal_mulai,

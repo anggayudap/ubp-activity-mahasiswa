@@ -23,6 +23,35 @@
                         @endif
 
                         <div class="row">
+                            @if (!$data['is_mahasiswa'])
+                        <div class="col-12">
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="name">Nama Mahasiswa</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="nama-mahasiswa" class="form-control" name="nama_mahasiswa"
+                                        placeholder="Nama Mahasiswa"
+                                        value="{{ isset($data['kegiatan']) ? $data['kegiatan']->nama_mahasiswa : old('nama_mahasiswa') }}"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group row">
+                                <div class="col-sm-3 col-form-label">
+                                    <label for="name">NIM</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="nim" class="form-control" name="nim"
+                                        placeholder="NIM"
+                                        value="{{ isset($data['kegiatan']) ? $data['kegiatan']->nim : old('nim') }}"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
@@ -55,13 +84,13 @@
                                         <select class="form-control" name="cakupan" id="cakupan" required>
                                             <option value="">Pilih Cakupan</option>
                                             <option
-                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('klasifikasi_id')) == 'lokal' ? 'selected' : '' }}
+                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('cakupan')) == 'lokal' ? 'selected' : '' }}
                                                 value="lokal">Lokal/Daerah</option>
                                             <option
-                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('klasifikasi_id')) == 'nasional' ? 'selected' : '' }}
+                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('cakupan')) == 'nasional' ? 'selected' : '' }}
                                                 value="nasional">Nasional</option>
                                             <option
-                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('klasifikasi_id')) == 'internasional' ? 'selected' : '' }}
+                                                {{ (isset($data['kegiatan']) ? $data['kegiatan']->cakupan : old('cakupan')) == 'internasional' ? 'selected' : '' }}
                                                 value="internasional">Internasional</option>
                                         </select>
                                     </div>

@@ -65,6 +65,8 @@
                         <span class="menu-title text-truncate" data-i18n="Input Kegiatan">{{ __('Input Kegiatan') }}</span>
                     </a>
                 </li>
+            @endhasrole
+            @hasanyrole('mahasiswa')
                 <li class="{{ request()->is('kegiatan/history*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kegiatan.history') }}"><i data-feather="clock"></i>
                         <span class="menu-title text-truncate"
