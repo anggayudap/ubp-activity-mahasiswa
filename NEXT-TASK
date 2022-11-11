@@ -11,25 +11,49 @@ link bukti/sertifikat
 
 - kemahasiswaan bisa input kegiatan : half DONE
 
-- id/nama dpm dan kemahsiswaan yg approval : half done
+- id/nama dpm dan kemahsiswaan yg approval : DONE
 --> tambahkan approved by siapa di kegiatan dan di proposal
-
-- input localization kegiatan pada kemahasiswaan (local/nasional/internasional) : half DONE
-
-- tambah input prestasi di input kegiatan : half DONE
-
 
 menu proposal
 input kegiatan : tanggal proposal -> tanggal kegiatan
 
 
-editable di approval kemahasiswaan
-tanggal
-judul proposal
-ketua pelaksana
-anggaran
+
+
+- input localization kegiatan pada kemahasiswaan (local/nasional/internasional) : DONE
+
+- tambah input prestasi di input kegiatan : DONE
+
+editable di approval : DONE
+- tanggal
+- judul proposal
+- ketua pelaksana
+- anggaran
 
 
 perbaikan tampilan kode prodi ke nama prodi di detail mobile : DONE
 
 periode di tentukan oleh tanggal akhir kegiatan
+-> tambah kolom range bulan, array number of bulan : DONE
+
+
+
+
+TGL 10 NOPEMBER 2022, review ke #2
+
+- tambah master mahasiswa dengan api ini : 
+Post : api-gateway.ubpkarawang.ac.id/external/akademik/mahasiswa
+Authorization : 743jda0RAodasfRRi35e
+----> untuk kebutuhan input kegiatan oleh kemahasiswaaan
+
+- tanggal proposal tidak update
+
+- API data kegiatan mahasiswa
+api data kegiatan
+- all mahasiswa
+- filter by nim mahasiswa
+
+
+- REPORT DATA KEGIATAN MAHASISWA & PROPOSAL KEGIATAN
+
+- reject kegiatan belum ada note rejectnya

@@ -9,14 +9,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
-class KegiatanController extends Controller {
-    public function all(Request $request) {
+class KegiatanController extends Controller
+{
+    public function all(Request $request)
+    {
         $posts = Kegiatan::select('id', 'klasifikasi_id', 'nama_kegiatan', 'nim', 'bukti_kegiatan')
             ->where('approval', 'approve')
             ->with(['klasifikasi'])
             ->get();
 
-        $output = array();
+        $output = [];
 
         if ($posts->count() > 0) {
             foreach ($posts as $post) {
@@ -31,24 +33,25 @@ class KegiatanController extends Controller {
 
             //return collection of posts as a resource
             return new KegiatanResource('200', 'Data Kegiatan : Ditemukan', $output);
-           
         }
 
         return new KegiatanResource('404', 'Data Kegiatan : Tidak Ditemukan', $output);
     }
 
-    public function filtered(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'nim' => 'required',
-        ],
+    public function filtered(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nim' => 'required',
+            ],
             [
                 'nim.required' => 'Masukkan NIM Mahasiswa !',
-            ]
+            ],
         );
 
         if ($validator->fails()) {
             return new KegiatanResource('401', 'Silahkan Isi Bidang Yang Kosong', $validator->errors());
-
         } else {
             $posts = Kegiatan::select('id', 'klasifikasi_id', 'nama_kegiatan', 'nim', 'bukti_kegiatan')
                 ->where('approval', 'approve')
@@ -56,7 +59,7 @@ class KegiatanController extends Controller {
                 ->with(['klasifikasi'])
                 ->get();
 
-            $output = array();
+            $output = [];
 
             if ($posts->count() > 0) {
                 foreach ($posts as $post) {

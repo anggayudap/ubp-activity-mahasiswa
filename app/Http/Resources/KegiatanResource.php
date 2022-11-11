@@ -20,7 +20,7 @@ class KegiatanResource extends JsonResource
     {
         return [
             'status_code' => $this->status_code,
-            'messages' => $this->messages,
+            'message' => $this->messages,
             'data' => $this->resource,
         ];
     }

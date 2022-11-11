@@ -9,6 +9,7 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\RoleUserController;
+use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\ReportKegiatanController;
 use App\Http\Controllers\ReportProposalController;
 use App\Http\Controllers\KlasifikasiKegiatanController;
@@ -67,6 +68,8 @@ Route::prefix('master')->name('master.')->middleware('auth')->group(function () 
     Route::resource('/periode', PeriodeController::class);
     Route::resource('/user', UserController::class);
     Route::resource('/role', RoleUserController::class);
+    Route::get('/mahasiswa/update', [MahasiswaController::class, 'update_mahasiswa'])->name('mahasiswa.update_mahasiswa');
+    Route::resource('/mahasiswa', MahasiswaController::class);
     Route::resource('/klasifikasi', KlasifikasiKegiatanController::class);
 });
 

@@ -168,6 +168,12 @@
                             data-i18n="Klasifikasi Kegiatan">{{ __('Klasifikasi Kegiatan') }}</span>
                     </a>
                 </li>
+                <li class="{{ request()->is('master/mahasiswa*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('master.mahasiswa.index') }}"><i
+                            data-feather="database"></i>
+                        <span class="menu-title text-truncate" data-i18n="Mahasiswa">{{ __('Mahasiswa') }}</span>
+                    </a>
+                </li>
                 <li class="{{ request()->is('master/periode*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('master.periode.index') }}"><i
                             data-feather="database"></i>
