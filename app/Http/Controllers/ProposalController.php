@@ -379,7 +379,7 @@ class ProposalController extends Controller
         $post = Proposal::create([
             'nim' => session('user.id'),
             'nama_mahasiswa' => session('user.nama'),
-            'prodi' => session('user.prodi'),
+            'prodi' => session('user.prodi'), 
             'date' => $request->date,
             'judul_proposal' => $request->judul_proposal,
             'ketua_pelaksana' => $request->ketua_pelaksana,
