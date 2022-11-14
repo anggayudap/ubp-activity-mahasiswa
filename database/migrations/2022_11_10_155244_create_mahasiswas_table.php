@@ -19,7 +19,7 @@ class CreateMahasiswasTable extends Migration
             $table->string('nama_mahasiswa')->nullable();
             $table->string('prodi', 10)->nullable();
             $table->string('periode_masuk', 10)->nullable();
-            $table->timestamps();
+            $table->datetime('tanggal_update')->nullable();
         });
     }
 
