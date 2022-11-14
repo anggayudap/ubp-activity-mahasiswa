@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Master;
 
 use DataTables;
 use App\Models\User;
@@ -13,7 +13,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class UserController extends Controller {
     public function index(Request $request) {
         if ($request->ajax()) {
-            $data = User::select(['id', 'name', 'email', 'role', 'last_login_at']);
+            $data = User::select(['id', 'name', 'email', 'last_login_at']);
             return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
@@ -28,6 +28,12 @@ class UserController extends Controller {
                         </div>
                         </div>';
                     return $btn;
+                })
+                ->addColumn('role', function ($row) {
+                    $role_list = $row->getRoleNames();
+                    $role_list = $role_list->implode(', ');
+                    
+                    return $role_list;
                 })
                 ->editColumn('last_login_at', function (User $user) {
                     return ($user->last_login_at) ? get_date_time($user->last_login_at) : 'No login records';

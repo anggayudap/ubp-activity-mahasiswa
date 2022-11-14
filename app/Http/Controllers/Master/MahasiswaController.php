@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Master;
 
+use DataTables;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class MahasiswaController extends Controller {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
+   
     public function update_mahasiswa() {
         $response = Http::withHeaders(['Authorization' => '743jda0RAodasfRRi35e'])->post('https://api-gateway.ubpkarawang.ac.id/external/akademik/mahasiswa');
-
         $output = $response->json();
 
         if (isset($output['data'])) {
@@ -32,6 +29,7 @@ class MahasiswaController extends Controller {
                         'nama_mahasiswa' => $data_mhs['nama'],
                         'prodi' => $data_mhs['kode_prodi'],
                         'periode_masuk' => $data_mhs['id_periode_masuk'],
+                        'tanggal_update' => date("Y-m-d H:i:s"),
                     ];
                 }
 
@@ -39,75 +37,44 @@ class MahasiswaController extends Controller {
 
             // truncate first
             Mahasiswa::truncate();
-
+            // then insert batch
             Mahasiswa::insert($bulk_data);
 
-            return true;
+            Alert::success('Berhasil!', 'Data mahasiswa berhasil diupdate!');
+            return redirect(route('master.mahasiswa.index'));
         }
 
-        return false;
+        Alert::error('Update gagal!', 'Terjadi error saat update. Silahkan coba lagi dalam waktu 30 menit kedepan atau hub. administrator anda!');
+        return redirect(route('master.mahasiswa.index'));
     }
 
-    public function index() {
-        //
+    public function index(Request $request) {
+        if ($request->ajax()) {
+            $data = Mahasiswa::all();
+            return Datatables::of($data)->addIndexColumn()
+                ->removeColumn('id')
+                ->make(true);
+        }
+
+        return view('master.mahasiswa.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create() {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request) {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Mahasiswa  $mahasiswa
-     * @return \Illuminate\Http\Response
-     */
     public function show(Mahasiswa $mahasiswa) {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Mahasiswa  $mahasiswa
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Mahasiswa $mahasiswa) {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Mahasiswa  $mahasiswa
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Mahasiswa $mahasiswa) {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Mahasiswa  $mahasiswa
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Mahasiswa $mahasiswa) {
         //
     }
