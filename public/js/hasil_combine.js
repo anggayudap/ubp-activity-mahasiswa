@@ -1030,7 +1030,7 @@ window.colors = {
   var $html = $('html');
   var $body = $('body');
   var $textcolor = '#4e5154';
-  var assetPath = 'vuexy/';
+  var assetPath = '../vuexy/';
 
   if ($('body').attr('data-framework') === 'laravel') {
     assetPath = $('body').attr('data-asset-path');
