@@ -337,6 +337,8 @@ class ProposalController extends Controller
                     ];
                 }
 
+                // update input oleh dpm/kemahasiswaan saat approve proposal
+                $param['date'] = $request->data['date'];
                 $param['judul_proposal'] = $request->data['judul_proposal'];
                 $param['ketua_pelaksana'] = $request->data['ketua_pelaksana'];
                 $param['anggaran_pengajuan'] = $request->data['anggaran_pengajuan'];
