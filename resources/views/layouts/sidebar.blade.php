@@ -140,7 +140,7 @@
 
 
             @hasanyrole('kemahasiswaan|admin')
-                {{-- <li class=" navigation-header"><span data-i18n="Report">{{ __('Report') }}</span><i
+                <li class=" navigation-header"><span data-i18n="Report">{{ __('Report') }}</span><i
                         data-feather="more-horizontal"></i>
                 </li>
                 <li class="{{ request()->is('report/kegiatan*') ? 'active' : '' }} nav-item">
@@ -156,7 +156,7 @@
                         <span class="menu-title text-truncate"
                             data-i18n="Proposal Kegiatan">{{ __('Proposal Kegiatan') }}</span>
                     </a>
-                </li> --}}
+                </li>
 
                 <li class=" navigation-header"><span data-i18n="Master">{{ __('Master Data') }}</span><i
                         data-feather="more-horizontal"></i>

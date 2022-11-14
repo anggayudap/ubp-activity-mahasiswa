@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
-@section('title', 'Report Permintaan Barang')
-@section('menu-title', 'Report Permintaan Barang')
+@section('title', 'Report Kegiatan Mahasiswa')
+@section('menu-title', 'Report Kegiatan Mahasiswa')
 
 
 @section('content')
@@ -21,27 +21,65 @@
                                 <div class="col-12">
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
-                                            <label>Tipe</label>
+                                            <label>NIM - Nama Mahasiswa</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="form-control" name="tipe" id="tipe" required>
-                                                <option>Pilih tipe</option>
-                                                <option value="summary">Summary Pengambilan Barang</option>
-                                                <option value="pengambilan">Detail Pengambilan Barang</option>
+                                            <select class="select2 form-control" name="nim" id="nim">
+                                                <option value="all">Semua Mahasiswa</option>
+                                                @foreach ($data['mahasiswa'] as $id => $mahasiswa)
+                                                    <option value="{{ $id }}">{{ $mahasiswa }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
-                                            <label>Departemen</label>
+                                            <label>Prodi</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="form-control" name="departement[]" id="departement"
-                                                multiple="multiple">
-                                                @foreach ($data['departement']->all() as $departement)
-                                                    <option value="{{ $departement->code }}">{{ $departement->name }}
-                                                    </option>
+                                            <select class="form-control" name="prodi" id="prodi">
+                                                <option value="all">Semua Prodi</option>
+                                                @foreach ($data['fetch_prodi'] as $prodi)
+                                                    <option value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option>
                                                 @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3 col-form-label">
+                                            <label>Klasifikasi</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-control" name="klasifikasi" id="klasifikasi">
+                                                <option value="all">Semua klasifikasi</option>
+                                                @foreach ($data['fetch_klasifikasi'] as $klasifikasi)
+                                                    <option value="{{ $klasifikasi->id }}">{{ $klasifikasi->name_kegiatan }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3 col-form-label">
+                                            <label>Periode</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-control" name="periode" id="periode">
+                                                <option value="all">Semua Periode</option>
+                                                @foreach ($data['fetch_periode'] as $periode)
+                                                    <option value="{{ $periode->id }}">{{ $periode->periode_awal.'-'.$periode->periode_akhir }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3 col-form-label">
+                                            <label>Tahun Periode</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-control" name="tahun_periode" id="tahun-periode">
+                                                @for ($i = 2022; $i <= date("Y"); $i++)
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
                                             </select>
                                         </div>
                                     </div>
@@ -51,29 +89,11 @@
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="status[]" id="status" multiple="multiple">
-                                                <option value="pending">Pending</option>
-                                                <option value="menunggu_persetujuan">Menunggu Persetujuan</option>
-                                                <option value="siap_diambil">Siap Diambil</option>
-                                                <option value="selesai">Selesai</option>
+                                                <option value="review">Sedang Direview</option>
+                                                <option value="checked_dosen">Ditinjau Dosen</option>
+                                                <option value="checked_kemahasiswaan">Ditinjau Kemahasiswaa</option>
+                                                <option value="completed">Selesai</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3 col-form-label">
-                                            <label>Dari Tanggal</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" id="start-date" class="form-control flatpickr-basic"
-                                                name="start_date" required value="{{ date('Y-m-d') }}" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3 col-form-label">
-                                            <label>Sampai Tanggal</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" id="end-date" class="form-control flatpickr-basic"
-                                                name="end_date" required value="{{ date('Y-m-d') }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -93,10 +113,8 @@
                                 @endif
 
                                 <div class="col-md-6 offset-md-3">
-                                    <button type="submit" name="submit" value="excel" class="btn btn-success mr-1"><i
-                                            data-feather="download" class="mr-1"></i>Excel</button>
                                     <button type="submit" name="submit" value="view" class="btn btn-primary mr-1"><i
-                                            data-feather="file-text" class="mr-1"></i>View</button>
+                                            data-feather="file-text" class="mr-1"></i>Lihat Report</button>
                                 </div>
                             </div>
                         </form>
