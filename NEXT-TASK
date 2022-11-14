@@ -41,14 +41,16 @@ periode di tentukan oleh tanggal akhir kegiatan
 
 TGL 10 NOPEMBER 2022, review ke #2
 
-- tambah master mahasiswa dengan api ini : 
+- tambah master mahasiswa dengan api ini + button update data: DONE
 Post : api-gateway.ubpkarawang.ac.id/external/akademik/mahasiswa
 Authorization : 743jda0RAodasfRRi35e
 ----> untuk kebutuhan input kegiatan oleh kemahasiswaaan
 
-- tanggal proposal tidak update
+- IMPLEMENTATION -> datam mahasiswa di input proposal (oleh kemahasiswaan)
 
-- API data kegiatan mahasiswa
+- tanggal proposal tidak update : DONE
+
+- API data kegiatan mahasiswa : DONE
 api data kegiatan
 - all mahasiswa
 - filter by nim mahasiswa

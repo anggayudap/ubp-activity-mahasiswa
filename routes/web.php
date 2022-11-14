@@ -2,17 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ProdiController;
-use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
-use App\Http\Controllers\RoleUserController;
-use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\Master\UserController;
+use App\Http\Controllers\Master\ProdiController;
+use App\Http\Controllers\Master\PeriodeController;
 use App\Http\Controllers\ReportKegiatanController;
 use App\Http\Controllers\ReportProposalController;
-use App\Http\Controllers\KlasifikasiKegiatanController;
+use App\Http\Controllers\Master\RoleUserController;
+use App\Http\Controllers\Master\MahasiswaController;
+use App\Http\Controllers\Master\KlasifikasiKegiatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,11 +55,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('report')->name('report.')->middleware('auth', 'role:admin|kemahasiswaan')->group(function () {
-    Route::get('/report/proposal', [ReportProposalController::class, 'index'])->name('proposal');
-    Route::post('/report/proposal/submit', [ReportProposalController::class, 'submit'])->name('proposal.submit');
+    Route::get('/proposal', [ReportProposalController::class, 'index'])->name('proposal');
+    Route::post('/proposal/submit', [ReportProposalController::class, 'submit'])->name('proposal.submit');
 
-    Route::get('/report/kegiatan', [ReportKegiatanController::class, 'index'])->name('kegiatan');
-    Route::post('/report/kegiatan/submit', [ReportKegiatanController::class, 'submit'])->name('kegiatan.submit');
+    Route::get('/kegiatan', [ReportKegiatanController::class, 'index'])->name('kegiatan');
+    Route::post('/kegiatan/submit', [ReportKegiatanController::class, 'submit'])->name('kegiatan.submit');
 });
 
 Route::prefix('master')->name('master.')->middleware('auth')->group(function () {
