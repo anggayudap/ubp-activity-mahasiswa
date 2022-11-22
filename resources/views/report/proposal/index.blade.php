@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
-                                            <label>Status Permintaan</label>
+                                            <label>Status Permintaan <em>(Pilih satu atau lebih)</em></label>
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="status[]" id="status" multiple="multiple">

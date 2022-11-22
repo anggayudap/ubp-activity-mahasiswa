@@ -31,9 +31,8 @@
                                 </div>
                                 <div class="col-sm-9">
                                     <input type="text" id="nama-mahasiswa" class="form-control" name="nama_mahasiswa"
-                                        placeholder="Nama Mahasiswa"
                                         value="{{ isset($data['kegiatan']) ? $data['kegiatan']->nama_mahasiswa : old('nama_mahasiswa') }}"
-                                        required>
+                                        required readonly>
                                 </div>
                             </div>
                         </div>

@@ -15,15 +15,14 @@ class ReportKegiatanController extends Controller
     public function index()
     {
         $data = [];
-        $fetch_mahasiswa = Mahasiswa::all();
+        $fetch_mahasiswa = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
         $data['fetch_prodi'] = Prodi::all();
         $data['fetch_klasifikasi'] = KlasifikasiKegiatan::all();
         $data['fetch_periode'] = Periode::all();
 
         if ($fetch_mahasiswa->count() > 0) {
-            foreach ($fetch_mahasiswa as $mahasiswa) {
-                $data['mahasiswa'][$mahasiswa->nim] = $mahasiswa->nim . ' - ' . $mahasiswa->nama_mahasiswa;
-            }
+            $collection = collect($fetch_mahasiswa);
+            $data['mahasiswa'] = $collection->keyBy('nim')->all();
         }
 
         return view('report.kegiatan.index', compact('data'));

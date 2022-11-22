@@ -1,0 +1,13 @@
+akses SFTP dan SSH
+IP : 192.168.100.155
+Port : 22
+username : adminsimkatmawa
+password : simkatmawa2022
+
+akses mysql
+link : 192.168.100.155:81/mysql
+host : localhost
+username : simkatmawa
+password : k4t4_s1mk4t
+
+Public : 103.73.74.188

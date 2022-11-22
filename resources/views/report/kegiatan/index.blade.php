@@ -26,9 +26,12 @@
                                         <div class="col-md-6">
                                             <select class="select2 form-control" name="nim" id="nim">
                                                 <option value="all">Semua Mahasiswa</option>
-                                                @foreach ($data['mahasiswa'] as $id => $mahasiswa)
-                                                    <option value="{{ $id }}">{{ $mahasiswa }}</option>
-                                                @endforeach
+                                                @if (isset($data['mahasiswa']))
+                                                    @foreach ($data['mahasiswa'] as $nim => $value)
+                                                        <option value="{{ $nim }}">
+                                                            {{ $value->nim . ' - ' . $value->nama_mahasiswa }}</option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
@@ -53,7 +56,8 @@
                                             <select class="form-control" name="klasifikasi" id="klasifikasi">
                                                 <option value="all">Semua klasifikasi</option>
                                                 @foreach ($data['fetch_klasifikasi'] as $klasifikasi)
-                                                    <option value="{{ $klasifikasi->id }}">{{ $klasifikasi->name_kegiatan }}</option>
+                                                    <option value="{{ $klasifikasi->id }}">{{ $klasifikasi->name_kegiatan }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -66,7 +70,9 @@
                                             <select class="form-control" name="periode" id="periode">
                                                 <option value="all">Semua Periode</option>
                                                 @foreach ($data['fetch_periode'] as $periode)
-                                                    <option value="{{ $periode->id }}">{{ $periode->periode_awal.'-'.$periode->periode_akhir }}</option>
+                                                    <option value="{{ $periode->id }}">
+                                                        {{ $periode->periode_awal . '-' . $periode->periode_akhir }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -77,7 +83,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <select class="form-control" name="tahun_periode" id="tahun-periode">
-                                                @for ($i = 2022; $i <= date("Y"); $i++)
+                                                @for ($i = 2022; $i <= date('Y'); $i++)
                                                     <option value="{{ $i }}">{{ $i }}</option>
                                                 @endfor
                                             </select>
@@ -85,7 +91,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
-                                            <label>Status Permintaan</label>
+                                            <label>Status Permintaan <em>(Pilih satu atau lebih)</em></label>
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="status[]" id="status" multiple="multiple">

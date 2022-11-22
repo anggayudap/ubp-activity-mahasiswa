@@ -46,16 +46,15 @@ Post : api-gateway.ubpkarawang.ac.id/external/akademik/mahasiswa
 Authorization : 743jda0RAodasfRRi35e
 ----> untuk kebutuhan input kegiatan oleh kemahasiswaaan
 
-- IMPLEMENTATION -> datam mahasiswa di input proposal (oleh kemahasiswaan)
-
 - tanggal proposal tidak update : DONE
 
 - API data kegiatan mahasiswa : DONE
-api data kegiatan
-- all mahasiswa
-- filter by nim mahasiswa
+    - all mahasiswa
+    - filter by nim mahasiswa
 
 
 - REPORT DATA KEGIATAN MAHASISWA & PROPOSAL KEGIATAN
 
 - reject kegiatan belum ada note rejectnya
+
+- IMPLEMENTATION -> datam mahasiswa di input proposal (oleh kemahasiswaan)
