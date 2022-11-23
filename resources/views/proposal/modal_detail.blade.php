@@ -16,7 +16,7 @@
                     </tr>
                     <tr>
                         <td class="pr-1">Prodi</td>
-                        <td>{{ $output['proposal']->prodi_mahasiswa->nama_prodi }}</td>
+                        <td>{!! $output['proposal']->prodi_mahasiswa->nama_prodi ?? '<em class="text-danger">data Prodi tidak tersedia</em>' !!}</td>
                     </tr>
                     <tr>
                         <td class="pr-1">Tanggal</td>
