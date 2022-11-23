@@ -24,32 +24,25 @@
 
                         <div class="row">
                             @if (!$data['is_mahasiswa'])
-                        <div class="col-12">
-                            <div class="form-group row">
-                                <div class="col-sm-3 col-form-label">
-                                    <label for="name">Nama Mahasiswa</label>
+                                <div class="col-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-3 col-form-label">
+                                            <label for="name">NIM - Nama Mahasiswa</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <select class="select2 form-control" name="nim" id="nim" required>
+                                                <option value="">Pilih NIM/Nama Mahasiswa</option>
+                                                @if (isset($data['mahasiswa']))
+                                                    @foreach ($data['mahasiswa'] as $nim => $value)
+                                                        <option value="{{ $nim }}">
+                                                            {{ $value->nim . ' - ' . $value->nama_mahasiswa }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-9">
-                                    <input type="text" id="nama-mahasiswa" class="form-control" name="nama_mahasiswa"
-                                        value="{{ isset($data['kegiatan']) ? $data['kegiatan']->nama_mahasiswa : old('nama_mahasiswa') }}"
-                                        required readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group row">
-                                <div class="col-sm-3 col-form-label">
-                                    <label for="name">NIM</label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <input type="text" id="nim" class="form-control" name="nim"
-                                        placeholder="NIM"
-                                        value="{{ isset($data['kegiatan']) ? $data['kegiatan']->nim : old('nim') }}"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
+                            @endif
 
                             <div class="col-12">
                                 <div class="form-group row">

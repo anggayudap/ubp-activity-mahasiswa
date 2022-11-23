@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Kegiatan;
-use App\Models\KlasifikasiKegiatan;
-use App\Models\Periode;
 use DataTables;
+use App\Models\Periode;
+use App\Models\Kegiatan;
+use App\Models\Mahasiswa;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\KlasifikasiKegiatan;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class KegiatanController extends Controller
@@ -138,10 +139,17 @@ class KegiatanController extends Controller
         $data['periode'] = Periode::all();
         $data['is_mahasiswa'] = true;
 
+        // if not mahasiswa
         $user = Auth::user();
         if (!$user->hasRole('mahasiswa')) {
-            // if role is kemahasiswaan
+            // if role is kemahasiswaan or dosen
             $data['is_mahasiswa'] = false;
+
+            $fetch_mahasiswa = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
+            if ($fetch_mahasiswa->count() > 0) {
+                $collection = collect($fetch_mahasiswa);
+                $data['mahasiswa'] = $collection->keyBy('nim')->all();
+            }
         }
 
         return view('kegiatan.form', compact('data'));
@@ -150,6 +158,7 @@ class KegiatanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'nim' => 'sometimes|required|numeric',
             'nama_kegiatan' => 'required',
             'tanggal_mulai' => 'required',
             'tanggal_akhir' => 'required',
@@ -180,10 +189,24 @@ class KegiatanController extends Controller
             $bukti_kegiatan_path = $this->upload_file($request->file('bukti_kegiatan'), 'bukti_kegiatan');
         }
 
+        if (isset($request->nim)) {
+            $mahasiswa = Mahasiswa::where('nim', $request->nim)
+                ->select('nama_mahasiswa', 'prodi')
+                ->first();
+                
+            $param_nim = $request->nim;
+            $param_nama = $mahasiswa->nama_mahasiswa;
+            $param_prodi = $mahasiswa->prodi;
+        } else {
+            $param_nim = session('user.id');
+            $param_nama = session('user.nama');
+            $param_prodi = session('user.prodi');
+        }
+
         $post = Kegiatan::create([
-            'nim' => $request->nim ?? session('user.id'),
-            'nama_mahasiswa' => $request->nama_mahasiswa ?? session('user.nama'),
-            'prodi' => session('user.prodi'),
+            'nim' => $param_nim,
+            'nama_mahasiswa' => $param_nama,
+            'prodi' => $param_prodi,
             'tahun_periode' => date('Y'),
             'nama_kegiatan' => $request->nama_kegiatan,
             'tanggal_mulai' => $request->tanggal_mulai,
