@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/kegiatan/history', [KegiatanController::class, 'history'])->name('kegiatan.history')->middleware('role:mahasiswa|kemahasiswaan');
     Route::get('/kegiatan/modal_detail/{id}', [KegiatanController::class, 'detail'])->name('kegiatan.detail');
     Route::post('/kegiatan/decision', [KegiatanController::class, 'decision'])->name('kegiatan.decision');
+    Route::post('/kegiatan/update_dpm', [KegiatanController::class, 'update_dpm'])->name('kegiatan.update_dpm');
 
     Route::get('/proposal/list', [ProposalController::class, 'list'])->name('proposal.list')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history')->middleware('role:mahasiswa');

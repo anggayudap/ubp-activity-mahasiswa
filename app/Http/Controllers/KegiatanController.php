@@ -137,7 +137,7 @@ class KegiatanController extends Controller
         $data['klasifikasi'] = $klasifikasi->groupBy('group_kegiatan');
         $data['periode'] = Periode::all();
         $data['is_mahasiswa'] = true;
-        
+
         $user = Auth::user();
         if (!$user->hasRole('mahasiswa')) {
             // if role is kemahasiswaan
@@ -384,6 +384,19 @@ class KegiatanController extends Controller
         }
     }
 
+    public function update_dpm(Request $request)
+    {
+        if ($request->ajax()) {
+            $kegiatan = Kegiatan::where('id', $request->id)->update(['prestasi' => $request->prestasi]);
+
+            if ($kegiatan) {
+                return response()->json(['success' => true, 'message' => 'Data Kegiatan berhasil disimpan', 'redirect' => route('kegiatan.list')]);
+            } else {
+                return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
+            }
+        }
+    }
+
     public function decision(Request $request)
     {
         if ($request->ajax()) {
@@ -407,6 +420,7 @@ class KegiatanController extends Controller
                 'periode_id' => $periode_id,
                 'status' => 'completed',
                 'approval' => $request->decision,
+                'prestasi' => $request->prestasi,
                 'kemahasiswaan_user_id' => session('user.user_id'),
                 'kemahasiswaan_user_name' => session('user.nama'),
             ]);
