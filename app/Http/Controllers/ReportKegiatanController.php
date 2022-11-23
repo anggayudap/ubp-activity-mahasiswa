@@ -14,7 +14,6 @@ class ReportKegiatanController extends Controller
 {
     public function index()
     {
-        $data = [];
         $fetch_mahasiswa = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
         $data['fetch_prodi'] = Prodi::all();
         $data['fetch_klasifikasi'] = KlasifikasiKegiatan::all();
@@ -39,8 +38,6 @@ class ReportKegiatanController extends Controller
             'status' => 'array|required',
         ]);
 
-        // dd($request);
-
         $query = Kegiatan::with(['periode', 'klasifikasi', 'prodi_mahasiswa'])
             ->whereIn('status', $request->status)
             ->where('tahun_periode', $request->tahun_periode);
@@ -57,9 +54,8 @@ class ReportKegiatanController extends Controller
             $query->where('periode_id', $request->periode);
         }
 
-        // dd($query->get());
         $output['result'] = $query->get();
-        // dd($output);
+
         return view('report.kegiatan.table', compact('output'));
     }
 }

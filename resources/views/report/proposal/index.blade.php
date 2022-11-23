@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('title', 'Report Proposal Kegiatan')
+@section('menu-title', 'Report Proposal Kegiatan')
 
 
 @section('content')
@@ -20,57 +21,45 @@
                                 <div class="col-12">
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
-                                            <label>Tipe</label>
+                                            <label>NIM - Nama Mahasiswa</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="form-control" name="tipe" id="tipe" required>
-                                                <option>Pilih tipe</option>
-                                                <option value="summary">Summary Pengambilan Barang</option>
-                                                <option value="pengambilan">Detail Pengambilan Barang</option>
+                                            <select class="select2 form-control" name="nim" id="nim">
+                                                <option value="all">SEMUA MAHASISWA</option>
+                                                @if (isset($data['mahasiswa']))
+                                                    @foreach ($data['mahasiswa'] as $nim => $value)
+                                                        <option value="{{ $nim }}">
+                                                            {{ $value->nim . ' - ' . $value->nama_mahasiswa }}</option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
-                                            <label>Departemen</label>
+                                            <label>Prodi</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="select2 form-control" name="mahasiswa" id="mahasiswa">
-                                                @foreach ($data['mahasiswa'] as $mahasiswa)
-                                                    <option value="{{ $mahasiswa->user_id }}">{{ $mahasiswa->name }}</option>
+                                            <select class="form-control" name="prodi" id="prodi">
+                                                <option value="all">SEMUA PRODI</option>
+                                                @foreach ($data['fetch_prodi'] as $prodi)
+                                                    <option value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
+                                    
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
-                                            <label>Status Permintaan <em>(Pilih satu atau lebih)</em></label>
+                                            <label>Status Proposal <em>(Pilih satu atau lebih)</em></label>
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="status[]" id="status" multiple="multiple">
-                                                <option value="pending">Pending</option>
-                                                <option value="menunggu_persetujuan">Menunggu Persetujuan</option>
-                                                <option value="siap_diambil">Siap Diambil</option>
-                                                <option value="selesai">Selesai</option>
+                                                <option value="wait_fakultas">Menunggu Approval Fakultas</option>
+                                                <option value="wait_kemahasiswaan">Menunggu Approval Kemahasiswaan</option>
+                                                <option value="reject">Reject</option>
+                                                <option value="completed">Selesai</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3 col-form-label">
-                                            <label>Dari Tanggal</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" id="start-date" class="form-control flatpickr-basic"
-                                                name="start_date" required value="{{ date('Y-m-d') }}" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3 col-form-label">
-                                            <label>Sampai Tanggal</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" id="end-date" class="form-control flatpickr-basic"
-                                                name="end_date" required value="{{ date('Y-m-d') }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -90,10 +79,8 @@
                                 @endif
 
                                 <div class="col-md-6 offset-md-3">
-                                    <button type="submit" name="submit" value="excel" class="btn btn-success mr-1"><i
-                                            data-feather="download" class="mr-1"></i>Excel</button>
                                     <button type="submit" name="submit" value="view" class="btn btn-primary mr-1"><i
-                                            data-feather="file-text" class="mr-1"></i>View</button>
+                                            data-feather="file-text" class="mr-1"></i>Lihat Report</button>
                                 </div>
                             </div>
                         </form>

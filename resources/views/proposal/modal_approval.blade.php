@@ -23,7 +23,7 @@
                         <tr>
                             <td class="pr-1">Tanggal</td>
                             <td>
-                                <input type="text" id="date" class="form-control flatpickr-basic"
+                                <input type="text" id="date" name="date" class="form-control flatpickr-basic"
                                     value="{{ $output['proposal']->date }}" required>
                             </td>
                         </tr>
