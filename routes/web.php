@@ -26,7 +26,7 @@ use App\Http\Controllers\Master\KlasifikasiKegiatanController;
  */
 
 Route::get('/', function () {
-    return view('layouts.master');
+    return view('dashboard');
 })->middleware('auth');
 
 Route::get('/dashboard', function () {
