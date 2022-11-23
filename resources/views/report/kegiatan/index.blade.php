@@ -25,7 +25,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <select class="select2 form-control" name="nim" id="nim">
-                                                <option value="all">Semua Mahasiswa</option>
+                                                <option value="all">SEMUA MAHASISWA</option>
                                                 @if (isset($data['mahasiswa']))
                                                     @foreach ($data['mahasiswa'] as $nim => $value)
                                                         <option value="{{ $nim }}">
@@ -41,7 +41,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="prodi" id="prodi">
-                                                <option value="all">Semua Prodi</option>
+                                                <option value="all">SEMUA PRODI</option>
                                                 @foreach ($data['fetch_prodi'] as $prodi)
                                                     <option value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option>
                                                 @endforeach
@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="klasifikasi" id="klasifikasi">
-                                                <option value="all">Semua klasifikasi</option>
+                                                <option value="all">SEMUA KLASIFIKASI</option>
                                                 @foreach ($data['fetch_klasifikasi'] as $klasifikasi)
                                                     <option value="{{ $klasifikasi->id }}">{{ $klasifikasi->name_kegiatan }}
                                                     </option>
@@ -68,7 +68,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="periode" id="periode">
-                                                <option value="all">Semua Periode</option>
+                                                <option value="all">SEMUA PERIODE</option>
                                                 @foreach ($data['fetch_periode'] as $periode)
                                                     <option value="{{ $periode->id }}">
                                                         {{ $periode->periode_awal . '-' . $periode->periode_akhir }}
