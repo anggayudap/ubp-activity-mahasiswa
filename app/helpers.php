@@ -38,7 +38,7 @@ if (!function_exists('get_date_time')) {
             $timestamp = strtotime($date);
             return date($format, $timestamp);
         }
-        return 'false';
+        return false;
     }
 
 }
