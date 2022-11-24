@@ -46,7 +46,7 @@
                                     <td class="text-nowrap">{{ $i }}</td>
                                     <td>{{ $kegiatan->nim }}</td>
                                     <td>{{ $kegiatan->nama_mahasiswa }}</td>
-                                    <td>{{ $kegiatan->prodi_mahasiswa->nama_prodi }}</td>
+                                    <td>{{ $kegiatan->prodi_mahasiswa->nama_prodi ?? $kegiatan->prodi }}</td>
                                     <td>{{ $kegiatan->periode ? $kegiatan->periode->periode_awal . '-' . $kegiatan->periode->periode_akhir : '' }}
                                     </td>
                                     <td>{{ $kegiatan->tahun_periode }}</td>
@@ -63,8 +63,8 @@
                                                 data-feather="file"></i></a></td>
                                     <td><a target="_blank" href="{{ $kegiatan->bukti_kegiatan }}"
                                             class="btn btn-primary"><i data-feather="file"></i></a></td>
-                                    <td>{!! ($kegiatan->status) ? trans('serba.' . $kegiatan->status) : '-' !!}</td>
-                                    <td>{!! trans('serba.' . $kegiatan->approval) !!}</td>
+                                    <td>{!! trans('serba.' . $kegiatan->status) !!}</td>
+                                    <td>{!! ($kegiatan->approval) ? trans('serba.' . $kegiatan->approval) : '&nbsp;' !!}</td>
                                     <td>{{ $kegiatan->prestasi }}</td>
                                     <td>{{ $kegiatan->keterangan }}</td>
                                 </tr>
@@ -92,6 +92,12 @@
     {{-- write css script here --}}
     <link rel="stylesheet" href="{{ URL::asset('css/table.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/form.css') }}">
+    <style>
+        /* add vertical align in th */
+        .table > thead > tr > th {
+            vertical-align: middle;
+        }
+    </style>
 @endpush
 
 @push('scripts')
