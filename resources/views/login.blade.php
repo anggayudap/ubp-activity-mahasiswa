@@ -11,7 +11,7 @@
                     <div class="brand-logo">
                         <img src="{{ asset('logo-ubp.png') }}" class="img-fluid responsive-logo" />
                     </div>
-                    <h2 class="brand-text text-primary ml-1 text-center">SIMKATMAWA</h2>
+                    <h2 class="brand-text text-primary text-center">SIMKATMAWA</h2>
                     <p class="card-text mb-2">Silahkan login menggunakan akun SIPT anda</p>
 
                     <form class="auth-login-form mt-2" action="{{ route('login_submit') }}" method="POST">
