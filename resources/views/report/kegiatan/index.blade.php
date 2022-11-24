@@ -43,7 +43,7 @@
                                             <select class="form-control" name="prodi" id="prodi">
                                                 <option value="all">SEMUA PRODI</option>
                                                 @foreach ($data['fetch_prodi'] as $prodi)
-                                                    <option value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option>
+                                                    <option value="{{ $prodi->kode_prodi }}">{{ $prodi->nama_prodi }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
