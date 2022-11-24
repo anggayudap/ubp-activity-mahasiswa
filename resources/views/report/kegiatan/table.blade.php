@@ -63,7 +63,7 @@
                                                 data-feather="file"></i></a></td>
                                     <td><a target="_blank" href="{{ $kegiatan->bukti_kegiatan }}"
                                             class="btn btn-primary"><i data-feather="file"></i></a></td>
-                                    <td>{!! trans('serba.' . $kegiatan->status) !!}</td>
+                                    <td>{!! ($kegiatan->status) ? trans('serba.' . $kegiatan->status) : '-' !!}</td>
                                     <td>{!! trans('serba.' . $kegiatan->approval) !!}</td>
                                     <td>{{ $kegiatan->prestasi }}</td>
                                     <td>{{ $kegiatan->keterangan }}</td>
