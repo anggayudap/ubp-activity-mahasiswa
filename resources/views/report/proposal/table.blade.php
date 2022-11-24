@@ -25,12 +25,9 @@
                                 <th rowspan="2">Judul Proposal</th>
                                 <th rowspan="2">Anggaran Pengajuan</th>
                                 <th rowspan="2">Lampiran Proposal</th>
-
                                 <th rowspan="2">Status</th>
                                 <th colspan="2">Approval Fakultas</th>
                                 <th colspan="2">Approval Kemahasiswaan</th>
-
-
                                 <th rowspan="2">Note Reject</th>
                             </tr>
                             <tr>
@@ -41,13 +38,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @php
+                            @php
                                 $i = 1;
                             @endphp
-                            @forelse ($output['result'] as $kegiatan)
+                            @forelse ($output['result'] as $proposal)
                                 <tr class="text-nowrap">
                                     <td class="text-nowrap">{{ $i }}</td>
-                                    <td>{{ $kegiatan->nim }}</td>
+                                    <td>{{ $proposal->nim }}</td>
+                                    <td>{{ $proposal->nama_mahasiswa }}</td>
+                                    <td>{{ $proposal->prodi_mahasiswa->nama_prodi ?? $proposal->prodi }}</td>
+                                    <td>{{ get_date($proposal->date) }}</td>
+                                    <td>{{ $proposal->judul_proposal }}</td>
+                                    <td>{{ rupiah($proposal->anggaran_pengajuan) }}</td>
+                                    <td></td>
+                                    <td>{!! trans('serba.' . $proposal->current_status) !!}</td>
+                                    <td>{{ get_date_time($proposal->fakultas_approval_date) }}</td>
+                                    <td>{{ $proposal->fakultas_user_name }}</td>
+                                    <td>{{ get_date_time($proposal->kemahasiswaan_approval_date) }}</td>
+                                    <td>{{ $proposal->kemahasiswaan_user_name }}</td>
+                                    <td>{{ $proposal->reject_note }}</td>
+
+
+                                    {{-- <td>{{ $kegiatan->nim }}</td>
                                     <td>{{ $kegiatan->nama_mahasiswa }}</td>
                                     <td>{{ $kegiatan->prodi_mahasiswa->nama_prodi }}</td>
                                     <td>{{ $kegiatan->periode ? $kegiatan->periode->periode_awal . '-' . $kegiatan->periode->periode_akhir : '' }}
@@ -69,7 +81,7 @@
                                     <td>{!! trans('serba.' . $kegiatan->status) !!}</td>
                                     <td>{!! trans('serba.' . $kegiatan->approval) !!}</td>
                                     <td>{{ $kegiatan->prestasi }}</td>
-                                    <td>{{ $kegiatan->keterangan }}</td>
+                                    <td>{{ $kegiatan->keterangan }}</td> --}}
                                 </tr>
                                 @php
                                     $i++;
@@ -80,7 +92,7 @@
                                         <h4 class="text-danger">Tidak ada data yang dapat ditampilkan.</h4>
                                     </td>
                                 </tr>
-                            @endforelse --}}
+                            @endforelse
 
 
                         </tbody>
@@ -95,6 +107,12 @@
     {{-- write css script here --}}
     <link rel="stylesheet" href="{{ URL::asset('css/table.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('css/form.css') }}">
+    <style>
+        /* add vertical align in th */
+        .table > thead > tr > th {
+            vertical-align: middle;
+        }
+    </style>
 @endpush
 
 @push('scripts')
