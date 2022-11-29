@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/proposal', ProposalController::class);
 });
 
-Route::prefix('report')->name('report.')->middleware('auth', 'role:admin|kemahasiswaan')->group(function () {
+Route::prefix('report')->name('report.')->middleware('auth', 'role:kemahasiswaan')->group(function () {
     Route::get('/proposal', [ReportProposalController::class, 'index'])->name('proposal');
     Route::post('/proposal/submit', [ReportProposalController::class, 'submit'])->name('proposal.submit');
 
@@ -63,7 +63,7 @@ Route::prefix('report')->name('report.')->middleware('auth', 'role:admin|kemahas
     Route::post('/kegiatan/submit', [ReportKegiatanController::class, 'submit'])->name('kegiatan.submit');
 });
 
-Route::prefix('master')->name('master.')->middleware('auth')->group(function () {
+Route::prefix('master')->name('master.')->middleware('auth', 'role:kemahasiswaan')->group(function () {
     /* routing for master data*/
     Route::resource('/prodi', ProdiController::class);
     Route::resource('/periode', PeriodeController::class);
@@ -91,3 +91,9 @@ Route::get('/clear', function () {
 
     dd("Cache, View & Config is cleared");
 });
+
+//Route::get('/migrate', function () {
+//    \Artisan::call('migrate:fresh --seed');
+
+//    dd("success: database has migrated");
+//});
