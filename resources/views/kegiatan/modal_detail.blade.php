@@ -70,23 +70,43 @@
                         </tr>
 
                         <tr>
-                            <td class="pr-1">Link Event</td>
+                            <td class="pr-1">URL Penyelenggara</td>
                             <td>
-                                <a href="{{ $output['kegiatan']->url_event }}" target="_blank" type="button"
-                                    class="btn btn-flat-success">
-                                    <i data-feather="link" class="mr-25"></i>
-                                    <span>Buka Link</span>
-                                </a>
+                                @if ($output['kegiatan']->url_event)
+                                    <a href="{{ $output['kegiatan']->url_event }}" target="_blank" type="button"
+                                        class="btn btn-flat-success">
+                                        <i data-feather="link" class="mr-25"></i>
+                                        <span>Buka Link</span>
+                                    </a>
+                                @else
+                                    <em class="text-muted">Data tidak tersedia</em>
+                                @endif
                             </td>
                         </tr>
 
                         <tr>
-                            <td class="pr-1">Prestasi</td>
+                            <td class="pr-1">URL Publikasi</td>
+                            <td>
+                                @if ($output['kegiatan']->url_publikasi)
+                                    <a href="{{ $output['kegiatan']->url_publikasi }}" target="_blank" type="button"
+                                        class="btn btn-flat-success">
+                                        <i data-feather="link" class="mr-25"></i>
+                                        <span>Buka Link</span>
+                                    </a>
+                                @else
+                                    <em class="text-muted">Data tidak tersedia</em>
+                                @endif
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pr-1">Prestasi Yang Diraih</td>
                             <td>
                                 @if (!$output['kegiatan']->approval)
                                     @hasanyrole('dosen|kemahasiswaan')
                                         <input type="text" name="prestasi" id="prestasi" class="form-control"
-                                            value="{{ $output['kegiatan']->prestasi }}" placeholder="Tambahkan Prestasi">
+                                            value="{{ $output['kegiatan']->prestasi }}"
+                                            placeholder="Tambahkan Prestasi Yang Diraih">
                                     @else
                                         {{ $output['kegiatan']->prestasi }}
                                     @endhasanyrole
@@ -125,43 +145,55 @@
     <div class="card-body">
         <h4 class="card-title">Data Lampiran</h4>
         <h4>1. Surat Tugas</h4>
-        @if ($output['is_pdf']['surat_tugas'])
-            <object data="{{ URL::asset($output['kegiatan']->surat_tugas) }}" type="application/pdf" frameborder="0"
-                width="100%" height="600px" style="padding: 20px;">
-                <p>Oops! Your browser doesn't support PDFs!</p>
-                <p><a href="{{ URL::asset($output['kegiatan']->surat_tugas) }}">Download Instead</a></p>
-            </object>
+        @if ($output['kegiatan']->surat_tugas)
+            @if ($output['is_pdf']['surat_tugas'])
+                <object data="{{ URL::asset($output['kegiatan']->surat_tugas) }}" type="application/pdf"
+                    frameborder="0" width="100%" height="600px" style="padding: 20px;">
+                    <p>Oops! Your browser doesn't support PDFs!</p>
+                    <p><a href="{{ URL::asset($output['kegiatan']->surat_tugas) }}">Download Instead</a></p>
+                </object>
+            @else
+                <img src="{{ URL::asset($output['kegiatan']->surat_tugas) }}" class="img-fluid"
+                    style="max-height: 100%" alt="image surat tugas">
+            @endif
         @else
-            <img src="{{ URL::asset($output['kegiatan']->surat_tugas) }}" class="img-fluid" style="max-height: 100%"
-                alt="image surat tugas">
+            <em class="text-muted">Data tidak tersedia</em>
         @endif
     </div>
 
     <div class="card-body">
         <h4>2. Foto Kegiatan</h4>
-        @if ($output['is_pdf']['foto_kegiatan'])
-            <object data="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}" type="application/pdf" frameborder="0"
-                width="100%" height="600px" style="padding: 20px;">
-                <p>Oops! Your browser doesn't support PDFs!</p>
-                <p><a href="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}">Download Instead</a></p>
-            </object>
+        @if ($output['kegiatan']->foto_kegiatan)
+            @if ($output['is_pdf']['foto_kegiatan'])
+                <object data="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}" type="application/pdf"
+                    frameborder="0" width="100%" height="600px" style="padding: 20px;">
+                    <p>Oops! Your browser doesn't support PDFs!</p>
+                    <p><a href="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}">Download Instead</a></p>
+                </object>
+            @else
+                <img src="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}" class="img-fluid"
+                    style="max-height: 100%" alt="image surat tugas">
+            @endif
         @else
-            <img src="{{ URL::asset($output['kegiatan']->foto_kegiatan) }}" class="img-fluid" style="max-height: 100%"
-                alt="image surat tugas">
+            <em class="text-muted">Data tidak tersedia</em>
         @endif
     </div>
 
     <div class="card-body">
         <h4>3. Bukti Kegiatan</h4>
-        @if ($output['is_pdf']['bukti_kegiatan'])
-            <object data="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}" type="application/pdf" frameborder="0"
-                width="100%" height="600px" style="padding: 20px;">
-                <p>Oops! Your browser doesn't support PDFs!</p>
-                <p><a href="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}">Download Instead</a></p>
-            </object>
+        @if ($output['kegiatan']->bukti_kegiatan)
+            @if ($output['is_pdf']['bukti_kegiatan'])
+                <object data="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}" type="application/pdf"
+                    frameborder="0" width="100%" height="600px" style="padding: 20px;">
+                    <p>Oops! Your browser doesn't support PDFs!</p>
+                    <p><a href="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}">Download Instead</a></p>
+                </object>
+            @else
+                <img src="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}" class="img-fluid"
+                    style="max-height: 100%" alt="image surat tugas">
+            @endif
         @else
-            <img src="{{ URL::asset($output['kegiatan']->bukti_kegiatan) }}" class="img-fluid" style="max-height: 100%"
-                alt="image surat tugas">
+            <em class="text-muted">Data tidak tersedia</em>
         @endif
     </div>
 
@@ -186,7 +218,7 @@
             confirmButtonText: 'Ya',
             cancelButtonText: 'Tidak'
         }).then((result) => {
-            console.log($('input[name=prestasi]').val());
+            // console.log($('input[name=prestasi]').val());
             if (result.value) {
                 $.ajaxSetup({
                     headers: {

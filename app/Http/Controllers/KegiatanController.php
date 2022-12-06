@@ -164,12 +164,14 @@ class KegiatanController extends Controller
             'tanggal_akhir' => 'required',
             'klasifikasi_id' => 'required',
             'cakupan' => 'required',
-            'prestasi' => 'nullable',
             'keterangan' => 'required',
-            'url_event' => 'required|url',
-            'surat_tugas' => 'required|mimes:pdf,png,jpg,jpeg|max:5120',
-            'foto_kegiatan' => 'required|mimes:pdf,png,jpg,jpeg|max:5120',
-            'bukti_kegiatan' => 'required|mimes:pdf,png,jpg,jpeg|max:5120',
+            // optional input
+            'prestasi' => 'nullable',
+            'url_event' => 'nullable',
+            'url_publikasi' => 'nullable',
+            'surat_tugas' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
+            'foto_kegiatan' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
+            'bukti_kegiatan' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
         ]);
 
         // dd($request);
@@ -193,7 +195,7 @@ class KegiatanController extends Controller
             $mahasiswa = Mahasiswa::where('nim', $request->nim)
                 ->select('nama_mahasiswa', 'prodi')
                 ->first();
-                
+
             $param_nim = $request->nim;
             $param_nama = $mahasiswa->nama_mahasiswa;
             $param_prodi = $mahasiswa->prodi;
@@ -201,6 +203,25 @@ class KegiatanController extends Controller
             $param_nim = session('user.id');
             $param_nama = session('user.nama');
             $param_prodi = session('user.prodi');
+        }
+
+        if (isset($request->url_event)) {
+            if (strpos($request->url_event, 'http://') !== false) {
+                $url_event = $request->url_event;
+            } else {
+                $url_event = 'http://' . $request->url_event;
+            }
+        } else {
+            $url_event = null;
+        }
+        if (isset($request->url_publikasi)) {
+            if (strpos($request->url_publikasi, 'http://') !== false) {
+                $url_publikasi = $request->url_publikasi;
+            } else {
+                $url_publikasi = 'http://' . $request->url_publikasi;
+            }
+        } else {
+            $url_publikasi = null;
         }
 
         $post = Kegiatan::create([
@@ -214,7 +235,8 @@ class KegiatanController extends Controller
             'klasifikasi_id' => $request->klasifikasi_id,
             'cakupan' => $request->cakupan,
             'prestasi' => $request->prestasi,
-            'url_event' => $request->url_event,
+            'url_event' => $url_event,
+            'url_publikasi' => $url_publikasi,
             'surat_tugas' => $surat_tugas_path,
             'foto_kegiatan' => $foto_kegiatan_path,
             'bukti_kegiatan' => $bukti_kegiatan_path,
@@ -225,7 +247,13 @@ class KegiatanController extends Controller
 
         if ($post) {
             Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil dibuat!');
-            return redirect(route('kegiatan.history'));
+            if ($request->nim) {
+                // redirect untuk dpm & kemahasiswaan
+                return redirect(route('kegiatan.list'));
+            } else {
+                // redirect untuk mahasiswa
+                return redirect(route('kegiatan.history'));
+            }
         } else {
             return redirect()
                 ->back()
@@ -283,6 +311,21 @@ class KegiatanController extends Controller
         $data['klasifikasi'] = $klasifikasi->groupBy('group_kegiatan');
         $data['periode'] = Periode::all();
 
+        $data['is_mahasiswa'] = true;
+
+        // if not mahasiswa
+        $user = Auth::user();
+        if (!$user->hasRole('mahasiswa')) {
+            // if role is kemahasiswaan or dosen
+            $data['is_mahasiswa'] = false;
+
+            $fetch_mahasiswa = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
+            if ($fetch_mahasiswa->count() > 0) {
+                $collection = collect($fetch_mahasiswa);
+                $data['mahasiswa'] = $collection->keyBy('nim')->all();
+            }
+        }
+
         // dd($data);
         return view('kegiatan.form', compact('data'));
     }
@@ -295,9 +338,11 @@ class KegiatanController extends Controller
             'tanggal_akhir' => 'required',
             'klasifikasi_id' => 'required',
             'cakupan' => 'required',
-            'prestasi' => 'nullable',
             'keterangan' => 'required',
-            'url_event' => 'required|url',
+            // optional input
+            'prestasi' => 'nullable',
+            'url_event' => 'nullable',
+            'url_publikasi' => 'nullable',
             'surat_tugas' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
             'foto_kegiatan' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
             'bukti_kegiatan' => 'nullable|mimes:pdf,png,jpg,jpeg|max:5120',
@@ -312,9 +357,11 @@ class KegiatanController extends Controller
             $surat_tugas_path = $this->upload_file($request->file('surat_tugas'), 'surat_tugas');
 
             // delete previous file
-            $prev_file = public_path($kegiatan->surat_tugas);
-            if (file_exists($prev_file)) {
-                unlink($prev_file);
+            if ($kegiatan->surat_tugas) {
+                $prev_file = public_path($kegiatan->surat_tugas);
+                if (file_exists($prev_file)) {
+                    unlink($prev_file);
+                }
             }
         }
 
@@ -322,9 +369,11 @@ class KegiatanController extends Controller
             $foto_kegiatan_path = $this->upload_file($request->file('foto_kegiatan'), 'foto_kegiatan');
 
             // delete previous file
-            $prev_file = public_path($kegiatan->foto_kegiatan);
-            if (file_exists($prev_file)) {
-                unlink($prev_file);
+            if ($kegiatan->foto_kegiatan) {
+                $prev_file = public_path($kegiatan->foto_kegiatan);
+                if (file_exists($prev_file)) {
+                    unlink($prev_file);
+                }
             }
         }
 
@@ -332,10 +381,31 @@ class KegiatanController extends Controller
             $bukti_kegiatan_path = $this->upload_file($request->file('bukti_kegiatan'), 'bukti_kegiatan');
 
             // delete previous file
-            $prev_file = public_path($kegiatan->bukti_kegiatan);
-            if (file_exists($prev_file)) {
-                unlink($prev_file);
+            if ($kegiatan->bukti_kegiatan) {
+                $prev_file = public_path($kegiatan->bukti_kegiatan);
+                if (file_exists($prev_file)) {
+                    unlink($prev_file);
+                }
             }
+        }
+
+        if (isset($request->url_event)) {
+            if (strpos($request->url_event, 'http://') !== false) {
+                $url_event = $request->url_event;
+            } else {
+                $url_event = 'http://' . $request->url_event;
+            }
+        } else {
+            $url_event = null;
+        }
+        if (isset($request->url_publikasi)) {
+            if (strpos($request->url_publikasi, 'http://') !== false) {
+                $url_publikasi = $request->url_publikasi;
+            } else {
+                $url_publikasi = 'http://' . $request->url_publikasi;
+            }
+        } else {
+            $url_publikasi = null;
         }
 
         $update_params = [
@@ -347,7 +417,8 @@ class KegiatanController extends Controller
             'tanggal_akhir' => $request->tanggal_akhir,
             'klasifikasi_id' => $request->klasifikasi_id,
             'cakupan' => $request->cakupan,
-            'url_event' => $request->url_event,
+            'url_event' => $url_event,
+            'url_publikasi' => $url_publikasi,
             'keterangan' => $request->keterangan,
         ];
 
@@ -367,7 +438,13 @@ class KegiatanController extends Controller
 
         if ($kegiatan) {
             Alert::success('Berhasil!', 'Data kegiatan mahasiswa berhasil diupdate!');
-            return redirect(route('kegiatan.history'));
+            if ($request->nim) {
+                // redirect untuk dpm & kemahasiswaan
+                return redirect(route('kegiatan.list'));
+            } else {
+                // redirect untuk mahasiswa
+                return redirect(route('kegiatan.history'));
+            }
         } else {
             return redirect()
                 ->back()

@@ -134,20 +134,6 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
-                                        <label for="name">URL/Link Pendaftaran</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="url-event" class="form-control " name="url_event"
-                                            placeholder="URL/Link Pendaftaran"
-                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->url_event : old('url_event') }}"
-                                            required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 col-form-label">
                                         <label for="name">Keterangan</label>
                                     </div>
                                     <div class="col-sm-9">
@@ -159,11 +145,50 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
-                                        <label for="name">Surat Tugas</label>
+                                        <label for="name">URL Penyelenggara**</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="url-event" class="form-control " name="url_event"
+                                            placeholder="URL Penyelenggara"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->url_event : old('url_event') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">URL Publikasi**</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="url-publikasi" class="form-control "
+                                            name="url_publikasi" placeholder="URL Penyelenggara"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->url_publikasi : old('url_publikasi') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Prestasi Yang Diraih**</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="prestasi" class="form-control " name="prestasi"
+                                            placeholder="Prestasi Yang Diraih"
+                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->prestasi : old('prestasi') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Upload Surat Tugas**</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <img id="surat-tugas-preview" class="img-fluid my-1 col-sm-5"
-                                            {{ isset($data['kegiatan']) ? 'src=' . URL::asset($data['kegiatan']->surat_tugas) : '' }}>
+                                            {{ isset($data['kegiatan']) && $data['kegiatan']->surat_tugas ? 'src=' . URL::asset($data['kegiatan']->surat_tugas) : 'src=' . URL::asset('no-uploaded.png') }}>
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="file-surat-tugas"
                                                 name="surat_tugas" onchange="javascript:previewImage('surat-tugas')"
@@ -177,11 +202,11 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
-                                        <label for="name">Foto Kegiatan</label>
+                                        <label for="name">Upload Foto Kegiatan**</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <img id="foto-kegiatan-preview" class="img-fluid my-1 col-sm-5"
-                                            {{ isset($data['kegiatan']) ? 'src=' . URL::asset($data['kegiatan']->foto_kegiatan) : '' }}>
+                                            {{ isset($data['kegiatan']) && $data['kegiatan']->foto_kegiatan ? 'src=' . URL::asset($data['kegiatan']->foto_kegiatan) : 'src=' . URL::asset('no-uploaded.png') }}>
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="file-foto-kegiatan"
                                                 name="foto_kegiatan" onchange="javascript:previewImage('foto-kegiatan')"
@@ -195,11 +220,11 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
-                                        <label for="name">Bukti Kegiatan (sertifikat, dll)</label>
+                                        <label for="name">Upload Bukti Kegiatan (sertifikat, dll)**</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <img id="bukti-kegiatan-preview" class="img-fluid my-1 col-sm-5"
-                                            {{ isset($data['kegiatan']) ? 'src=' . URL::asset($data['kegiatan']->bukti_kegiatan) : '' }}>
+                                            {{ isset($data['kegiatan']) && $data['kegiatan']->bukti_kegiatan ? 'src=' . URL::asset($data['kegiatan']->bukti_kegiatan) : 'src=' . URL::asset('no-uploaded.png') }}>
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="file-bukti-kegiatan"
                                                 name="bukti_kegiatan" onchange="javascript:previewImage('bukti-kegiatan')"
@@ -219,17 +244,10 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
-                                        <label for="name">Prestasi</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="prestasi" class="form-control " name="prestasi"
-                                            placeholder="Prestasi"
-                                            value="{{ isset($data['kegiatan']) ? $data['kegiatan']->prestasi : old('prestasi') }}"
-                                            required>
+                                        <label for="name"><em>NB (**): Boleh dikosongkan</em></label>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-sm-9 offset-sm-3">
                                 <button type="submit"
                                     class="btn btn-primary mr-1 waves-effect waves-float waves-light">Submit
