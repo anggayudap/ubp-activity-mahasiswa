@@ -17,8 +17,10 @@ class ProposalController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status']);
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status', 'laporan_rejected_kemahasiswaan', 'prodi'])->with(['prodi_mahasiswa']);
             $user = Auth::user();
+
+            // dd($data);
 
             if (!$user->hasRole('kemahasiswaan')) {
                 // if role only dosen
@@ -62,10 +64,14 @@ class ProposalController extends Controller
                     return $btn;
                 })
                 ->editColumn('next_approval', function (Proposal $proposal) {
-                    if ($proposal->current_status == 'reject') {
+                    if ($proposal->laporan_rejected_kemahasiswaan) {
+                        return trans('serba.reject_laporan');
+                    } elseif ($proposal->current_status == 'reject') {
                         return trans('serba.reject');
+                    } elseif ($proposal->current_status == 'completed') {
+                        return trans('serba.' . $proposal->current_status);
                     }
-                    return trans('serba.' . $proposal->next_approval);
+                    return trans('serba.' . $proposal->current_status) . trans('serba.' . $proposal->next_approval);
                 })
                 ->rawColumns(['action', 'next_approval'])
                 ->removeColumn('id')
@@ -81,7 +87,9 @@ class ProposalController extends Controller
     public function history(Request $request)
     {
         if ($request->ajax()) {
-            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status'])->where('nim', session('user.id'));
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status', 'laporan_rejected_kemahasiswaan', 'prodi'])
+                ->with(['prodi_mahasiswa'])
+                ->where('nim', session('user.id'));
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -113,16 +121,23 @@ class ProposalController extends Controller
                             ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
                             </form>';
                     }
+                    if (in_array($row->current_status, ['upload_laporan', 'laporan_diupload']) || $row->laporan_rejected_kemahasiswaan == '1') {
+                        $btn .= '<a href="#" data-toggle="modal" data-target="#xlarge-upload-laporan" onclick="upload_laporan(' . $row->id . ')" class="dropdown-item"><i data-feather="upload"></i> Upload Laporan</a>';
+                    }
                     $btn .= '</div>
                         </div>';
 
                     return $btn;
                 })
                 ->editColumn('next_approval', function (Proposal $proposal) {
-                    if ($proposal->current_status == 'reject') {
+                    if ($proposal->laporan_rejected_kemahasiswaan) {
+                        return trans('serba.reject_laporan');
+                    } elseif ($proposal->current_status == 'reject') {
                         return trans('serba.reject');
+                    } elseif ($proposal->current_status == 'completed') {
+                        return trans('serba.' . $proposal->current_status);
                     }
-                    return trans('serba.' . $proposal->next_approval);
+                    return trans('serba.' . $proposal->current_status) . trans('serba.' . $proposal->next_approval);
                 })
                 ->rawColumns(['action', 'next_approval'])
                 ->removeColumn('id')
@@ -138,7 +153,8 @@ class ProposalController extends Controller
     public function approval_fakultas(Request $request)
     {
         if ($request->ajax()) {
-            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status'])
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status', 'laporan_rejected_kemahasiswaan', 'prodi'])
+                ->with(['prodi_mahasiswa'])
                 // ->where('prodi', session('user.prodi')) /** prodi equals with prodi user */
                 ->where('current_status', 'pending')
                 ->where('next_approval', 'fakultas');
@@ -159,7 +175,9 @@ class ProposalController extends Controller
                     return $btn;
                 })
                 ->editColumn('next_approval', function (Proposal $proposal) {
-                    if ($proposal->current_status == 'reject') {
+                    if ($proposal->laporan_rejected_kemahasiswaan) {
+                        return trans('serba.reject_laporan');
+                    } elseif ($proposal->current_status == 'reject') {
                         return trans('serba.reject');
                     }
                     return trans('serba.' . $proposal->next_approval);
@@ -178,7 +196,8 @@ class ProposalController extends Controller
     public function approval_kemahasiswaan(Request $request)
     {
         if ($request->ajax()) {
-            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status'])
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status', 'laporan_rejected_kemahasiswaan', 'prodi'])
+                ->with(['prodi_mahasiswa'])
                 ->where('current_status', 'pending')
                 ->where('next_approval', 'kemahasiswaan');
             return Datatables::of($data)
@@ -198,7 +217,9 @@ class ProposalController extends Controller
                     return $btn;
                 })
                 ->editColumn('next_approval', function (Proposal $proposal) {
-                    if ($proposal->current_status == 'reject') {
+                    if ($proposal->laporan_rejected_kemahasiswaan) {
+                        return trans('serba.reject_laporan');
+                    } elseif ($proposal->current_status == 'reject') {
                         return trans('serba.reject');
                     }
                     return trans('serba.' . $proposal->next_approval);
@@ -215,43 +236,48 @@ class ProposalController extends Controller
         return view('proposal.index', compact('data'));
     }
 
-    public function approve(Request $request)
+    public function approval_laporan(Request $request)
     {
         if ($request->ajax()) {
-            $proposal = Proposal::findOrFail($request->id);
-            $param = [];
+            $data = Proposal::select(['id', 'date', 'judul_proposal', 'nama_mahasiswa', 'ketua_pelaksana', 'next_approval', 'is_editable', 'current_status', 'laporan_rejected_kemahasiswaan', 'prodi'])
+                ->with(['prodi_mahasiswa'])
+                ->where('current_status', 'laporan_diupload')
+                ->where('next_approval', 'kemahasiswaan')
+                ->whereNotNull('file_laporan');
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn =
+                        '<div class="dropdown">
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right" style="">
+                        <a href="#" data-toggle="modal" data-target="#approval-modal" onclick="javascript:approval(' .
+                        $row->id .
+                        ');" class="dropdown-item"><i data-feather="check"></i> Approval Laporan</a>';
 
-            if ($request->type == 'fakultas') {
-                $param = [
-                    'next_approval' => 'kemahasiswaan',
-                    'current_status' => 'pending',
-                    'fakultas_approval_date' => date('Y-m-d H:i:s'),
-                    'rejected_fakultas' => '0',
-                    'is_editable' => '0',
-                    'reject_note' => null,
-                ];
-            } elseif ($request->type == 'kemahasiswaan') {
-                $param = [
-                    'next_approval' => 'completed',
-                    'current_status' => 'completed',
-                    'kemahasiswaan_approval_date' => date('Y-m-d H:i:s'),
-                    'rejected_kemahasiswaan' => '0',
-                    'is_editable' => '0',
-                    'reject_note' => null,
-                ];
-            }
+                    $btn .= '</div>
+                        </div>';
 
-            // update to table
-            $proposal->update($param);
-
-            if ($proposal) {
-                return response()->json(['success' => true, 'message' => 'Proposal berhasil di approve', 'redirect' => route('proposal.list')]);
-            } else {
-                return response()->json(['success' => true, 'message' => 'Terjadi error saat approve. Harap hub. administrator anda.']);
-            }
+                    return $btn;
+                })
+                ->editColumn('next_approval', function (Proposal $proposal) {
+                    if ($proposal->laporan_rejected_kemahasiswaan) {
+                        return trans('serba.reject_laporan');
+                    } elseif ($proposal->current_status == 'reject') {
+                        return trans('serba.reject');
+                    }
+                    return trans('serba.' . $proposal->next_approval);
+                })
+                ->rawColumns(['action', 'next_approval'])
+                ->removeColumn('id')
+                ->make(true);
         }
 
-        return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
+        $data['heading'] = 'Approval Laporan';
+        $data['datasource'] = 'proposal.approval_laporan';
+        $data['approval'] = 'laporan';
+
+        return view('proposal.index', compact('data'));
     }
 
     public function reject(Request $request)
@@ -289,6 +315,49 @@ class ProposalController extends Controller
         return response()->json(['success' => true, 'message' => 'Terjadi error. Harap hub. administrator anda.']);
     }
 
+    public function submit_laporan(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required',
+            'file_laporan' => 'required|file|max:5120',
+        ]);
+
+        $laporan_proposal_path = null;
+
+        if ($request->file('file_laporan')) {
+            $laporan_proposal_path = $this->upload_file($request->file('file_laporan'), 'file_laporan');
+        }
+
+        $post = Proposal::where('id', $request->id);
+
+        // delete prev file if exists
+        // dd($post);
+        $proposal = $post->first();
+        if ($proposal->file_laporan) {
+            $prev_file = public_path($proposal->file_laporan);
+            if (file_exists($prev_file)) {
+                unlink($prev_file);
+            }
+        }
+
+        $post->update([
+            'file_laporan' => $laporan_proposal_path,
+            'laporan_uploaded' => date('Y-m-d H:i:s'),
+            'laporan_rejected_kemahasiswaan' => 0,
+            'laporan_kemahasiswaan_approval_date' => null,
+            'laporan_kemahasiswaan_user_id' => null,
+            'laporan_kemahasiswaan_user_name' => null,
+            'current_status' => 'laporan_diupload',
+        ]);
+
+        if ($post) {
+            Alert::success('Berhasil!', 'Laporan berhasil di upload!');
+            return redirect(route('proposal.history'));
+        } else {
+            Alert::error('Gagal!', 'Laporan tidak dapat di upload!');
+            return redirect(route('proposal.history'));
+        }
+    }
     public function submit_approval(Request $request)
     {
         if ($request->ajax()) {
@@ -315,18 +384,18 @@ class ProposalController extends Controller
                         'reject_note' => $request->note,
                     ];
                 }
-
             } elseif ($request->approval == 'kemahasiswaan') {
                 if ($request->type == 'approve') {
                     $param = [
                         'kemahasiswaan_user_id' => session('user.user_id'),
                         'kemahasiswaan_user_name' => session('user.nama'),
-                        'next_approval' => 'completed',
-                        'current_status' => 'completed',
+                        'next_approval' => 'kemahasiswaan',
+                        'current_status' => 'upload_laporan',
                         'kemahasiswaan_approval_date' => date('Y-m-d H:i:s'),
                         'rejected_kemahasiswaan' => '0',
                         'is_editable' => '0',
                         'reject_note' => null,
+                        'laporan_deadline' => date('Y-m-d', strtotime($proposal->tanggal_akhir . '+10 days')),
                     ];
                 } elseif ($request->type == 'reject') {
                     $param = [
@@ -336,13 +405,33 @@ class ProposalController extends Controller
                         'reject_note' => $request->note,
                     ];
                 }
-
-                // update input oleh dpm/kemahasiswaan saat approve proposal
-                $param['date'] = $request->data['date'];
-                $param['judul_proposal'] = $request->data['judul_proposal'];
-                $param['ketua_pelaksana'] = $request->data['ketua_pelaksana'];
-                $param['anggaran_pengajuan'] = $request->data['anggaran_pengajuan'];
+            } elseif ($request->approval == 'laporan') {
+                if ($request->type == 'approve') {
+                    $param = [
+                        'laporan_kemahasiswaan_user_id' => session('user.user_id'),
+                        'laporan_kemahasiswaan_user_name' => session('user.nama'),
+                        'next_approval' => 'completed',
+                        'current_status' => 'completed',
+                        'laporan_kemahasiswaan_approval_date' => date('Y-m-d H:i:s'),
+                        'laporan_rejected_kemahasiswaan' => '0',
+                        'is_editable' => '0',
+                        'reject_note' => null,
+                    ];
+                } elseif ($request->type == 'reject') {
+                    $param = [
+                        'current_status' => 'reject',
+                        'laporan_rejected_kemahasiswaan' => '1',
+                        'is_editable' => '0',
+                        'reject_note' => $request->note,
+                    ];
+                }
             }
+
+            // update input oleh dpm/kemahasiswaan saat approve proposal
+            $param['date'] = $request->data['date'];
+            $param['judul_proposal'] = $request->data['judul_proposal'];
+            $param['ketua_pelaksana'] = $request->data['ketua_pelaksana'];
+            $param['anggaran_pengajuan'] = $request->data['anggaran_pengajuan'];
 
             // update to table
             $proposal->update($param);
@@ -370,6 +459,8 @@ class ProposalController extends Controller
             'ketua_pelaksana' => 'required',
             'anggaran_pengajuan' => 'required|numeric',
             'file_proposal' => 'required|file|max:5120',
+            'tanggal_mulai' => 'required',
+            'tanggal_akhir' => 'required',
         ]);
 
         $file_proposal_path = null;
@@ -381,10 +472,12 @@ class ProposalController extends Controller
         $post = Proposal::create([
             'nim' => session('user.id'),
             'nama_mahasiswa' => session('user.nama'),
-            'prodi' => session('user.prodi'), 
+            'prodi' => session('user.prodi'),
             'date' => $request->date,
             'judul_proposal' => $request->judul_proposal,
             'ketua_pelaksana' => $request->ketua_pelaksana,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_akhir' => $request->tanggal_akhir,
             'anggaran_pengajuan' => $request->anggaran_pengajuan,
             'file_proposal' => $file_proposal_path,
             'current_status' => 'pending',
@@ -412,6 +505,13 @@ class ProposalController extends Controller
         return view('proposal.modal_detail', compact('output'));
     }
 
+    public function upload_laporan($id)
+    {
+        $output = $this->fetch_detail_proposal($id);
+
+        return view('proposal.modal_upload_laporan', compact('output'));
+    }
+
     public function approval($id)
     {
         $output = $this->fetch_detail_proposal($id);
@@ -425,14 +525,28 @@ class ProposalController extends Controller
             ->with(['prodi_mahasiswa'])
             ->first();
 
-        $output['is_pdf']['file_proposal'] = false;
+        if ($output['proposal']->file_proposal) {
+            $output['is_pdf']['file_proposal'] = false;
 
-        $file_name = $output['proposal']->file_proposal;
-        $str_pieces = explode('.', $file_name);
-        $extensions = end($str_pieces);
+            $file_name = $output['proposal']->file_proposal;
+            $str_pieces = explode('.', $file_name);
+            $extensions = end($str_pieces);
 
-        if ($extensions == 'pdf') {
-            $output['is_pdf']['file_proposal'] = true;
+            if ($extensions == 'pdf') {
+                $output['is_pdf']['file_proposal'] = true;
+            }
+        }
+
+        if ($output['proposal']->file_laporan) {
+            $output['is_pdf']['file_laporan'] = false;
+
+            $file_name = $output['proposal']->file_laporan;
+            $str_pieces = explode('.', $file_name);
+            $extensions = end($str_pieces);
+
+            if ($extensions == 'pdf') {
+                $output['is_pdf']['file_laporan'] = true;
+            }
         }
 
         return $output;
@@ -453,6 +567,8 @@ class ProposalController extends Controller
             'ketua_pelaksana' => 'required',
             'anggaran_pengajuan' => 'required|numeric',
             'file_proposal' => 'nullable|file|max:5120',
+            'tanggal_mulai' => 'required',
+            'tanggal_akhir' => 'required',
         ]);
 
         $proposal = Proposal::findOrFail($id);
@@ -469,6 +585,8 @@ class ProposalController extends Controller
             'date' => $request->date,
             'judul_proposal' => $request->judul_proposal,
             'ketua_pelaksana' => $request->ketua_pelaksana,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_akhir' => $request->tanggal_akhir,
             'anggaran_pengajuan' => $request->anggaran_pengajuan,
             'current_status' => 'pending',
         ];

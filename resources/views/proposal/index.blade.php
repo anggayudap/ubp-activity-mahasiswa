@@ -18,6 +18,7 @@
                                     <th>{{ __('Tanggal') }}</th>
                                     <th>{{ __('Judul Proposal') }}</th>
                                     <th>{{ __('Nama Mahasiswa') }}</th>
+                                    <th>{{ __('Prodi') }}</th>
                                     <th>{{ __('Ketua Pelaksana') }}</th>
                                     <th>{{ __('Status Approval') }}</th>
                                     <th>{{ __('Aksi') }}</th>
@@ -32,7 +33,7 @@
 
     <div class="modal fade text-left" id="xlarge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel16">Detail Proposal Kegiatan</h4>
@@ -41,6 +42,21 @@
                     </button>
                 </div>
                 <div class="modal-body" id="detail-proposal">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade text-left" id="xlarge-upload-laporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel16">Upload Laporan Proposal Kegiatan</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="upload-laporan-proposal">
                 </div>
             </div>
         </div>
@@ -100,6 +116,10 @@
                     name: 'nama_mahasiswa'
                 },
                 {
+                    data: 'prodi_mahasiswa.nama_prodi',
+                    name: 'prodi_mahasiswa.nama_prodi'
+                },
+                {
                     data: 'ketua_pelaksana',
                     name: 'ketua_pelaksana'
                 },
@@ -155,10 +175,55 @@
             $('#detail-proposal').load(base_url + '/proposal/modal_detail/' + id);
         }
 
+        function upload_laporan(id) {
+            // $('#upload-laporan-proposal').remove();
+            $('#upload-laporan-proposal').load(base_url + '/proposal/upload_laporan/' + id);
+        }
+
         function approval(id) {
             // $('#approval-proposal').remove();
             $('#approval-proposal').load(base_url + '/proposal/approval/' + id);
         }
+
+        // function uploadLaporan() {
+        //     event.preventDefault();
+        //     Swal.fire({
+        //         width: 680,
+        //         title: 'Konfirmasi upload file laporan proposal?',
+        //         // text: "Data yang sudah di hapus tidak bisa dikembalikan!",
+        //         icon: 'question',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: 'Ya',
+        //         cancelButtonText: 'Tidak'
+        //     }).then((result) => {
+        //         const json_param = formConverter($('form').serializeArray());
+
+        //         // $.ajaxSetup({
+        //         //     headers: {
+        //         //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         //     }
+        //         // });
+        //         // $.ajax({
+        //         //     url: "{{ route('proposal.submit_approval') }}",
+        //         //     method: 'POST',
+        //         //     data: {
+        //         //         data: json_param,
+        //         //         type: 'approve',
+        //         //         approval : approval,
+        //         //     },
+        //         //     success: function(data) {
+        //         //         if (data.success) {
+        //         //             successMessage(data.message, data.redirect);
+        //         //         } else {
+        //         //             errorMessage(data.message);
+        //         //         }
+        //         //     }
+        //         // });
+        //         console.log(json_param);
+        //     });
+        // }
 
         function approveConfirm(approval) {
             event.preventDefault();

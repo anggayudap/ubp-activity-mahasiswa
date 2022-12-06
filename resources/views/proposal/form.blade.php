@@ -68,6 +68,34 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
+                                        <label for="name">Tanggal Mulai Kegiatan</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="start-date" class="form-control flatpickr-basic"
+                                            name="tanggal_mulai" placeholder="Tanggal Mulai"
+                                            value="{{ isset($data['proposal']) ? $data['proposal']->tanggal_mulai : old('tanggal_mulai') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="name">Tanggal Akhir Kegiatan</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="end-date" class="form-control flatpickr-basic"
+                                            name="tanggal_akhir" placeholder="Tanggal Akhir"
+                                            value="{{ isset($data['proposal']) ? $data['proposal']->tanggal_akhir : old('tanggal_akhir') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
                                         <label for="name">Anggaran Pengajuan</label>
                                     </div>
                                     <div class="col-sm-6">

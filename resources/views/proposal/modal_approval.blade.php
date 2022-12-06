@@ -86,18 +86,46 @@
     </form>
 </div>
 <div class="card-body">
-    <h4>Proposal</h4>
-
-    @if ($output['is_pdf']['file_proposal'])
-        <object data="{{ URL::asset($output['proposal']->file_proposal) }}" type="application/pdf" frameborder="0"
-            width="100%" height="600px" style="padding: 20px;">
-            <p>Oops! Your browser doesn't support PDFs!</p>
-            <p><a href="{{ URL::asset($output['proposal']->file_proposal) }}">Download Instead</a></p>
-        </object>
-    @else
-        <img src="{{ URL::asset($output['proposal']->file_proposal) }}" class="img-fluid" style="max-height: 100%"
-            alt="image surat tugas">
-    @endif
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" aria-controls="home"
+                role="tab" aria-selected="true">File Proposal</a>
+        </li>
+        @if (isset($output['is_pdf']) && $output['proposal']->file_laporan)
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" aria-controls="profile"
+                    role="tab" aria-selected="false">File Laporan</a>
+            </li>
+        @endif
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="home" aria-labelledby="home-tab" role="tabpanel">
+            @if (isset($output['is_pdf']) && $output['is_pdf']['file_proposal'])
+                <object data="{{ URL::asset($output['proposal']->file_proposal) }}" type="application/pdf"
+                    frameborder="0" width="100%" height="600px" style="padding: 20px;">
+                    <p>Oops! Your browser doesn't support PDFs!</p>
+                    <p><a href="{{ URL::asset($output['proposal']->file_proposal) }}">Download Instead</a></p>
+                </object>
+            @else
+                <img src="{{ URL::asset($output['proposal']->file_proposal) }}" class="img-fluid"
+                    style="max-height: 100%" alt="image surat tugas">
+            @endif
+        </div>
+        @if (isset($output['is_pdf']) && $output['proposal']->file_laporan)
+            <div class="tab-pane" id="profile" aria-labelledby="profile-tab" role="tabpanel">
+                @if ($output['is_pdf']['file_laporan'])
+                    <object data="{{ URL::asset($output['proposal']->file_laporan) }}" type="application/pdf"
+                        frameborder="0" width="100%" height="600px" style="padding: 20px;">
+                        <p>Oops! Your browser doesn't support PDFs!</p>
+                        <p><a href="{{ URL::asset($output['proposal']->file_laporan) }}">Download Instead</a></p>
+                    </object>
+                @else
+                    <img src="{{ URL::asset($output['proposal']->file_laporan) }}" class="img-fluid"
+                        style="max-height: 100%" alt="image surat tugas">
+                @endif
+            </div>
+        @endif
+    </div>
 
 </div>
 <script type="text/javascript">
