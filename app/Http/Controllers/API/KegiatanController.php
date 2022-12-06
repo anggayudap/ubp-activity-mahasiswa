@@ -27,6 +27,7 @@ class KegiatanController extends Controller
                     'nim' => $post->nim,
                     'id-kegiatan' => $post->id,
                     'klasifikasi' => $post->klasifikasi->name_kegiatan,
+                    'tahun-kegiatan' => $post->tahun_periode,
                     'bukti-sertifikat' => URL::asset($post->bukti_kegiatan),
                 ];
             }
@@ -68,6 +69,7 @@ class KegiatanController extends Controller
                         'nim' => $post->nim,
                         'id-kegiatan' => $post->id,
                         'klasifikasi' => $post->klasifikasi->name_kegiatan,
+                        'tahun-kegiatan' => $post->tahun_periode,
                         'bukti-sertifikat' => URL::asset($post->bukti_kegiatan),
                     ];
                 }
