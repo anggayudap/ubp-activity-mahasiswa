@@ -29,7 +29,7 @@
 <!-- BEGIN: Body-->
 
 <body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click"
-    data-menu="vertical-menu-modern" data-col="">
+    data-menu="vertical-menu-modern" data-col="" data-framework="laravel" data-asset-path="{{ URL::asset('vuexy').'/' }}">
     @include('sweetalert::alert')
 
     <!-- BEGIN: Header-->

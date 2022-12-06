@@ -2,15 +2,15 @@
 
 return [
     'pending_text' => 'Pending',
-    'menunggu_persetujuan_text' => 'Menunggu Persetujuan',
     'siap_diambil_text' => 'Siap Diambil',
     'selesai_text' => 'Selesai',
     'reject_text' => 'Rejected',
-    'pending' => '<div class="badge badge-warning">Pending</div>',
-    'menunggu_persetujuan' => '<div class="badge badge-warning">Menunggu Persetujuan</div>',
-    'siap_diambil' => '<div class="badge badge-success">Siap Diambil</div>',
+    'pending' => '<div class="badge badge-primary">Pending</div>',
+    'upload_laporan' => '<div class="badge badge-primary">Upload Laporan</div>',
+    'laporan_diupload' => '<div class="badge badge-success">Laporan Diupload</div>',
     'selesai' => '<div class="badge badge-secondary">Selesai</div>',
     'reject' => '<div class="badge badge-danger">Rejected</div>',
+    'reject_laporan' => '<div class="badge badge-danger">Laporan Rejected</div>',
 
     'checked_kemahasiswaan' => '<div class="badge badge-success">Ditinjau Kemahasiswaan</div>',
     'checked_dosen' => '<div class="badge badge-success">Ditinjau Dosen</div>',

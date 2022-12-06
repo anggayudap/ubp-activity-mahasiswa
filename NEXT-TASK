@@ -62,3 +62,55 @@ Authorization : 743jda0RAodasfRRi35e
 - DPM bisa tambah kegiatan : DONE
 
 - input field prestasi editable saat approval DPM & kemahasiswaan : DONE
+
+
+
+====================================================================================================
+TAMBAHAN
+- dashboard untuk alert upload laporan proposal
+
+
+
+
+
+
+
+
+
+
+
+- REPORT SUMMARY SESUAI FORMAT DI WA : DONE
+- ALL REPORT : tambahkan EXPORT TO EXCEL : DONE
+
++ URL Publikasi (opsional) (DONE)
+
+ input opsional :  DONE
+- url penyelenggara
+- surat tugas
+- foto kegiatan
+- bukti sertifikat
+
+url penyelenggara tambahin http di depannya : DONE
+
+- URL/Link Pendaftaran -> URL Penyelenggara : DONEEE
+- Prestasi -> prestasi yang diraih : DONEEE
+
++ Tanggal kegiatan (http://simkatmawa.ubpkarawang.ac.id/proposal/create)
+- input range tanggal kegiatan di input proposal : tgl mulai kegiatan - tgl berkahir kegiatan  (DONE)
+
+- tab navigation file proposal & laporan -> detail modal DONE
+
+- size modal diperbesar -> xl DONE
+
+- tambah kolom prodi di menu list proposal : DONE
+
+API
+tambah output tahun kegiatan : DONE
+
+- setelah acc kemahasiswaan -> upload laporan (pdf) : (DONE)
+- maksimal upload adalah +10 hari dari tgl terakhir kegiatan : DONE
+
++ laporan proposal kegiatan
+	Laporan (format upload : PDF) : DONE
+
+- report custom summary : tambah kolom summary tingkat (nasional, lokal, internasional) : DONE

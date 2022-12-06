@@ -44,9 +44,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/proposal/list', [ProposalController::class, 'list'])->name('proposal.list')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/history', [ProposalController::class, 'history'])->name('proposal.history')->middleware('role:mahasiswa');
     Route::get('/proposal/modal_detail/{id}', [ProposalController::class, 'detail'])->name('proposal.detail');
+    Route::get('/proposal/upload_laporan/{id}', [ProposalController::class, 'upload_laporan'])->name('proposal.upload_laporan');
+    Route::post('/proposal/submit_laporan', [ProposalController::class, 'submit_laporan'])->name('proposal.submit_laporan');
     Route::get('/proposal/approval/{id}', [ProposalController::class, 'approval'])->name('proposal.approval');
     Route::get('/proposal/approval_fakultas', [ProposalController::class, 'approval_fakultas'])->name('proposal.approval_fakultas')->middleware('role:dosen|kemahasiswaan');
     Route::get('/proposal/approval_kemahasiswaan', [ProposalController::class, 'approval_kemahasiswaan'])->name('proposal.approval_kemahasiswaan')->middleware('role:dosen|kemahasiswaan');
+    Route::get('/proposal/approval_laporan', [ProposalController::class, 'approval_laporan'])->name('proposal.approval_laporan')->middleware('role:dosen|kemahasiswaan');
     // Route::post('/proposal/approve', [ProposalController::class, 'approve'])->name('proposal.approve');
     // Route::post('/proposal/reject', [ProposalController::class, 'reject'])->name('proposal.reject');
     Route::post('/proposal/submit_approval', [ProposalController::class, 'submit_approval'])->name('proposal.submit_approval');

@@ -99,6 +99,13 @@
                                     {{-- <span class="badge badge-light-danger badge-pill ml-auto mr-2">2</span> --}}
                                 </a>
                             </li>
+                            <li class="{{ request()->is('proposal/approval_laporan*') ? 'active' : '' }}">
+                                <a class="d-flex align-items-center" href="{{ route('proposal.approval_laporan') }}">
+                                    <i data-feather="circle"></i><span class="menu-item text-truncate"
+                                        data-i18n="Laporan">Laporan</span>
+                                    {{-- <span class="badge badge-light-danger badge-pill ml-auto mr-2">2</span> --}}
+                                </a>
+                            </li>
                         @endrole
                     </ul>
                 </li>
