@@ -27,6 +27,7 @@ class CreateKegiatansTable extends Migration
             $table->text('surat_tugas')->nullable();
             $table->text('foto_kegiatan')->nullable();
             $table->text('url_event')->nullable();
+            $table->text('url_publikasi')->nullable();
             $table->text('bukti_kegiatan')->nullable();
             $table->text('keterangan')->nullable();
             $table->string('prestasi')->nullable();
