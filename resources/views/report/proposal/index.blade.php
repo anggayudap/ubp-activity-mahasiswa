@@ -43,12 +43,13 @@
                                             <select class="form-control" name="prodi" id="prodi">
                                                 <option value="all">SEMUA PRODI</option>
                                                 @foreach ($data['fetch_prodi'] as $prodi)
-                                                    <option value="{{ $prodi->kode_prodi }}">{{ $prodi->nama_prodi }}</option>
+                                                    <option value="{{ $prodi->kode_prodi }}">{{ $prodi->nama_prodi }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
                                             <label>Status Proposal <em>(Pilih satu atau lebih)</em></label>
@@ -57,6 +58,7 @@
                                             <select class="form-control" name="status[]" id="status" multiple="multiple">
                                                 <option value="wait_fakultas">Menunggu Approval Fakultas</option>
                                                 <option value="wait_kemahasiswaan">Menunggu Approval Kemahasiswaan</option>
+                                                <option value="upload_laporan">Upload Laporan</option>
                                                 <option value="reject">Reject</option>
                                                 <option value="completed">Selesai</option>
                                             </select>
@@ -81,6 +83,8 @@
                                 <div class="col-md-6 offset-md-3">
                                     <button type="submit" name="submit" value="view" class="btn btn-primary mr-1"><i
                                             data-feather="file-text" class="mr-1"></i>Lihat Report</button>
+                                    <button type="submit" name="submit" value="export" class="btn btn-success mr-1"><i
+                                            data-feather="download" class="mr-1"></i>Export Excel</button>
                                 </div>
                             </div>
                         </form>

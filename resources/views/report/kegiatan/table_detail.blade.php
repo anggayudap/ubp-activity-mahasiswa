@@ -6,7 +6,7 @@
 @section('content')
     <div class="content-header row">
         <div class="col-12 d-flex  justify-content-md-center align-self-center">
-            <h1>Report Kegiatan Mahasiswa</h1>
+            <h1>Report :: Detail Kegiatan Mahasiswa</h1>
         </div>
 
     </div>
@@ -27,13 +27,14 @@
                                 <th scope="col">Klasifikasi</th>
                                 <th scope="col">Tanggal Kegiatan</th>
                                 <th scope="col">Cakupan</th>
-                                <th scope="col">Link Kegiatan</th>
+                                <th scope="col">URL Penyelenggara</th>
+                                <th scope="col">URL Publikasi</th>
                                 <th scope="col">Surat Tugas</th>
                                 <th scope="col">Foto Kegiatan</th>
                                 <th scope="col">Bukti Kegiatan</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Approval</th>
-                                <th scope="col">Prestasi</th>
+                                <th scope="col">Prestasi Yang Diraih</th>
                                 <th scope="col">Keterangan</th>
                             </tr>
                         </thead>
@@ -55,16 +56,41 @@
                                     <td>{{ get_indo_date($kegiatan->tanggal_mulai) . ' s/d ' . get_indo_date($kegiatan->tanggal_akhir) }}
                                     </td>
                                     <td>{{ ucfirst($kegiatan->cakupan) }}</td>
-                                    <td><a target="_blank" href="{{ $kegiatan->url_event }}" class="btn btn-primary"><i
-                                                data-feather="link"></i></a></td>
-                                    <td><a target="_blank" href="{{ asset($kegiatan->surat_tugas) }}"
-                                            class="btn btn-primary"><i data-feather="file"></i></a></td>
-                                    <td><a target="_blank" href="{{ $kegiatan->foto_kegiatan }}" class="btn btn-primary"><i
-                                                data-feather="file"></i></a></td>
-                                    <td><a target="_blank" href="{{ $kegiatan->bukti_kegiatan }}"
-                                            class="btn btn-primary"><i data-feather="file"></i></a></td>
+                                    <td>
+                                        @if ($kegiatan->url_event)
+                                            <a target="_blank" href="{{ $kegiatan->url_event }}" class="btn btn-primary"><i
+                                                    data-feather="link"></i></a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($kegiatan->url_publikasi)
+                                            <a target="_blank" href="{{ $kegiatan->url_publikasi }}"
+                                                class="btn btn-primary"><i data-feather="link"></i></a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($kegiatan->surat_tugas)
+                                            <a target="_blank" href="{{ asset($kegiatan->surat_tugas) }}"
+                                                class="btn btn-primary"><i data-feather="file"></i></a>
+                                        @endif
+
+                                    </td>
+                                    <td>
+                                        @if ($kegiatan->foto_kegiatan)
+                                            <a target="_blank" href="{{ asset($kegiatan->foto_kegiatan) }}"
+                                                class="btn btn-primary"><i data-feather="file"></i></a>
+                                        @endif
+
+                                    </td>
+                                    <td>
+                                        @if ($kegiatan->bukti_kegiatan)
+                                            <a target="_blank" href="{{ asset($kegiatan->bukti_kegiatan) }}"
+                                                class="btn btn-primary"><i data-feather="file"></i></a>
+                                        @endif
+
+                                    </td>
                                     <td>{!! trans('serba.' . $kegiatan->status) !!}</td>
-                                    <td>{!! ($kegiatan->approval) ? trans('serba.' . $kegiatan->approval) : '&nbsp;' !!}</td>
+                                    <td>{!! $kegiatan->approval ? trans('serba.' . $kegiatan->approval) : '&nbsp;' !!}</td>
                                     <td>{{ $kegiatan->prestasi }}</td>
                                     <td>{{ $kegiatan->keterangan }}</td>
                                 </tr>
@@ -94,7 +120,7 @@
     <link rel="stylesheet" href="{{ URL::asset('css/form.css') }}">
     <style>
         /* add vertical align in th */
-        .table > thead > tr > th {
+        .table>thead>tr>th {
             vertical-align: middle;
         }
     </style>

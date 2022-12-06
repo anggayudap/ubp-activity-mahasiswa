@@ -21,6 +21,18 @@
                                 <div class="col-12">
                                     <div class="form-group row">
                                         <div class="col-md-3 col-form-label">
+                                            <label>Tipe</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-control" name="type" required>
+                                                <option value="detail">Detail Kegiatan</option>
+                                                <option value="custom_detail">Custom Detail Kegiatan</option>
+                                                <option value="custom_summary">Custom Summary Kegiatan (by Prodi)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-3 col-form-label">
                                             <label>NIM - Nama Mahasiswa</label>
                                         </div>
                                         <div class="col-md-6">
@@ -121,6 +133,8 @@
                                 <div class="col-md-6 offset-md-3">
                                     <button type="submit" name="submit" value="view" class="btn btn-primary mr-1"><i
                                             data-feather="file-text" class="mr-1"></i>Lihat Report</button>
+                                    <button type="submit" name="submit" value="export" class="btn btn-success mr-1"><i
+                                            data-feather="download" class="mr-1"></i>Export Excel</button>
                                 </div>
                             </div>
                         </form>

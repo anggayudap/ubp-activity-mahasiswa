@@ -23,14 +23,20 @@
                                 <th rowspan="2">Prodi</th>
                                 <th rowspan="2">Tanggal Proposal</th>
                                 <th rowspan="2">Judul Proposal</th>
+                                <th rowspan="2">Ketua Pelaksana</th>
+                                <th rowspan="2">Tanggal Kegiatan</th>
                                 <th rowspan="2">Anggaran Pengajuan</th>
                                 <th rowspan="2">Lampiran Proposal</th>
+                                <th rowspan="2">Lampiran Laporan</th>
                                 <th rowspan="2">Status</th>
                                 <th colspan="2">Approval Fakultas</th>
                                 <th colspan="2">Approval Kemahasiswaan</th>
+                                <th colspan="2">Approval Laporan</th>
                                 <th rowspan="2">Note Reject</th>
                             </tr>
                             <tr>
+                                <th>Tanggal</th>
+                                <th>Nama</th>
                                 <th>Tanggal</th>
                                 <th>Nama</th>
                                 <th>Tanggal</th>
@@ -49,39 +55,29 @@
                                     <td>{{ $proposal->prodi_mahasiswa->nama_prodi ?? $proposal->prodi }}</td>
                                     <td>{{ get_date($proposal->date) }}</td>
                                     <td>{{ $proposal->judul_proposal }}</td>
+                                    <td>{{ $proposal->ketua_pelaksana }}</td>
+                                    <td>{{ get_date($proposal->tanggal_mulai) }} s/d {{ get_date($proposal->tanggal_akhir) }}</td>
                                     <td>{{ rupiah($proposal->anggaran_pengajuan) }}</td>
-                                    <td></td>
+                                    <td>
+                                        @if ($proposal->file_proposal)
+                                            <a target="_blank" href="{{ asset($proposal->file_proposal) }}" class="btn btn-primary"><i
+                                                    data-feather="link"></i></a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($proposal->file_laporan)
+                                            <a target="_blank" href="{{ asset($proposal->file_laporan) }}" class="btn btn-primary"><i
+                                                    data-feather="link"></i></a>
+                                        @endif
+                                    </td>
                                     <td>{!! trans('serba.' . $proposal->current_status) !!}</td>
                                     <td>{{ get_date_time($proposal->fakultas_approval_date) }}</td>
                                     <td>{{ $proposal->fakultas_user_name }}</td>
                                     <td>{{ get_date_time($proposal->kemahasiswaan_approval_date) }}</td>
                                     <td>{{ $proposal->kemahasiswaan_user_name }}</td>
+                                    <td>{{ get_date_time($proposal->laporan_kemahasiswaan_approval_date) }}</td>
+                                    <td>{{ $proposal->laporan_kemahasiswaan_user_name }}</td>
                                     <td>{{ $proposal->reject_note }}</td>
-
-
-                                    {{-- <td>{{ $kegiatan->nim }}</td>
-                                    <td>{{ $kegiatan->nama_mahasiswa }}</td>
-                                    <td>{{ $kegiatan->prodi_mahasiswa->nama_prodi }}</td>
-                                    <td>{{ $kegiatan->periode ? $kegiatan->periode->periode_awal . '-' . $kegiatan->periode->periode_akhir : '' }}
-                                    </td>
-                                    <td>{{ $kegiatan->tahun_periode }}</td>
-                                    <td>{{ $kegiatan->nama_kegiatan }}</td>
-                                    <td>{{ $kegiatan->klasifikasi->name_kegiatan }}</td>
-                                    <td>{{ get_indo_date($kegiatan->tanggal_mulai) . ' s/d ' . get_indo_date($kegiatan->tanggal_akhir) }}
-                                    </td>
-                                    <td>{{ ucfirst($kegiatan->cakupan) }}</td>
-                                    <td><a target="_blank" href="{{ $kegiatan->url_event }}" class="btn btn-primary"><i
-                                                data-feather="link"></i></a></td>
-                                    <td><a target="_blank" href="{{ asset($kegiatan->surat_tugas) }}"
-                                            class="btn btn-primary"><i data-feather="file"></i></a></td>
-                                    <td><a target="_blank" href="{{ $kegiatan->foto_kegiatan }}" class="btn btn-primary"><i
-                                                data-feather="file"></i></a></td>
-                                    <td><a target="_blank" href="{{ $kegiatan->bukti_kegiatan }}"
-                                            class="btn btn-primary"><i data-feather="file"></i></a></td>
-                                    <td>{!! trans('serba.' . $kegiatan->status) !!}</td>
-                                    <td>{!! trans('serba.' . $kegiatan->approval) !!}</td>
-                                    <td>{{ $kegiatan->prestasi }}</td>
-                                    <td>{{ $kegiatan->keterangan }}</td> --}}
                                 </tr>
                                 @php
                                     $i++;
