@@ -110,6 +110,10 @@ Route::get('/profile', function () {
     ->middleware('auth')
     ->name('profile_user');
 
+    Route::get('/not_authorized', function () {
+        return view('error.not_authorized');
+    })->name('error_notauthorized');
+
 Route::get('/clear', function () {
     \Artisan::call('cache:clear');
     \Artisan::call('view:clear');

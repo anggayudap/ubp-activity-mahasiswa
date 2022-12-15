@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Prodi;
@@ -11,8 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
-class LoginController extends Controller {
-    public function authenticate(Request $request) {
+class LoginController extends Controller
+{
+    public function authenticate(Request $request)
+    {
         $credentials = $request->validate([
             'email' => ['required', 'email:dns'],
             'password' => ['required'],
@@ -24,7 +24,6 @@ class LoginController extends Controller {
         ]);
 
         $output = $response->json();
-
 
         if ($output['status_code'] == 000) {
             // login success
@@ -48,13 +47,27 @@ class LoginController extends Controller {
                 if ($output['data']['role'] == 'mahasiswa') {
                     $cek_user->assignRole('mahasiswa');
                 } else {
+                    $access_valid = false;
                     $user_access_list = $output['data']['user_access'];
-                    // check if kemahasiswaan
-                    if (strpos($user_access_list, 'kemahasiswaan') !== false) {
+                    $dosen_user_access = ['korprodi', 'dpm'];
+                    $kemahasiswaan_user_access = ['kemahasiswaan', 'pusdatin', 'akademik'];
+
+                    // check if user_access was valid with kemahasiswaan role
+                    if ($this->strposa($user_access_list, $kemahasiswaan_user_access)) {
                         $cek_user->assignRole('kemahasiswaan');
+                        $access_valid = true;
                     }
 
-                    $cek_user->assignRole('dosen');
+                    // check if user_access was valid with dpm role
+                    if ($this->strposa($user_access_list, $dosen_user_access)) {
+                        $cek_user->assignRole('dosen');
+                        $access_valid = true;
+                    }
+
+                    if (!$access_valid) {
+                        // user_access hasn't registered or matching with role
+                        return redirect()->route('error_notauthorized');
+                    }
                 }
             }
 
@@ -88,12 +101,24 @@ class LoginController extends Controller {
         // dd($response->json());
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    private function strposa(string $haystack, array $needles, int $offset = 0): bool
+    {
+        foreach ($needles as $needle) {
+            if (strpos($haystack, $needle, $offset) !== false) {
+                return true; // stop on first true result
+            }
+        }
+
+        return false;
     }
 }
