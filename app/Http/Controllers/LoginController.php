@@ -41,6 +41,11 @@ class LoginController extends Controller
             // input id User model to session
             $data_user['user_id'] = $cek_user->id;
 
+            // clear roles for renew dosen/kemahasiswaan access list w/ role in application
+            if ($output['data']['role'] != 'mahasiswa') {
+                $cek_user->roles()->detach();
+            }
+
             // check assigned role
             if ($cek_user->getRoleNames()->isEmpty()) {
                 // assign user with role. check if mahasiswa
