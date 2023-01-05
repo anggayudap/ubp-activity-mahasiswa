@@ -1,13 +1,16 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KompetisiController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\ProdiController;
+use App\Http\Controllers\Master\SkemaController;
+use App\Http\Controllers\Master\ReviewController;
 use App\Http\Controllers\Master\PeriodeController;
 use App\Http\Controllers\ReportKegiatanController;
 use App\Http\Controllers\ReportProposalController;
@@ -67,8 +70,26 @@ Route::middleware('auth')->group(function () {
     // Route::post('/proposal/reject', [ProposalController::class, 'reject'])->name('proposal.reject');
     Route::post('/proposal/submit_approval', [ProposalController::class, 'submit_approval'])->name('proposal.submit_approval');
 
+
+    Route::get('/kompetisi/list', [KompetisiController::class, 'list'])
+        ->name('kompetisi.list')
+        ->middleware('role:mahasiswa|kemahasiswaan');
+    Route::get('/kompetisi/signup', [KompetisiController::class, 'signup'])
+        ->name('kompetisi.signup')
+        ->middleware('role:mahasiswa|kemahasiswaan');
+    Route::get('/kompetisi/approval', [KompetisiController::class, 'approval'])
+        ->name('kompetisi.approval')
+        ->middleware('role:kemahasiswaan');
+    Route::get('/kompetisi/review', [KompetisiController::class, 'review'])
+        ->name('kompetisi.review')
+        ->middleware('role:dosen');
+    Route::get('/kompetisi/history', [KompetisiController::class, 'history'])
+        ->name('kompetisi.history')
+        ->middleware('role:dosen');
+
     Route::resource('/kegiatan', KegiatanController::class);
     Route::resource('/proposal', ProposalController::class);
+    Route::resource('/kompetisi', KompetisiController::class);
 });
 
 Route::prefix('report')
@@ -94,6 +115,8 @@ Route::prefix('master')
         Route::get('/mahasiswa/update', [MahasiswaController::class, 'update_mahasiswa'])->name('mahasiswa.update_mahasiswa');
         Route::resource('/mahasiswa', MahasiswaController::class);
         Route::resource('/klasifikasi', KlasifikasiKegiatanController::class);
+        Route::resource('/review', ReviewController::class);
+        Route::resource('/skema', SkemaController::class);
     });
 
 Route::controller(LoginController::class)->group(function () {

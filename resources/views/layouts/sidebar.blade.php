@@ -2,8 +2,8 @@
     <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item mr-auto"><a class="navbar-brand" href="{{ route('dashboard') }}"><span class="brand-logo">
-                <img class="img-responsive img-fluid" src="{{ asset('logo-ubp.png') }}">
-                        </span>
+                        <img class="img-responsive img-fluid" src="{{ asset('logo-ubp.png') }}">
+                    </span>
                     <h2 class="brand-text">SIMKATMAWA</h2>
                 </a></li>
             <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i
@@ -35,7 +35,8 @@
             @endhasrole
             @hasanyrole('mahasiswa')
                 <li class="{{ request()->is('kegiatan/history*') ? 'active' : '' }} nav-item">
-                    <a class="d-flex align-items-center" href="{{ route('kegiatan.history') }}"><i data-feather="clock"></i>
+                    <a class="d-flex align-items-center" href="{{ route('kegiatan.history') }}"><i
+                            data-feather="clock"></i>
                         <span class="menu-title text-truncate"
                             data-i18n="History Kegiatan">{{ __('History Kegiatan') }}</span>
                     </a>
@@ -58,8 +59,7 @@
                 <li class="{{ request()->is('proposal/create*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('proposal.create') }}"><i
                             data-feather="file-plus"></i>
-                        <span class="menu-title text-truncate"
-                            data-i18n="Input Proposal">{{ __('Input Proposal') }}</span>
+                        <span class="menu-title text-truncate" data-i18n="Input Proposal">{{ __('Input Proposal') }}</span>
                     </a>
                 </li>
                 <li class="{{ request()->is('proposal/history*') ? 'active' : '' }} nav-item"><a
@@ -79,9 +79,8 @@
             @endhasanyrole
 
             @hasanyrole('dosen|kemahasiswaan')
-                <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i
-                            data-feather="check"></i><span class="menu-title text-truncate"
-                            data-i18n="Approval">Approval</span></a>
+                <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="check"></i><span
+                            class="menu-title text-truncate" data-i18n="Approval">Approval</span></a>
                     <ul class="menu-content">
                         @role('dosen')
                             <li class="{{ request()->is('proposal/approval_fakultas*') ? 'active' : '' }}">
@@ -111,6 +110,76 @@
                 </li>
             @endhasanyrole
 
+            <li class=" navigation-header"><span data-i18n="Kompetisi">{{ __('Kompetisi') }}</span><i
+                    data-feather="more-horizontal"></i>
+            </li>
+            @hasrole('kemahasiswaan')
+                <li class="{{ request()->is('kompetisi/create*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('kompetisi.create') }}"><i
+                            data-feather="file-plus"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="Buat Kompetisi">{{ __('Buat Kompetisi') }}</span>
+                    </a>
+                </li>
+            @endhasrole
+
+            @hasanyrole('mahasiswa|kemahasiswaan')
+                <li class="{{ request()->is('kompetisi/list*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('kompetisi.list') }}"><i
+                            data-feather="list"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="List Kompetisi">{{ __('List Kompetisi') }}</span>
+                    </a>
+                </li>
+            @endhasanyrole
+
+
+            @hasanyrole('dosen|kemahasiswaan')
+                <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i
+                            data-feather="check"></i><span class="menu-title text-truncate"
+                            data-i18n="Approval & Review">Approval & Review</span></a>
+                    <ul class="menu-content">
+                        @role('kemahasiswaan')
+                            <li class="{{ request()->is('kompetisi/approval*') ? 'active' : '' }} nav-item">
+                                <a class="d-flex align-items-center" href="{{ route('kompetisi.approval') }}"><i
+                                        data-feather="circle"></i>
+                                    <span class="menu-title text-truncate"
+                                        data-i18n="Approval Kompetisi">{{ __('Approval Kompetisi') }}</span>
+                                    <span class="badge badge-light-danger badge-pill ml-auto mr-2">2</span>
+                                </a>
+                            </li>
+                        @endrole
+                        @role('dosen')
+                            <li class="{{ request()->is('kompetisi/review*') ? 'active' : '' }} nav-item">
+                                <a class="d-flex align-items-center" href="{{ route('kompetisi.review') }}"><i
+                                        data-feather="circle"></i>
+                                    <span class="menu-title text-truncate"
+                                        data-i18n="Review Kompetisi">{{ __('Review Kompetisi') }}</span>
+                                </a>
+                            </li>
+                        @endrole
+                        @role('kemahasiswaan')
+                            <li class="{{ request()->is('kompetisi/approval*') ? 'active' : '' }} nav-item">
+                                <a class="d-flex align-items-center" href="{{ route('kompetisi.approval') }}"><i
+                                        data-feather="circle"></i>
+                                    <span class="menu-title text-truncate"
+                                        data-i18n="Penilaian AKhir">{{ __('Penilaian AKhir') }}</span>
+                                </a>
+                            </li>
+                        @endrole
+                    </ul>
+                </li>
+            @endhasrole
+
+            @hasanyrole('mahasiswa|dosen|kemahasiswaan')
+                <li class="{{ request()->is('kompetisi/history*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('kompetisi.history') }}"><i
+                            data-feather="clock"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="History Kompetisi">{{ __('History Kompetisi') }}</span>
+                    </a>
+                </li>
+            @endhasanyrole
 
 
             @hasanyrole('kemahasiswaan')
@@ -135,37 +204,71 @@
                 <li class=" navigation-header"><span data-i18n="Master">{{ __('Master Data') }}</span><i
                         data-feather="more-horizontal"></i>
                 </li>
-                <li class="{{ request()->is('master/klasifikasi*') ? 'active' : '' }} nav-item">
-                    <a class="d-flex align-items-center" href="{{ route('master.klasifikasi.index') }}"><i
-                            data-feather="database"></i>
-                        <span class="menu-title text-truncate"
-                            data-i18n="Klasifikasi Kegiatan">{{ __('Klasifikasi Kegiatan') }}</span>
-                    </a>
+                {{-- MASTER DATA KEGIATAN --}}
+                <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="database"></i><span
+                    class="menu-title text-truncate" data-i18n="Master Kegiatan">Kegiatan</span></a>
+                    <ul class="menu-content">
+                            <li class="{{ request()->is('master/klasifikasi*') ? 'active' : '' }} nav-item">
+                                <a class="d-flex align-items-center" href="{{ route('master.klasifikasi.index') }}"><i
+                                        data-feather="circle"></i>
+                                    <span class="menu-title text-truncate"
+                                        data-i18n="Klasifikasi Kegiatan">{{ __('Klasifikasi Kegiatan') }}</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('master/periode*') ? 'active' : '' }} nav-item">
+                                <a class="d-flex align-items-center" href="{{ route('master.periode.index') }}"><i
+                                        data-feather="circle"></i>
+                                    <span class="menu-title text-truncate" data-i18n="Periode">{{ __('Periode') }}</span>
+                                </a>
+                            </li>
+                    </ul>
                 </li>
+                {{-- END MASTER DATA KEGIATAN --}}
+
+
+                {{-- MASTER DATA KOMPETISI --}}
+                <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="database"></i><span
+                    class="menu-title text-truncate" data-i18n="Master Kompetisi">Kompetisi</span></a>
+                    <ul class="menu-content">
+                        <li class="{{ request()->is('master/skema*') ? 'active' : '' }} nav-item">
+                            <a class="d-flex align-items-center" href="#"><i
+                                    data-feather="circle"></i>
+                                <span class="menu-title text-truncate"
+                                    data-i18n="Skema Kompetisi">{{ __('Skema Kompetisi') }}</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->is('master/review*') ? 'active' : '' }} nav-item">
+                            <a class="d-flex align-items-center" href="{{ route('master.review.index') }}"><i
+                                    data-feather="circle"></i>
+                                <span class="menu-title text-truncate"
+                                    data-i18n="Review">{{ __('Review') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {{-- END MASTER DATA KOMPETISI --}}
+                
                 <li class="{{ request()->is('master/mahasiswa*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('master.mahasiswa.index') }}"><i
                             data-feather="database"></i>
                         <span class="menu-title text-truncate" data-i18n="Mahasiswa">{{ __('Mahasiswa') }}</span>
                     </a>
                 </li>
-                <li class="{{ request()->is('master/periode*') ? 'active' : '' }} nav-item">
-                    <a class="d-flex align-items-center" href="{{ route('master.periode.index') }}"><i
-                            data-feather="database"></i>
-                        <span class="menu-title text-truncate" data-i18n="Periode">{{ __('Periode') }}</span>
-                    </a>
-                </li>
+                
                 <li class="{{ request()->is('master/prodi*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('master.prodi.index') }}"><i
                             data-feather="database"></i>
                         <span class="menu-title text-truncate" data-i18n="Prodi">{{ __('Prodi') }}</span>
                     </a>
                 </li>
+
                 <li class="{{ request()->is('master/user*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('master.user.index') }}"><i
                             data-feather="database"></i>
                         <span class="menu-title text-truncate" data-i18n="User">{{ __('User') }}</span>
                     </a>
                 </li>
+
                 <li class="{{ request()->is('master/role*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('master.role.index') }}"><i
                             data-feather="database"></i>

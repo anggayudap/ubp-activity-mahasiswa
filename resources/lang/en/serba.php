@@ -16,6 +16,9 @@ return [
     'checked_dosen' => '<div class="badge badge-success">Ditinjau Dosen</div>',
     'review' => '<div class="badge badge-warning">Sedang Direview</div>',
 
+    'status_1' => '<div class="badge badge-primary">Aktif</div>',
+    'status_0' => '<div class="badge badge-danger">Tidak Aktif</div>',
+
     'yes' => 'Ya',
     'no' => 'Tidak',
     
