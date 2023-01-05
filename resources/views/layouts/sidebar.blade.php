@@ -231,7 +231,7 @@
                     class="menu-title text-truncate" data-i18n="Master Kompetisi">Kompetisi</span></a>
                     <ul class="menu-content">
                         <li class="{{ request()->is('master/skema*') ? 'active' : '' }} nav-item">
-                            <a class="d-flex align-items-center" href="#"><i
+                            <a class="d-flex align-items-center" href="{{ route('master.skema.index') }}"><i
                                     data-feather="circle"></i>
                                 <span class="menu-title text-truncate"
                                     data-i18n="Skema Kompetisi">{{ __('Skema Kompetisi') }}</span>
