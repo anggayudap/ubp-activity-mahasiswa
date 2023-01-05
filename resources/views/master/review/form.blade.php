@@ -27,7 +27,7 @@
                                         <label for="name">Teks Review</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <input type="text" id="teks_review" class="form-control" name="teks_review"
+                                        <input type="text" id="teks-review" class="form-control" name="teks_review"
                                             placeholder="Teks Review" value="{{ isset($data) ? $data->teks_review : '' }}">
                                     </div>
                                 </div>
