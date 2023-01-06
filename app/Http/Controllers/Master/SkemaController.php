@@ -75,7 +75,7 @@ class SkemaController extends Controller
         ]);
 
         if ($post) {
-            Alert::success('Berhasil!', 'Data skema kompetisi berhasil dibuat!');
+            Alert::success('Berhasil!', 'Data skema berhasil dibuat!');
             return redirect(route('master.skema.index'));
         } else {
             return redirect()
@@ -116,7 +116,7 @@ class SkemaController extends Controller
         ]);
 
         if ($update) {
-            Alert::success('Berhasil!', 'Data skema kompetisi berhasil diupdate!');
+            Alert::success('Berhasil!', 'Data skema berhasil diupdate!');
             return redirect(route('master.skema.index'));
         } else {
             return redirect()
@@ -134,10 +134,10 @@ class SkemaController extends Controller
         $data->delete();
 
         if ($data) {
-            Alert::success('Berhasil!', 'Data skema kompetisi berhasil dihapus!');
+            Alert::success('Berhasil!', 'Data skema berhasil dihapus!');
             return redirect(route('master.skema.index'));
         } else {
-            Alert::error('Gagal!', 'Data skema kompetisi tidak dapat dihapus!');
+            Alert::error('Gagal!', 'Data skema tidak dapat dihapus!');
             return redirect(route('master.skema.index'));
         }
     }

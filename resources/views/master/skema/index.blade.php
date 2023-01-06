@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
-@section('title', 'Master Data Skema Kompetisi')
-@section('menu-title', 'Kelola Data Skema Kompetisi')
+@section('title', 'Master Data Skema')
+@section('menu-title', 'Kelola Data Skema')
 
 
 @section('content')

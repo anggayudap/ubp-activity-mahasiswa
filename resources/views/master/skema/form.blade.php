@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
-@section('title', 'Form Data Skema Kompetisi')
-@section('menu-title', 'Master Data Skema Kompetisi')
+@section('title', 'Form Data Skema')
+@section('menu-title', 'Master Data Skema')
 
 
 @section('content')
@@ -9,7 +9,7 @@
         <div class="col-md-12 col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">{{ isset($data) ? 'Edit' : 'Tambah' }} Data Skema Kompetisi</h4>
+                    <h4 class="card-title">{{ isset($data) ? 'Edit' : 'Tambah' }} Data Skema</h4>
                 </div>
                 <div class="card-body">
                     <form
