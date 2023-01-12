@@ -7,6 +7,7 @@ use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KompetisiController;
+use App\Http\Controllers\Master\DosenController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\ProdiController;
 use App\Http\Controllers\Master\SkemaController;
@@ -35,6 +36,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
     ->name('dashboard');
 
+// ROUTE KEGIATAN
 Route::middleware('auth')->group(function () {
     /* routing for main menu */
     Route::get('/kegiatan/list', [KegiatanController::class, 'list'])
@@ -47,6 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/kegiatan/decision', [KegiatanController::class, 'decision'])->name('kegiatan.decision');
     Route::post('/kegiatan/update_dpm', [KegiatanController::class, 'update_dpm'])->name('kegiatan.update_dpm');
 
+    Route::resource('/kegiatan', KegiatanController::class);
+});
+
+// ROUTE PROPOSAL
+Route::middleware('auth')->group(function () {
     Route::get('/proposal/list', [ProposalController::class, 'list'])
         ->name('proposal.list')
         ->middleware('role:dosen|kemahasiswaan');
@@ -70,25 +77,35 @@ Route::middleware('auth')->group(function () {
     // Route::post('/proposal/reject', [ProposalController::class, 'reject'])->name('proposal.reject');
     Route::post('/proposal/submit_approval', [ProposalController::class, 'submit_approval'])->name('proposal.submit_approval');
 
+    Route::resource('/proposal', ProposalController::class);
+});
 
+// ROUTE KOMPETISI
+Route::middleware('auth')->group(function () {
     Route::get('/kompetisi/list', [KompetisiController::class, 'list'])
         ->name('kompetisi.list')
         ->middleware('role:mahasiswa|kemahasiswaan');
-    Route::get('/kompetisi/signup', [KompetisiController::class, 'signup'])
-        ->name('kompetisi.signup')
-        ->middleware('role:mahasiswa|kemahasiswaan');
+
     Route::get('/kompetisi/approval', [KompetisiController::class, 'approval'])
         ->name('kompetisi.approval')
         ->middleware('role:kemahasiswaan');
     Route::get('/kompetisi/review', [KompetisiController::class, 'review'])
         ->name('kompetisi.review')
         ->middleware('role:dosen');
+
+    Route::get('/kompetisi/register', [KompetisiController::class, 'register'])
+        ->name('kompetisi.register')
+        ->middleware('role:mahasiswa|kemahasiswaan');
+    Route::get('/kompetisi/register_form/{id}', [KompetisiController::class, 'register_form'])
+        ->name('kompetisi.register_form')
+        ->middleware('role:mahasiswa|kemahasiswaan');
+    Route::post('/kompetisi/register_submit', [KompetisiController::class, 'register_submit'])
+        ->name('kompetisi.register_submit');
+
     Route::get('/kompetisi/history', [KompetisiController::class, 'history'])
         ->name('kompetisi.history')
-        ->middleware('role:dosen');
+        ->middleware('role:mahasiswa|dosen|kemahasiswaan');
 
-    Route::resource('/kegiatan', KegiatanController::class);
-    Route::resource('/proposal', ProposalController::class);
     Route::resource('/kompetisi', KompetisiController::class);
 });
 
@@ -112,6 +129,8 @@ Route::prefix('master')
         Route::resource('/periode', PeriodeController::class);
         Route::resource('/user', UserController::class);
         Route::resource('/role', RoleUserController::class);
+        Route::get('/dosen/update', [DosenController::class, 'update_dosen'])->name('dosen.update_dosen');
+        Route::resource('/dosen', DosenController::class);
         Route::get('/mahasiswa/update', [MahasiswaController::class, 'update_mahasiswa'])->name('mahasiswa.update_mahasiswa');
         Route::resource('/mahasiswa', MahasiswaController::class);
         Route::resource('/klasifikasi', KlasifikasiKegiatanController::class);
@@ -133,9 +152,9 @@ Route::get('/profile', function () {
     ->middleware('auth')
     ->name('profile_user');
 
-    Route::get('/not_authorized', function () {
-        return view('error.not_authorized');
-    })->name('error_notauthorized');
+Route::get('/not_authorized', function () {
+    return view('error.not_authorized');
+})->name('error_notauthorized');
 
 Route::get('/clear', function () {
     \Artisan::call('cache:clear');

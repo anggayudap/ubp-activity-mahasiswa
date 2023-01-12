@@ -123,7 +123,7 @@
                 </li>
             @endhasrole
 
-            @hasanyrole('mahasiswa|kemahasiswaan')
+            @hasanyrole('dosen|kemahasiswaan')
                 <li class="{{ request()->is('kompetisi/list*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kompetisi.list') }}"><i
                             data-feather="list"></i>
@@ -171,7 +171,14 @@
                 </li>
             @endhasrole
 
-            @hasanyrole('mahasiswa|dosen|kemahasiswaan')
+            @hasanyrole('mahasiswa|kemahasiswaan')
+                <li class="{{ request()->is('kompetisi/register*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('kompetisi.register') }}"><i
+                            data-feather="award"></i>
+                        <span class="menu-title text-truncate"
+                            data-i18n="Registrasi Kompetisi">{{ __('Registrasi Kompetisi') }}</span>
+                    </a>
+                </li>
                 <li class="{{ request()->is('kompetisi/history*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kompetisi.history') }}"><i
                             data-feather="clock"></i>
@@ -234,7 +241,7 @@
                             <a class="d-flex align-items-center" href="{{ route('master.skema.index') }}"><i
                                     data-feather="circle"></i>
                                 <span class="menu-title text-truncate"
-                                    data-i18n="Skema Kompetisi">{{ __('Skema Kompetisi') }}</span>
+                                    data-i18n="Skema">{{ __('Skema') }}</span>
                             </a>
                         </li>
                         <li class="{{ request()->is('master/review*') ? 'active' : '' }} nav-item">
@@ -252,6 +259,13 @@
                     <a class="d-flex align-items-center" href="{{ route('master.mahasiswa.index') }}"><i
                             data-feather="database"></i>
                         <span class="menu-title text-truncate" data-i18n="Mahasiswa">{{ __('Mahasiswa') }}</span>
+                    </a>
+                </li>
+                
+                <li class="{{ request()->is('master/dosen*') ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="{{ route('master.dosen.index') }}"><i
+                            data-feather="database"></i>
+                        <span class="menu-title text-truncate" data-i18n="Dosen">{{ __('Dosen') }}</span>
                     </a>
                 </li>
                 
