@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Master;
 use DataTables;
 use App\Models\Dosen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -40,6 +41,8 @@ class DosenController extends Controller
                         'nidn' => $data_dosen['nidn'],
                         'singkatan' => $data_dosen['singkatan'],
                         'prodi' => $data_dosen['homebase'],
+                        'created_at' => Carbon::now(),
+                        'updated_at' => null,
                         
                     ];
 
@@ -61,7 +64,7 @@ class DosenController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Dosen::all();
+            $data = Dosen::select('nip', 'nidn', 'nama', 'email', 'prodi');
             return Datatables::of($data)->addIndexColumn()
                 ->removeColumn('id')
                 ->make(true);
