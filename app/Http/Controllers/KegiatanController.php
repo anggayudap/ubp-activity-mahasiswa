@@ -16,6 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class KegiatanController extends Controller
 {
+    public function index(Request $request) {
+        return redirect()->route('dashboard');
+    }
+    
     public function list(Request $request)
     {
         if ($request->ajax()) {

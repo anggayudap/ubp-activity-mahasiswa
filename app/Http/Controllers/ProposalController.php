@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use DataTables;
 use App\Models\Kegiatan;
 use App\Models\Proposal;
-use DataTables;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ProposalController extends Controller
 {
+    public function index(Request $request) {
+        return redirect()->route('dashboard');
+    }
+
     public function list(Request $request)
     {
         if ($request->ajax()) {
