@@ -12,11 +12,11 @@ class KompetisiParticipant extends Model
 {
     use HasFactory;
 
-    protected $table = 'reviews';
+    protected $table = 'kompetisi_participants';
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['kompetisi_id', 'nip_dosen', 'nama_dosen', 'email_dosen', 'prodi_dosen', 'judul', 'tahun', 'nama_skema', 'deskripsi_skema', 'file_upload', 'review', 'catatan', 'tanggal_approval', 'user_approval', 'nama_approval', 'keputusan', 'created_at', 'updated_at'];
+    protected $fillable = ['kompetisi_id', 'nip_dosen_pembimbing', 'nama_dosen_pembimbing', 'email_dosen_pembimbing', 'prodi_dosen_pembimbing', 'judul', 'tahun', 'nama_skema', 'deskripsi_skema', 'file_upload', 'review', 'catatan', 'tanggal_approval', 'user_approval', 'nama_approval', 'keputusan', 'is_editable', 'created_at', 'updated_at'];
 
     public function kompetisi()
     {

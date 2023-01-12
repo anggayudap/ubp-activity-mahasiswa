@@ -16,10 +16,10 @@ class CreateKompetisiParticipantsTable extends Migration
         Schema::create('kompetisi_participants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kompetisi_id');
-            $table->string('nip_dosen')->nullable();
-            $table->string('nama_dosen')->nullable();
-            $table->string('email_dosen')->nullable();
-            $table->string('prodi_dosen', 10)->nullable();
+            $table->string('nip_dosen_pembimbing')->nullable();
+            $table->string('nama_dosen_pembimbing')->nullable();
+            $table->string('email_dosen_pembimbing')->nullable();
+            $table->string('prodi_dosen_pembimbing', 10)->nullable();
             $table->string('judul');
             $table->year('tahun');
             $table->string('nama_skema')->nullable();
@@ -31,6 +31,8 @@ class CreateKompetisiParticipantsTable extends Migration
             $table->foreignId('user_approval')->nullable();
             $table->string('nama_approval')->nullable();
             $table->enum('keputusan', ['lolos', 'tidak_lolos'])->nullable();
+            $table->enum('status', ['pending', 'reject', 'in_review', 'completed'])->default('pending');
+            $table->tinyInteger('is_editable')->default(0);
             $table->timestamps();
 
             $table
