@@ -163,7 +163,7 @@
                                 <a class="d-flex align-items-center" href="{{ route('kompetisi.approval') }}"><i
                                         data-feather="circle"></i>
                                     <span class="menu-title text-truncate"
-                                        data-i18n="Penilaian AKhir">{{ __('Penilaian AKhir') }}</span>
+                                        data-i18n="Penilaian Akhir">{{ __('Penilaian AKhir') }}</span>
                                 </a>
                             </li>
                         @endrole
