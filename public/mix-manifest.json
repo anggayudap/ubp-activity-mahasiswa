@@ -5,10 +5,12 @@
     "/css/table.css": "/css/table.css",
     "/css/form.css": "/css/form.css",
     "/css/auth_styles.css": "/css/auth_styles.css",
+    "/css/text_editor.css": "/css/text_editor.css",
     "/css/chat_styles.css": "/css/chat_styles.css",
     "/js/hasil_combine.js": "/js/hasil_combine.js",
     "/js/table.js": "/js/table.js",
     "/js/form.js": "/js/form.js",
+    "/js/text_editor.js": "/js/text_editor.js",
     "/js/auth_scripts.js": "/js/auth_scripts.js",
     "/js/chat_scripts.js": "/js/chat_scripts.js"
 }
