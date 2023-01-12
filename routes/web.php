@@ -6,7 +6,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KompetisiApprovalController;
 use App\Http\Controllers\KompetisiController;
+use App\Http\Controllers\KompetisiRegisterController;
+use App\Http\Controllers\KompetisiReviewController;
 use App\Http\Controllers\Master\DosenController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Master\ProdiController;
@@ -86,25 +89,25 @@ Route::middleware('auth')->group(function () {
         ->name('kompetisi.list')
         ->middleware('role:mahasiswa|kemahasiswaan');
 
-    Route::get('/kompetisi/approval', [KompetisiController::class, 'approval'])
-        ->name('kompetisi.approval')
-        ->middleware('role:kemahasiswaan');
-    Route::get('/kompetisi/review', [KompetisiController::class, 'review'])
-        ->name('kompetisi.review')
-        ->middleware('role:dosen');
 
-    Route::get('/kompetisi/register', [KompetisiController::class, 'register'])
+    Route::get('/kompetisi/register', [KompetisiRegisterController::class, 'register'])
         ->name('kompetisi.register')
         ->middleware('role:mahasiswa|kemahasiswaan');
-    Route::get('/kompetisi/register_form/{id}', [KompetisiController::class, 'register_form'])
+    Route::get('/kompetisi/register_form/{id}', [KompetisiRegisterController::class, 'register_form'])
         ->name('kompetisi.register_form')
         ->middleware('role:mahasiswa|kemahasiswaan');
-    Route::post('/kompetisi/register_submit', [KompetisiController::class, 'register_submit'])
+    Route::post('/kompetisi/register_submit', [KompetisiRegisterController::class, 'register_submit'])
         ->name('kompetisi.register_submit');
-
-    Route::get('/kompetisi/history', [KompetisiController::class, 'history'])
+    Route::get('/kompetisi/history', [KompetisiRegisterController::class, 'history'])
         ->name('kompetisi.history')
         ->middleware('role:mahasiswa|dosen|kemahasiswaan');
+
+    Route::get('/kompetisi/approval', [KompetisiApprovalController::class, 'approval'])
+        ->name('kompetisi.approval')
+        ->middleware('role:kemahasiswaan');
+    Route::get('/kompetisi/review', [KompetisiReviewController::class, 'review'])
+        ->name('kompetisi.review')
+        ->middleware('role:dosen');
 
     Route::resource('/kompetisi', KompetisiController::class);
 });

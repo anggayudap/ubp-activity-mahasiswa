@@ -100,11 +100,8 @@
                                         <select id="list-prodi" name="list_prodi[]" multiple data-live-search="true"
                                             class="form-control" required>
                                             @foreach ($data['prodi'] as $prodi)
-                                                <option
-                                                    {{-- {{ in_array($prodi->id, $data['selected_prodi']) ? 'selected' : '' }}
-                                                    value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option> --}}
-                                                    
-                                                    value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option>
+                                                <option {{ (isset($data['selected_prodi'])) && in_array($prodi->id, $data['selected_prodi']) ? 'selected' : '' }} value="{{ $prodi->id }}">
+                                                    {{ $prodi->nama_prodi }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -174,32 +171,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-                            {{-- <div class="col-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-3 col-form-label">
-                                        <label>File kompetisi</label>
-                                    </div>
-                                    <div class="col-sm-6">
-
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="file-kompetisi"
-                                                name="file_kompetisi" accept="application/pdf,.zip" />
-                                            <label class="custom-file-label" for="customFile">Choose file</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
-
-                            {{-- <div class="col-12">
-                                <div class="form-group row">
-                                    <em>Ket : Upload file menggunakan format <b>pdf</b> atau <b>zip</b>. Maks. size
-                                        5mb.</em>
-                                </div>
-                            </div> --}}
-
-
 
                             <div class="col-sm-6 offset-sm-3">
                                 <button type="submit"
