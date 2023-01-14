@@ -204,10 +204,24 @@ class KompetisiRegisterController extends Controller
             $param['file_upload'] = $file_participant_path;
             $param['user_created'] = session('user.user_id');
             $kompetisi_participant = KompetisiParticipant::create($param);
+            $kompetisi_participant_id = $kompetisi_participant->id;
+
 
         } else if($request->method == 'update') {
+            $old_data = KompetisiParticipant::where('id', $request->participant_id);
+
+            if($file_participant_path) {
+                // unlink the old file path
+                $prev_file = public_path($old_data->first()->file_upload);
+                if (file_exists($prev_file)) {
+                    unlink($prev_file);
+                }
+                $param['file_upload'] = $file_participant_path;
+            }
             $param['user_updated'] = session('user.user_id');
-            $kompetisi_participant = KompetisiParticipant::where('id', $request->participant_id)->update($param);
+            $param['status'] = 'pending';
+            $old_data->update($param);
+            $kompetisi_participant_id = $request->participant_id;
         }
 
         // dd('aman');
@@ -225,9 +239,11 @@ class KompetisiRegisterController extends Controller
 
         $data_mahasiswa_member = Mahasiswa::whereIn('nim', $member)->get();
 
+        // clear member data
+        KompetisiParticipantMember::where('participant_id', $kompetisi_participant_id)->delete();
         foreach ($data_mahasiswa_member as $data_mahasiswa) {
             $param_member[] = [
-                'participant_id' => $kompetisi_participant->id,
+                'participant_id' => $kompetisi_participant_id,
                 'nim' => $data_mahasiswa->nim,
                 'nama_mahasiswa' => $data_mahasiswa->nama_mahasiswa,
                 'prodi' => $data_mahasiswa->prodi,
@@ -236,7 +252,7 @@ class KompetisiRegisterController extends Controller
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
         }
-        // dd($param_member);
+
         $post = KompetisiParticipantMember::insert($param_member);
 
         if ($post) {
