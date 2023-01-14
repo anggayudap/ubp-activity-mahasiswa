@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Form Registrasi Kompetisi : ' . $data['kompetisi']->nama_kompetisi)
+@section('title', 'Form Registrasi Kompetisi : ' . $data->nama_kompetisi)
 
 @section('content')
     <div class="row">
@@ -12,12 +12,30 @@
                     <form action="{{ route('kompetisi.register_submit') }}" method="post" class="form form-horizontal "
                         enctype="multipart/form-data" novalidate>
                         @csrf
-                        @if (isset($data['kompetisi_participant']))
-                            @method('PUT')
+                        @if ($additional['is_update'])
+                            {{-- @method('PUT') --}}
+                            @php
+                                $data_participant = $data->participant->first();
+                                
+                                $nim_ketua_old = null;
+                                $nim_anggota_old = array();
+                                foreach ($data_participant->member as $key => $value) {
+                                    if($value['status_keanggotaan'] == 'anggota') {
+                                        $nim_anggota_old[] = $value->nim;
+                                    } else {
+                                        $nim_ketua_old = $value->nim;
+                                    }
+                                }
+
+                            @endphp
                         @endif
-                        <input type="hidden" name="kompetisi_id" value="{{ $data['kompetisi']->id }}" />
-                        <input type="hidden" name="type"
-                            value="{{ isset($data['kompetisi_participant']) ? 'update' : 'store' }}" />
+                        
+                        <input type="hidden" name="method" value="{{ ($additional['is_update']) ? 'update' : 'create' }}">
+                        <input type="hidden" name="kompetisi_id"
+                            value="{{ isset($data) ? $data->id : $additional['kompetisi']->id }}" />
+                        <input type="hidden" name="participant_id"
+                            value="{{ ($additional['is_update']) ? $data_participant->id : null }}" />
+                        
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group row">
@@ -27,7 +45,7 @@
                                     <div class="col-sm-6">
                                         <input type="text" id="judul" class="form-control" name="judul"
                                             placeholder="Judul"
-                                            value="{{ isset($data['kompetisi_participant']) ? $data['kompetisi_participant']->judul : old('judul') }}"
+                                            value="{{ $additional['is_update'] ? $data_participant->judul : old('judul') }}"
                                             required>
                                     </div>
                                 </div>
@@ -41,7 +59,9 @@
                                     <div class="col-sm-3">
                                         <select name="tahun" id="tahun" class="form-control" required>
                                             @for ($i = 2022; $i <= date('Y'); $i++)
-                                                <option value="{{ $i }}">{{ $i }}</option>
+                                                <option value="{{ $i }}"
+                                                    {{ $additional['is_update'] && $data_participant->tahun == $i ? 'selected' : '' }}>
+                                                    {{ $i }}</option>
                                             @endfor
                                         </select>
                                     </div>
@@ -55,8 +75,10 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <select name="skema" id="skema" class="form-control" required>
-                                            @foreach ($data['kompetisi']->skema as $data_skema)
-                                                <option value="{{ $data_skema->skema_id }}">{{ $data_skema->nama_skema }}</option>
+                                            @foreach ($data->skema as $data_skema)
+                                                <option value="{{ $data_skema->nama_skema }}"
+                                                    {{ $additional['is_update'] && $data_participant->nama_skema == $data_skema->nama_skema ? 'selected' : '' }}>
+                                                    {{ $data_skema->nama_skema }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -69,12 +91,11 @@
                                         <label>Dosen Pembimbing</label>
                                     </div>
                                     <div class="col-sm-6">
-                                        <select class="select2-data-dosen form-control"
-                                                                name="dosen_pembimbing" id="select2-ajax"></select>
-                                        {{-- <input type="text" id="dosen_pembimbing" class="form-control" name="dosen_pembimbing"
-                                            placeholder="Dosen Pembimbing"
-                                            value="{{ isset($data['kompetisi_participant']) ? $data['kompetisi_participant']->dosen_pembimbing : old('dosen_pembimbing') }}"
-                                            required> --}}
+                                        <input type="hidden" name="old_dosen_pembimbing"
+                                            value="{{ $additional['is_update'] ? $data_participant->id_dosen_pembimbing : '' }}"
+                                            disabled>
+                                        <select class="select2-data-dosen form-control" name="dosen_pembimbing"
+                                            id="select2-ajax"></select>
                                     </div>
                                 </div>
                             </div>
@@ -97,36 +118,52 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Ketua</td>
-                                                        <td><select class="form-control" name="ketua"
-                                                                id="ketua"></select></td>
+                                                        <td>
+                                                            <input type="hidden" name="old_nim_ketua"
+                                                                value="{{ $additional['is_update'] ? $nim_ketua_old : '' }}"
+                                                                disabled>
+                                                            <select class="form-control" name="ketua" id="ketua"></select>
+                                                        </td>
                                                         <td>&nbsp;</td>
                                                     </tr>
                                                     <tr id="member-1">
                                                         <td>Anggota</td>
-                                                        <td><select class="select2-data-ajax form-control"
-                                                                name="anggota[1]" id="select2-ajax"></select></td>
+                                                        <td>
+                                                            <input type="hidden" name="old_nim_anggota_1" value="{{ $additional['is_update'] && isset($nim_anggota_old[0]) ? $nim_anggota_old[0] : '' }}" disabled>
+                                                            <select class="select2-data-ajax form-control" id="anggota-1"
+                                                                name="anggota[1]" id="select2-ajax"></select>
+                                                        </td>
                                                         <td>&nbsp;</td>
                                                     </tr>
                                                     <tr id="member-2">
                                                         <td>Anggota</td>
-                                                        <td><select class="select2-data-ajax form-control"
-                                                                name="anggota[2]" id="select2-ajax"></select></td>
+                                                        <td>
+                                                            <input type="hidden" name="old_nim_anggota_2" value="{{ $additional['is_update'] && isset($nim_anggota_old[1]) ? $nim_anggota_old[1] : '' }}" disabled>
+                                                            <select class="select2-data-ajax form-control" id="anggota-2"
+                                                                name="anggota[2]" id="select2-ajax"></select>
+                                                        </td>
                                                         <td><button type="button" class="btn-danger btn-sm"
                                                                 onclick="javascript:delete_anggota('2')"><i
                                                                     data-feather='trash-2'></i></button></td>
                                                     </tr>
                                                     <tr id="member-3">
                                                         <td>Anggota</td>
-                                                        <td><select class="select2-data-ajax form-control"
-                                                                name="anggota[3]" id="select2-ajax"></select></td>
+                                                        <td>
+                                                            <input type="hidden" name="old_nim_anggota_3" value="{{ $additional['is_update']  && isset($nim_anggota_old[2]) ? $nim_anggota_old[2] : '' }}" disabled>
+                                                            <select class="select2-data-ajax form-control" id="anggota-3"
+                                                                name="anggota[3]" id="select2-ajax"></select>
+                                                        </td>
                                                         <td><button type="button" class="btn-danger btn-sm"
                                                                 onclick="javascript:delete_anggota('3')"><i
                                                                     data-feather='trash-2'></i></button></td>
                                                     </tr>
                                                     <tr id="member-4">
                                                         <td>Anggota</td>
-                                                        <td><select class="select2-data-ajax form-control"
-                                                                name="anggota[4]" id="select2-ajax"></select></td>
+                                                        <td>
+                                                            <input type="hidden" name="old_nim_anggota_4" value="{{ $additional['is_update'] && isset($nim_anggota_old[3]) ? $nim_anggota_old[3] : '' }}" disabled>
+                                                            <select class="select2-data-ajax form-control" id="anggota-4"
+                                                                name="anggota[4]" id="select2-ajax"></select>
+                                                        </td>
                                                         <td><button type="button" class="btn-danger btn-sm"
                                                                 onclick="javascript:delete_anggota('4')"><i
                                                                     data-feather='trash-2'></i></button></td>
@@ -196,7 +233,6 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ URL::asset('css/form.css') }}">
-    
 @endpush
 
 @push('scripts')
@@ -206,43 +242,63 @@
         let selectKetua = $('select#ketua');
         let selectAnggota = $('.select2-data-ajax');
         let selectDosen = $('.select2-data-dosen');
-        const dataMahasiswa = @json($data['mahasiswa']);
-        const dataDosen = @json($data['dosen']);
+        const dataMahasiswa = @json($additional['mahasiswa']);
+        const dataDosen = @json($additional['dosen']);
         const nimKetua = @json(session('user.id'));
+        const isUpdate = @json($additional['is_update']);
 
-        // console.log(nimKetua);
+        const oldDosenPembimbing = $('input[name="old_dosen_pembimbing"]').val();
+        const oldNimKetua = $('input[name="old_nim_ketua"]').val();
+        const oldNimAnggota1 = $('input[name="old_nim_anggota_1"]').val();
+        const oldNimAnggota2 = $('input[name="old_nim_anggota_2"]').val();
+        const oldNimAnggota3 = $('input[name="old_nim_anggota_3"]').val();
+        const oldNimAnggota4 = $('input[name="old_nim_anggota_4"]').val();
+
 
         $(document).ready(function() {
             const basicPickr = $('.flatpickr-basic');
             if (basicPickr.length) {
                 basicPickr.flatpickr();
             }
-            
+
             // init select 2 anggota mahasiswa
             selectKetua.select2({
                 width: '100%',
                 data: dataMahasiswa,
-                placeholder: 'Search for a repository',
+                placeholder: 'Cari npm mahasiswa',
                 minimumInputLength: 11,
             });
-            selectKetua.val(nimKetua).trigger('change');
-            selectKetua.attr('readonly', true);
+            
 
             selectAnggota.select2({
                 width: '100%',
                 data: dataMahasiswa,
-                placeholder: 'Cari data mahasiswa',
+                placeholder: 'Cari npm mahasiswa',
                 minimumInputLength: 11,
             });
 
             selectDosen.select2({
                 width: '100%',
                 data: dataDosen,
-                placeholder: 'cari data dosen pembimbing',
+                placeholder: 'Cari nama dosen pembimbing',
                 minimumInputLength: 2,
             });
 
-
+            if(isUpdate) {
+                // jika method update
+                // if (oldDosenPembimbing.length) {
+                    selectDosen.val(oldDosenPembimbing).trigger('change');
+                // }
+                selectKetua.val(oldNimKetua).trigger('change');
+                $('select#anggota-1').val(oldNimAnggota1).trigger('change');
+                $('select#anggota-2').val(oldNimAnggota2).trigger('change');
+                $('select#anggota-3').val(oldNimAnggota3).trigger('change');
+                $('select#anggota-4').val(oldNimAnggota4).trigger('change');
+            } else {
+                // jika method create
+                selectKetua.val(nimKetua).trigger('change');
+                selectKetua.attr('readonly', true);
+            }
 
         });
 

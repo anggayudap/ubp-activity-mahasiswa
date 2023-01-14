@@ -140,12 +140,12 @@
                             data-i18n="Approval & Review">Approval & Review</span></a>
                     <ul class="menu-content">
                         @role('kemahasiswaan')
-                            <li class="{{ request()->is('kompetisi/approval*') ? 'active' : '' }} nav-item">
-                                <a class="d-flex align-items-center" href="{{ route('kompetisi.approval') }}"><i
+                            <li class="{{ request()->is('kompetisi/approval/list*') ? 'active' : '' }} nav-item">
+                                <a class="d-flex align-items-center" href="{{ route('kompetisi.approval.list') }}"><i
                                         data-feather="circle"></i>
                                     <span class="menu-title text-truncate"
                                         data-i18n="Approval Kompetisi">{{ __('Approval Kompetisi') }}</span>
-                                    <span class="badge badge-light-danger badge-pill ml-auto mr-2">2</span>
+                                    {{-- <span class="badge badge-light-danger badge-pill ml-auto mr-2">2</span> --}}
                                 </a>
                             </li>
                         @endrole
@@ -159,8 +159,8 @@
                             </li>
                         @endrole
                         @role('kemahasiswaan')
-                            <li class="{{ request()->is('kompetisi/approval*') ? 'active' : '' }} nav-item">
-                                <a class="d-flex align-items-center" href="{{ route('kompetisi.approval') }}"><i
+                            <li class="{{ request()->is('kompetisi/result*') ? 'active' : '' }} nav-item">
+                                <a class="d-flex align-items-center" href="{{ route('kompetisi.approval.list') }}"><i
                                         data-feather="circle"></i>
                                     <span class="menu-title text-truncate"
                                         data-i18n="Penilaian Akhir">{{ __('Penilaian AKhir') }}</span>

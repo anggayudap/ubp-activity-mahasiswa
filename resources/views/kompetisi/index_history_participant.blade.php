@@ -32,22 +32,22 @@
         </div>
     </section>
 
-    {{-- <div class="modal fade text-left" id="xlarge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
+    <div class="modal fade text-left" id="xlarge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel16">Detail Proposal Kegiatan</h4>
+                    <h4 class="modal-title" id="myModalLabel16">Detail History Kompetisi</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" id="detail-proposal">
+                <div class="modal-body" id="detail-kompetisi-participant">
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade text-left" id="xlarge-upload-laporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
+    {{-- <div class="modal fade text-left" id="xlarge-upload-laporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -61,30 +61,30 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="modal fade text-left" id="approval-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel16">Approval Proposal Kegiatan</h4>
+                    <h4 class="modal-title" id="myModalLabel16">Approval Registrasi Kompetisi</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" id="approval-proposal">
+                <div class="modal-body" id="approval-kompetisi">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success waves-effect waves-float waves-light"
                         onclick="approveConfirm('{{ isset($data['approval']) ? $data['approval'] : '' }}');">
-                        <i data-feather="check" class="mr-25"></i>Approve Proposal</button>
+                        <i data-feather="check" class="mr-25"></i>Approve</button>
                     <button type="button" class="btn btn-danger waves-effect waves-float waves-light"
                         onclick="rejectConfirm('{{ isset($data['approval']) ? $data['approval'] : '' }}');">
-                        <i data-feather="x" class="mr-25"></i>Reject Proposal</button>
+                        <i data-feather="x" class="mr-25"></i>Reject</button>
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 @stop
 
 @push('styles')
@@ -104,11 +104,10 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route($data['datasource']) }}",
-            columns: [
-                {
+            columns: [{
                     data: 'created_at',
                     name: 'created_at'
-                },    
+                },
                 {
                     data: 'kompetisi.nama_kompetisi',
                     name: 'kompetisi.nama_kompetisi'
@@ -176,20 +175,20 @@
             });
         }
 
-        // function detail(id) {
-        //     // $('#detail-proposal').remove();
-        //     $('#detail-proposal').load(base_url + '/proposal/modal_detail/' + id);
-        // }
+        function detail(id) {
+            // $('#detail-kompetisi-participant').remove();
+            $('#detail-kompetisi-participant').load(base_url + '/kompetisi/participant/modal_detail/' + id);
+        }
 
         // function upload_laporan(id) {
         //     // $('#upload-laporan-proposal').remove();
         //     $('#upload-laporan-proposal').load(base_url + '/proposal/upload_laporan/' + id);
         // }
 
-        // function approval(id) {
-        //     // $('#approval-proposal').remove();
-        //     $('#approval-proposal').load(base_url + '/proposal/approval/' + id);
-        // }
+        function approval(id) {
+            // $('#approval-proposal').remove();
+            $('#approval-kompetisi').load(base_url + '/kompetisi/modal_approval/' + id);
+        }
 
         // function uploadLaporan() {
         //     event.preventDefault();
@@ -231,87 +230,92 @@
         //     });
         // }
 
-        // function approveConfirm(approval) {
-        //     event.preventDefault();
-        //     Swal.fire({
-        //         width: 680,
-        //         title: 'Anda yakin approve proposal ini?',
-        //         // text: "Data yang sudah di hapus tidak bisa dikembalikan!",
-        //         icon: 'question',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Ya',
-        //         cancelButtonText: 'Tidak'
-        //     }).then((result) => {
-        //         const json_param = formConverter($('form').serializeArray());
+        function approveConfirm(approval) {
+            event.preventDefault();
+            Swal.fire({
+                width: 680,
+                title: 'Anda yakin approve kompetisi ini?',
+                // text: "Data yang sudah di hapus tidak bisa dikembalikan!",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.value) {
+                    const json_param = formConverter($('form').serializeArray());
+                    console.log(json_param);
 
-        //         $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
-        //         $.ajax({
-        //             url: "{{ route('proposal.submit_approval') }}",
-        //             method: 'POST',
-        //             data: {
-        //                 data: json_param,
-        //                 type: 'approve',
-        //                 approval : approval,
-        //             },
-        //             success: function(data) {
-        //                 if (data.success) {
-        //                     successMessage(data.message, data.redirect);
-        //                 } else {
-        //                     errorMessage(data.message);
-        //                 }
-        //             }
-        //         });
-        //     });
-        // }
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: "{{ route('kompetisi.submit_approval') }}",
+                        method: 'POST',
+                        data: {
+                            data: json_param,
+                            type: 'approve',
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                successMessage(data.message, data.redirect);
+                            } else {
+                                errorMessage(data.message);
+                            }
+                        }
+                    });
+                }
 
-        // function rejectConfirm(approval) {
-        //     event.preventDefault();
+            });
+        }
 
-        //     $('#approval-modal').modal('hide');
+        function rejectConfirm(approval) {
+            event.preventDefault();
 
-        //     Swal.fire({
-        //         width: 680,
-        //         title: 'Anda yakin reject proposal ini?',
-        //         text: 'Silahkan input note reject',
-        //         input: 'text',
-        //         showCancelButton: true,
-        //         confirmButtonText: 'Ya',
+            $('#approval-modal').modal('hide');
+
+            Swal.fire({
+                width: 680,
+                title: 'Anda yakin reject kompetisi ini?',
+                text: 'Silahkan input note reject',
+                input: 'text',
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
 
 
-        //     }).then((result) => {
-        //         const json_param = formConverter($('form').serializeArray());
+            }).then((result) => {
+                if (result.value) {
 
-        //         $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
-        //         $.ajax({
-        //             url: "{{ route('proposal.submit_approval') }}",
-        //             method: 'POST',
-        //             data: {
-        //                 data: json_param,
-        //                 type: 'reject',
-        //                 approval : approval,
-        //                 note: result.value,
-        //             },
-        //             success: function(data) {
-        //                 if (data.success) {
-        //                     successMessage(data.message, data.redirect);
-        //                 } else {
-        //                     errorMessage(data.message);
-        //                 }
-        //             }
-        //         });
-        //     });
+                    const json_param = formConverter($('form').serializeArray());
 
-        // }
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: "{{ route('kompetisi.submit_approval') }}",
+                        method: 'POST',
+                        data: {
+                            data: json_param,
+                            type: 'reject',
+                            note: result.value,
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                successMessage(data.message, data.redirect);
+                            } else {
+                                errorMessage(data.message);
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
 
         function formConverter(form) {
             const json = {};
