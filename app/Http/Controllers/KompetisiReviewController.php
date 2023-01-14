@@ -144,6 +144,10 @@ class KompetisiReviewController extends Controller
             'status' => 'reviewed',
         ];
 
+        if($request->catatan) {
+            $update_param['catatan'] = 'Catatan dosen penilai: ' . $request->catatan;
+        }
+
         $update = KompetisiParticipant::where('id', $request->participant_id)->update($update_param);
 
         if ($update) {
