@@ -57,14 +57,20 @@ class LoginController extends Controller
                     $dosen_user_access = ['korprodi', 'dpm'];
                     $kemahasiswaan_user_access = ['kemahasiswaan', 'pusdatin', 'akademik'];
 
-                    // check if user_access was valid with kemahasiswaan role
-                    if ($this->strposa($user_access_list, $kemahasiswaan_user_access)) {
-                        $cek_user->assignRole('kemahasiswaan');
-                        $access_valid = true;
-                    }
-
-                    // check if user_access was valid with dpm role
-                    if ($this->strposa($user_access_list, $dosen_user_access)) {
+                    // handling for user access is null
+                    if ($user_access_list) {
+                        // check if user_access was valid with kemahasiswaan role
+                        if ($this->strposa($user_access_list, $kemahasiswaan_user_access)) {
+                            $cek_user->assignRole('kemahasiswaan');
+                            $access_valid = true;
+                        }
+    
+                        // check if user_access was valid with dpm role
+                        if ($this->strposa($user_access_list, $dosen_user_access)) {
+                            $cek_user->assignRole('dosen');
+                            $access_valid = true;
+                        }
+                    } else if ($output['data']['employee'] == 'dosen'){
                         $cek_user->assignRole('dosen');
                         $access_valid = true;
                     }
