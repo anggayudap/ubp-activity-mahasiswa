@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KompetisiApprovalController;
 use App\Http\Controllers\KompetisiController;
 use App\Http\Controllers\KompetisiRegisterController;
+use App\Http\Controllers\KompetisiResultController;
 use App\Http\Controllers\KompetisiReviewController;
 use App\Http\Controllers\Master\DosenController;
 use App\Http\Controllers\Master\UserController;
@@ -112,10 +113,20 @@ Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(functi
     Route::get('/approval/{id}', [KompetisiApprovalController::class, 'approval'])->name('approval');
     Route::post('/submit_approval', [KompetisiApprovalController::class, 'submit_approval'])->name('submit_approval');
 
-    
-    Route::get('/review', [KompetisiReviewController::class, 'review'])
-        ->name('review')
+    Route::get('/review/list', [KompetisiReviewController::class, 'review_list'])
+        ->name('review.list')
         ->middleware('role:dosen');
+    Route::get('/review/{id}', [KompetisiReviewController::class, 'review'])->name('review');
+    Route::post('/submit_review', [KompetisiReviewController::class, 'submit_review'])->name('submit_review');
+    
+    Route::get('/result/list', [KompetisiResultController::class, 'result_list'])
+        ->name('result.list')
+        ->middleware('role:dosen');
+    Route::get('/result/{id}', [KompetisiResultController::class, 'result'])->name('result');
+    Route::post('/submit_result', [KompetisiResultController::class, 'submit_result'])->name('submit_result');
+
+    
+    
 
     Route::resource('/', KompetisiController::class);
 });

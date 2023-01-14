@@ -151,7 +151,7 @@
                         @endrole
                         @role('dosen')
                             <li class="{{ request()->is('kompetisi/review*') ? 'active' : '' }} nav-item">
-                                <a class="d-flex align-items-center" href="{{ route('kompetisi.review') }}"><i
+                                <a class="d-flex align-items-center" href="{{ route('kompetisi.review.list') }}"><i
                                         data-feather="circle"></i>
                                     <span class="menu-title text-truncate"
                                         data-i18n="Review Kompetisi">{{ __('Review Kompetisi') }}</span>
@@ -160,7 +160,7 @@
                         @endrole
                         @role('kemahasiswaan')
                             <li class="{{ request()->is('kompetisi/result*') ? 'active' : '' }} nav-item">
-                                <a class="d-flex align-items-center" href="{{ route('kompetisi.approval.list') }}"><i
+                                <a class="d-flex align-items-center" href="{{ route('kompetisi.result.list') }}"><i
                                         data-feather="circle"></i>
                                     <span class="menu-title text-truncate"
                                         data-i18n="Penilaian Akhir">{{ __('Penilaian AKhir') }}</span>

@@ -84,7 +84,7 @@
                     @if (isset($additional['is_pdf']))
                         <object data="{{ URL::asset($output->file_upload) }}" type="application/pdf" frameborder="0"
                             width="100%" height="600px" style="padding: 20px;">
-                            <p>Oops! Lampiran file dalam bentuk zi!</p>
+                            <p>Oops! Lampiran file dalam bentuk arsip zip!</p>
                             <p><a href="{{ URL::asset($output->file_upload) }}">Download Instead</a></p>
                         </object>
                     @else
