@@ -54,6 +54,12 @@
                         <h5 class="mb-75">Status:</h5>
                         <p class="card-text">{!! trans('serba.' . $output->status) !!}</p>
                     </div>
+                    @if ($output->note_reject && $output->status == 'reject')
+                        <div class="mt-2">
+                            <h5 class="mb-75">Note Reject:</h5>
+                            <p class="card-text">{{ $output->note_reject }}</p>
+                        </div>
+                    @endif
                     @if ($output->review)
                         <div class="mt-2">
                             <h5 class="mb-75">Review:</h5>
