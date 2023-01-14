@@ -83,10 +83,7 @@ class KompetisiReviewController extends Controller
 
     public function review($id)
     {
-        $dosens = Dosen::select('id', 'nip', 'nama')->get();
-        $reviews = Review::select('id', 'teks_review')
-            ->where('aktif', '1')
-            ->get();
+        
 
         $output = KompetisiParticipant::with(['kompetisi', 'member', 'review'])
             ->where('id', $id)
@@ -103,23 +100,6 @@ class KompetisiReviewController extends Controller
             $additional['is_pdf'] = true;
         }
 
-        $additional['dosen'][] = [
-            'id' => null,
-            'text' => 'Silahkan input Nama Dosen Pembimbing',
-        ];
-        foreach ($dosens as $data_dosen) {
-            $additional['dosen'][] = [
-                'id' => $data_dosen->id,
-                'text' => $data_dosen->nama,
-            ];
-        }
-
-        foreach ($reviews as $data_review) {
-            $additional['review'][] = [
-                'id' => $data_review->id,
-                'text' => $data_review->teks_review,
-            ];
-        }
         return view('kompetisi.form_review', compact('output', 'additional'));
     }
 
@@ -145,7 +125,7 @@ class KompetisiReviewController extends Controller
         ];
 
         if($request->catatan) {
-            $update_param['catatan'] = 'Catatan dosen penilai: ' . $request->catatan;
+            $update_param['catatan'] = '<strong>Catatan dosen penilai:</strong> ' . $request->catatan;
         }
 
         $update = KompetisiParticipant::where('id', $request->participant_id)->update($update_param);

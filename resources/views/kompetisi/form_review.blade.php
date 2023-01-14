@@ -59,7 +59,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-3 col-form-label">
-                                    <label>Nama Dosen penilai</label>
+                                    <label>Nama Dosen Penilai</label>
                                 </div>
                                 <div class="col-sm-6 d-flex align-items-center">
                                     <p class="card-text">{{ $output->nama_dosen_penilai }}</p>
@@ -201,32 +201,13 @@
     <script src="{{ URL::asset('js/form.js') }}"></script>
 
     <script>
-        let selectDosen = $('.select2-data-dosen');
-        const dataDosen = @json($additional['dosen']);
+       
 
         $(document).ready(function() {
             const basicPickr = $('.flatpickr-basic');
             if (basicPickr.length) {
                 basicPickr.flatpickr();
-            }
-
-            // init select2
-            selectDosen.select2({
-                width: '100%',
-                // data: dataDosen,
-                placeholder: 'Cari nama dosen penilai',
-                minimumInputLength: 2,
-            });
-
-            // init bs-multiselect
-            $('select#review').multiselect({
-                nonSelectedText: 'Pilih satu atau lebih',
-                buttonTextAlignment: 'left',
-                enableFiltering: true,
-                enableCaseInsensitiveFiltering: true,
-                includeSelectAllOption: true,
-                buttonWidth: '400px'
-            });
+            }            
 
         });
 
