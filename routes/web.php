@@ -109,7 +109,7 @@ Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(functi
     Route::get('/approval/list', [KompetisiApprovalController::class, 'approval_list'])
         ->name('approval.list')
         ->middleware('role:kemahasiswaan');
-    Route::get('/modal_approval/{id}', [KompetisiApprovalController::class, 'approval'])->name('approval.modal');
+    Route::get('/approval/{id}', [KompetisiApprovalController::class, 'approval'])->name('approval');
     Route::post('/submit_approval', [KompetisiApprovalController::class, 'submit_approval'])->name('submit_approval');
 
     
