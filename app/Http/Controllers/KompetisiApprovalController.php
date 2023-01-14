@@ -193,6 +193,7 @@ class KompetisiApprovalController extends Controller
 
 
             $data_dosen = Dosen::where('id', $request->dosen_penilai)->first();
+            $update_param['id_dosen_penilai'] = $data_dosen->id_sipt;
             $update_param['nip_dosen_penilai'] = $data_dosen->nip;
             $update_param['nama_dosen_penilai'] = $data_dosen->nama;
             $update_param['email_dosen_penilai'] = $data_dosen->email;
