@@ -45,7 +45,7 @@ class KompetisiRegisterController extends Controller
                     if ($row->skema) {
                         foreach ($row->skema as $data_skema) {
                             $list_skema .= '<li>' . $data_skema->nama_skema . '</li>';
-                        };
+                        }
                     }
                     return '<ul>' . $list_skema . '</ul>';
                 })
@@ -86,54 +86,97 @@ class KompetisiRegisterController extends Controller
         $data['heading'] = 'Registrasi Kompetisi';
         $data['datasource'] = 'kompetisi.register';
 
-        return view('kompetisi.register_index', compact('data'));
+        return view('kompetisi.index_register', compact('data'));
     }
 
     public function register_form(Request $request, $id)
     {
-        $data['kompetisi'] = Kompetisi::with(['skema'])->findOrFail(Crypt::decrypt($id));
+        $data = Kompetisi::with(['skema'])->findOrFail(Crypt::decrypt($id));
         $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
         $dosens = Dosen::select('id', 'nip', 'nama')->get();
 
-        $data['mahasiswa'][] = [
+        $additional['mahasiswa'][] = [
             'id' => '0',
             'text' => 'Silahkan input NIM atau Nama Mahasiswa',
         ];
         foreach ($mahasiswas as $data_mahasiswa) {
-            $data['mahasiswa'][] = [
+            $additional['mahasiswa'][] = [
                 'id' => $data_mahasiswa->nim,
                 'text' => '(' . $data_mahasiswa->nim . ') ' . $data_mahasiswa->nama_mahasiswa,
             ];
         }
 
-        $data['dosen'][] = [
+        $additional['dosen'][] = [
             'id' => '0',
             'text' => 'Silahkan input Nama Dosen Pembimbing',
         ];
         foreach ($dosens as $data_dosen) {
-            $data['dosen'][] = [
+            $additional['dosen'][] = [
                 'id' => $data_dosen->id,
                 'text' => $data_dosen->nama,
             ];
         }
 
-        return view('kompetisi.form_register', compact('data'));
+        $additional['is_update'] = false;
+
+        return view('kompetisi.form_register', compact('data','additional'));
+    }
+
+    public function edit($id) {
+        $data = Kompetisi::with(['skema', 'participant' => function($q) use ($id) {
+            $q->where('id', Crypt::decrypt($id))->with(['member']);
+        }])
+        ->whereHas('participant', function ($query) use ($id){
+            return $query->where('id', Crypt::decrypt($id));
+        })
+        ->first();
+
+        $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
+        $dosens = Dosen::select('id', 'nip', 'nama')->get();
+
+        $additional['mahasiswa'][] = [
+            'id' => '0',
+            'text' => 'Silahkan input NIM atau Nama Mahasiswa',
+        ];
+        foreach ($mahasiswas as $data_mahasiswa) {
+            $additional['mahasiswa'][] = [
+                'id' => $data_mahasiswa->nim,
+                'text' => '(' . $data_mahasiswa->nim . ') ' . $data_mahasiswa->nama_mahasiswa,
+            ];
+        }
+
+        $additional['dosen'][] = [
+            'id' => '0',
+            'text' => 'Silahkan input Nama Dosen Pembimbing',
+        ];
+        foreach ($dosens as $data_dosen) {
+            $additional['dosen'][] = [
+                'id' => $data_dosen->id,
+                'text' => $data_dosen->nama,
+            ];
+        }
+
+        $additional['is_update'] = true;
+
+        return view('kompetisi.form_register', compact('data','additional'));
     }
 
     public function register_submit(Request $request)
     {
         $validated = $request->validate([
             'kompetisi_id' => 'required',
-            'type' => 'required|in:update,store',
+            'method' => 'required|in:update,create',
             'judul' => 'required',
             'tahun' => 'required|integer|digits:4',
             'skema' => 'required',
             'dosen_pembimbing' => 'required',
             'ketua' => 'required',
             'anggota' => 'required|array',
-            'file_kompetisi' => 'required|file|max:5120|mimes:pdf,zip',
+            'file_kompetisi' => 'sometimes|file|max:5120|mimes:pdf,zip',
         ]);
-        $data_skema = Skema::where('id', $request->skema)->first();
+
+        // dd($request);
+        $data_skema = Skema::where('nama_skema', $request->skema)->first();
 
         $file_participant_path = null;
 
@@ -142,9 +185,10 @@ class KompetisiRegisterController extends Controller
         }
 
         $data_dosen_pembimbing = Dosen::where('id', $request->dosen_pembimbing)->first();
-
-        $kompetisi_participant = KompetisiParticipant::create([
+        
+        $param = [
             'kompetisi_id' => $request->kompetisi_id,
+            'id_dosen_pembimbing' => $data_dosen_pembimbing->id,
             'nip_dosen_pembimbing' => $data_dosen_pembimbing->nip,
             'nama_dosen_pembimbing' => $data_dosen_pembimbing->nama,
             'email_dosen_pembimbing' => $data_dosen_pembimbing->email,
@@ -153,9 +197,26 @@ class KompetisiRegisterController extends Controller
             'tahun' => $request->tahun,
             'nama_skema' => $data_skema->nama_skema,
             'deskripsi_skema' => $data_skema->deskripsi_skema,
-            'file_upload' => $file_participant_path,
             'is_editable' => 1,
-        ]);
+        ];
+
+        if($request->method == 'create') {
+            $param['file_upload'] = $file_participant_path;
+            $param['user_created'] = session('user.user_id');
+            $kompetisi_participant = KompetisiParticipant::create($param);
+
+        } else if($request->method == 'update') {
+            $param['user_updated'] = session('user.user_id');
+            $kompetisi_participant = KompetisiParticipant::where('id', $request->participant_id)->update($param);
+        }
+
+        // dd('aman');
+        // $kompetisi_participant = KompetisiParticipant::create([
+            
+        //     'file_upload' => $file_participant_path,
+            
+        //     'user_created' => session('user.user_id'),
+        // ]);
 
         // index 0 = ketua
         // index 1-2-3-dst = anggota
@@ -165,7 +226,7 @@ class KompetisiRegisterController extends Controller
         $data_mahasiswa_member = Mahasiswa::whereIn('nim', $member)->get();
 
         foreach ($data_mahasiswa_member as $data_mahasiswa) {
-            $param[] = [
+            $param_member[] = [
                 'participant_id' => $kompetisi_participant->id,
                 'nim' => $data_mahasiswa->nim,
                 'nama_mahasiswa' => $data_mahasiswa->nama_mahasiswa,
@@ -175,8 +236,9 @@ class KompetisiRegisterController extends Controller
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
         }
+        // dd($param_member);
+        $post = KompetisiParticipantMember::insert($param_member);
 
-        $post = KompetisiParticipantMember::insert($param);
         if ($post) {
             Alert::success('Berhasil!', 'Registrasi Kompetisi berhasil!');
             return redirect(route('kompetisi.history'));
@@ -194,11 +256,12 @@ class KompetisiRegisterController extends Controller
     {
         if ($request->ajax()) {
             $nim_user = session('user.id');
-            $data = KompetisiParticipant::select(['id', 'kompetisi_id', 'created_at', 'nama_skema', 'nama_dosen_pembimbing', 'status'])
+            $data = KompetisiParticipant::select(['id', 'kompetisi_id', 'created_at', 'nama_skema', 'nama_dosen_pembimbing', 'status', 'is_editable'])
                 ->with(['kompetisi', 'member'])
                 ->whereHas('member', function (Builder $query) use ($nim_user) {
                     $query->where('nim', $nim_user);
-                });
+                })
+                ->orWhere('user_created', session('user.user_id'));
 
             return Datatables::of($data)
                 ->addColumn('nama_ketua', function ($row) {
@@ -219,20 +282,28 @@ class KompetisiRegisterController extends Controller
                     return $count;
                 })
                 ->addColumn('action', function ($row) {
+                    // handling editbale for ketua
+                    foreach ($row->member as $member) {
+                        if ($member->status_keanggotaan == 'ketua') {
+                            $nim_ketua = $member->nim;
+                        }
+                    }
+                    $nim_user = session('user.id');
+
                     $btn =
                         '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
-                        <a href="' .
-                        route('kompetisi.show', Crypt::encrypt($row->id)) .
-                        '" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
-                    if ($row->is_editable) {
+                        <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
+                        $row->id .
+                        ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
+                    if ($row->is_editable && ($nim_ketua == $nim_user)) {
                         $btn .=
                             '<a href="' .
-                            route('kompetisi.edit', Crypt::encrypt($row->id)) .
+                            route('kompetisi.participant.edit', Crypt::encrypt($row->id)) .
                             '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
                             <form action="' .
-                            route('kompetisi.destroy', [$row->id]) .
+                            route('kompetisi.participant.destroy', [$row->id]) .
                             '" method="POST" id="form-delete-' .
                             $row->id .
                             '" style="display: inline">
@@ -256,6 +327,9 @@ class KompetisiRegisterController extends Controller
                 ->editColumn('created_at', function (KompetisiParticipant $data) {
                     return get_indo_date($data->created_at);
                 })
+                ->editColumn('status', function (KompetisiParticipant $data) {
+                    return trans('serba.' . $data->status);
+                })
                 ->rawColumns(['action', 'status'])
                 ->removeColumn('id')
                 ->make(true);
@@ -264,7 +338,40 @@ class KompetisiRegisterController extends Controller
         $data['heading'] = 'History Registrasi Kompetisi';
         $data['datasource'] = 'kompetisi.history';
 
-        return view('kompetisi.history_participant', compact('data'));
+        return view('kompetisi.index_history_participant', compact('data'));
+    }
+
+    public function detail($id)
+    {
+        $output = KompetisiParticipant::with(['kompetisi', 'member'])
+            ->where('id', $id)
+            ->first();
+
+        $additional['is_pdf'] = false;
+
+        $file_name = $output->file_upload;
+        $str_pieces = explode('.', $file_name);
+        $extensions = end($str_pieces);
+
+        if ($extensions == 'pdf') {
+            $additional['is_pdf'] = true;
+        }
+
+        return view('kompetisi.modal.modal_detail', compact('output', 'additional'));
+    }
+
+    public function destroy($id)
+    {
+        $model = KompetisiParticipant::findOrFail($id);
+        $model->delete();
+
+        if ($model) {
+            Alert::success('Berhasil!', 'Data registrasi kompetisi berhasil dihapus!');
+            return redirect(route('kompetisi.history'));
+        } else {
+            Alert::error('Gagal!', 'Data registrasi kompetisi tidak dapat dihapus!');
+            return redirect(route('kompetisi.history'));
+        }
     }
 
     private function upload_file($request_file, $prefix)
