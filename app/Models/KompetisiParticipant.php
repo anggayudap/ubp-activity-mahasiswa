@@ -54,6 +54,6 @@ class KompetisiParticipant extends Model {
     }
 
     public function review() {
-        return $this->hasMany(KompetisiParticipantReview::class, 'paricipant_id');
+        return $this->hasMany(KompetisiParticipantReview::class, 'participant_id');
     }
 }
