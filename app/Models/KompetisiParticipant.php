@@ -32,7 +32,6 @@ class KompetisiParticipant extends Model {
         'nama_dosen_penilai',
         'email_dosen_penilai',
         'prodi_dosen_penilai',
-        'review',
         'catatan',
         'tanggal_approval',
         'user_approval',

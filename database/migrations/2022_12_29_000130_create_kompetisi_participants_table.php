@@ -26,13 +26,12 @@ class CreateKompetisiParticipantsTable extends Migration
             $table->string('nama_skema')->nullable();
             $table->string('deskripsi_skema')->nullable();
             $table->text('file_upload')->nullable();
-            $table->mediumText('review')->nullable();
             $table->text('catatan')->nullable();
             $table->dateTime('tanggal_approval')->nullable();
             $table->foreignId('user_approval')->nullable();
             $table->string('nama_approval')->nullable();
             $table->enum('keputusan', ['lolos', 'tidak_lolos'])->nullable();
-            $table->enum('status', ['pending', 'reject', 'in_review', 'completed'])->default('pending');
+            $table->enum('status', ['pending', 'reject', 'in_review', 'reviewed', 'completed'])->default('pending');
             $table->text('note_reject')->nullable();
             $table->tinyInteger('is_editable')->default(0);
             $table->timestamps();
