@@ -5,7 +5,7 @@ return [
     'siap_diambil_text' => 'Siap Diambil',
     'selesai_text' => 'Selesai',
     'reject_text' => 'Rejected',
-    'pending' => '<div class="badge badge-primary">Pending</div>',
+    'pending' => '<div class="badge badge-warning">Pending</div>',
     'upload_laporan' => '<div class="badge badge-primary">Upload Laporan</div>',
     'laporan_diupload' => '<div class="badge badge-success">Laporan Diupload</div>',
     'selesai' => '<div class="badge badge-secondary">Selesai</div>',

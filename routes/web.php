@@ -84,32 +84,40 @@ Route::middleware('auth')->group(function () {
 });
 
 // ROUTE KOMPETISI
-Route::middleware('auth')->group(function () {
-    Route::get('/kompetisi/list', [KompetisiController::class, 'list'])
-        ->name('kompetisi.list')
+Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(function () {
+    Route::get('/list', [KompetisiController::class, 'list'])
+        ->name('list')
         ->middleware('role:mahasiswa|kemahasiswaan');
 
 
-    Route::get('/kompetisi/register', [KompetisiRegisterController::class, 'register'])
-        ->name('kompetisi.register')
+    Route::get('/register', [KompetisiRegisterController::class, 'register'])
+        ->name('register')
         ->middleware('role:mahasiswa|kemahasiswaan');
-    Route::get('/kompetisi/register_form/{id}', [KompetisiRegisterController::class, 'register_form'])
-        ->name('kompetisi.register_form')
+    Route::get('/register_form/{id}', [KompetisiRegisterController::class, 'register_form'])
+        ->name('register_form')
         ->middleware('role:mahasiswa|kemahasiswaan');
-    Route::post('/kompetisi/register_submit', [KompetisiRegisterController::class, 'register_submit'])
-        ->name('kompetisi.register_submit');
-    Route::get('/kompetisi/history', [KompetisiRegisterController::class, 'history'])
-        ->name('kompetisi.history')
+    Route::post('/register_submit', [KompetisiRegisterController::class, 'register_submit'])
+        ->name('register_submit');
+    Route::get('/history', [KompetisiRegisterController::class, 'history'])
+        ->name('history')
         ->middleware('role:mahasiswa|dosen|kemahasiswaan');
+    Route::get('/participant/modal_detail/{id}', [KompetisiRegisterController::class, 'detail'])->name('participant.detail');
+    Route::get('/participant/edit/{id}', [KompetisiRegisterController::class, 'edit'])->name('participant.edit');
+    Route::delete('/participant/destroy/{id}', [KompetisiRegisterController::class, 'destroy'])->name('participant.destroy');
 
-    Route::get('/kompetisi/approval', [KompetisiApprovalController::class, 'approval'])
-        ->name('kompetisi.approval')
+
+    Route::get('/approval/list', [KompetisiApprovalController::class, 'approval_list'])
+        ->name('approval.list')
         ->middleware('role:kemahasiswaan');
-    Route::get('/kompetisi/review', [KompetisiReviewController::class, 'review'])
-        ->name('kompetisi.review')
+    Route::get('/modal_approval/{id}', [KompetisiApprovalController::class, 'approval'])->name('approval.modal');
+    Route::post('/submit_approval', [KompetisiApprovalController::class, 'submit_approval'])->name('submit_approval');
+
+    
+    Route::get('/review', [KompetisiReviewController::class, 'review'])
+        ->name('review')
         ->middleware('role:dosen');
 
-    Route::resource('/kompetisi', KompetisiController::class);
+    Route::resource('/', KompetisiController::class);
 });
 
 Route::prefix('report')
