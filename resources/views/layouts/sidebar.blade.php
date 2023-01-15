@@ -126,7 +126,7 @@
             @endhasrole
 
             @hasanyrole('kemahasiswaan')
-                <li class="{{ request()->is('kompetisi/list*') ? 'active' : '' }} nav-item">
+                <li class="{{ request()->is('kompetisi/list*','kompetisi/tracking*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kompetisi.list') }}"><i
                             data-feather="list"></i>
                         <span class="menu-title text-truncate"
