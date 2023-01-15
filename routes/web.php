@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
     /* routing for main menu */
     Route::get('/kegiatan/list', [KegiatanController::class, 'list'])
         ->name('kegiatan.list')
-        ->middleware('role:dosen|kemahasiswaan');
+        ->middleware('role:dpm|kemahasiswaan');
     Route::get('/kegiatan/history', [KegiatanController::class, 'history'])
         ->name('kegiatan.history')
         ->middleware('role:mahasiswa|kemahasiswaan');
@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/proposal/list', [ProposalController::class, 'list'])
         ->name('proposal.list')
-        ->middleware('role:dosen|kemahasiswaan');
+        ->middleware('role:dpm|kemahasiswaan');
     Route::get('/proposal/history', [ProposalController::class, 'history'])
         ->name('proposal.history')
         ->middleware('role:mahasiswa');
@@ -70,13 +70,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/proposal/approval/{id}', [ProposalController::class, 'approval'])->name('proposal.approval');
     Route::get('/proposal/approval_fakultas', [ProposalController::class, 'approval_fakultas'])
         ->name('proposal.approval_fakultas')
-        ->middleware('role:dosen|kemahasiswaan');
+        ->middleware('role:dpm|kemahasiswaan');
     Route::get('/proposal/approval_kemahasiswaan', [ProposalController::class, 'approval_kemahasiswaan'])
         ->name('proposal.approval_kemahasiswaan')
-        ->middleware('role:dosen|kemahasiswaan');
+        ->middleware('role:dpm|kemahasiswaan');
     Route::get('/proposal/approval_laporan', [ProposalController::class, 'approval_laporan'])
         ->name('proposal.approval_laporan')
-        ->middleware('role:dosen|kemahasiswaan');
+        ->middleware('role:dpm|kemahasiswaan');
     // Route::post('/proposal/approve', [ProposalController::class, 'approve'])->name('proposal.approve');
     // Route::post('/proposal/reject', [ProposalController::class, 'reject'])->name('proposal.reject');
     Route::post('/proposal/submit_approval', [ProposalController::class, 'submit_approval'])->name('proposal.submit_approval');
@@ -88,12 +88,17 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(function () {
     Route::get('/list', [KompetisiController::class, 'list'])
         ->name('list')
-        ->middleware('role:mahasiswa|kemahasiswaan');
+        ->middleware('role:kemahasiswaan');
 
 
     Route::get('/register', [KompetisiRegisterController::class, 'register'])
         ->name('register')
         ->middleware('role:mahasiswa|kemahasiswaan');
+
+    Route::get('/register/preview/{id}', [KompetisiRegisterController::class, 'preview'])
+        ->name('register.preview')
+        ->middleware('role:mahasiswa|kemahasiswaan');
+
     Route::get('/register_form/{id}', [KompetisiRegisterController::class, 'register_form'])
         ->name('register_form')
         ->middleware('role:mahasiswa|kemahasiswaan');
@@ -101,7 +106,7 @@ Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(functi
         ->name('register_submit');
     Route::get('/history', [KompetisiRegisterController::class, 'history'])
         ->name('history')
-        ->middleware('role:mahasiswa|dosen|kemahasiswaan');
+        ->middleware('role:mahasiswa|dosen|dpm|kemahasiswaan');
     Route::get('/participant/modal_detail/{id}', [KompetisiRegisterController::class, 'detail'])->name('participant.detail');
     Route::get('/participant/edit/{id}', [KompetisiRegisterController::class, 'edit'])->name('participant.edit');
     Route::delete('/participant/destroy/{id}', [KompetisiRegisterController::class, 'destroy'])->name('participant.destroy');
@@ -115,19 +120,20 @@ Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(functi
 
     Route::get('/review/list', [KompetisiReviewController::class, 'review_list'])
         ->name('review.list')
-        ->middleware('role:dosen');
+        ->middleware('role:dosen|dpm');
     Route::get('/review/{id}', [KompetisiReviewController::class, 'review'])->name('review');
     Route::post('/submit_review', [KompetisiReviewController::class, 'submit_review'])->name('submit_review');
     
     Route::get('/result/list', [KompetisiResultController::class, 'result_list'])
         ->name('result.list')
-        ->middleware('role:dosen');
+        ->middleware('role:dosen|dpm');
     Route::get('/result/{id}', [KompetisiResultController::class, 'result'])->name('result');
     Route::post('/submit_result', [KompetisiResultController::class, 'submit_result'])->name('submit_result');
 
     
     
-
+    // Route::get('create/', [KompetisiController::class, 'create'])->name('create');
+    Route::get('/{id}', [KompetisiController::class, 'show'])->name('show');
     Route::resource('/', KompetisiController::class);
 });
 

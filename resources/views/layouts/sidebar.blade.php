@@ -21,11 +21,12 @@
                 </a>
             </li>
 
-
+            @hasanyrole('mahasiswa|kemahasiswaan|dpm')
             <li class=" navigation-header"><span data-i18n="Kegiatan">{{ __('Kegiatan Mahasiswa') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
-            @hasanyrole('mahasiswa|kemahasiswaan|dosen')
+            @endhasanyrole
+            @hasanyrole('mahasiswa|kemahasiswaan')
                 <li class="{{ request()->is('kegiatan/create*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kegiatan.create') }}"><i
                             data-feather="file-plus"></i>
@@ -43,7 +44,7 @@
                 </li>
             @endhasrole
 
-            @hasanyrole('dosen|kemahasiswaan')
+            @hasanyrole('dpm|kemahasiswaan')
                 <li class="{{ request()->is('kegiatan/list*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kegiatan.list') }}"><i data-feather="list"></i>
                         <span class="menu-title text-truncate" data-i18n="List Kegiatan">{{ __('List Kegiatan') }}</span>
@@ -51,10 +52,11 @@
                 </li>
             @endhasanyrole
 
-
+            @hasanyrole('mahasiswa|kemahasiswaan|dpm')
             <li class=" navigation-header"><span data-i18n="Proposal">{{ __('Proposal Kegiatan') }}</span><i
                     data-feather="more-horizontal"></i>
             </li>
+            @endhasanyrole
             @hasrole('mahasiswa')
                 <li class="{{ request()->is('proposal/create*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('proposal.create') }}"><i
@@ -70,7 +72,7 @@
                 </li>
             @endhasrole('mahasiswa')
 
-            @hasanyrole('dosen|kemahasiswaan')
+            @hasanyrole('dpm|kemahasiswaan')
                 <li class="{{ request()->is('proposal/list*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('proposal.list') }}"><i data-feather="list"></i>
                         <span class="menu-title text-truncate" data-i18n="List Proposal">{{ __('List Proposal') }}</span>
@@ -78,11 +80,11 @@
                 </li>
             @endhasanyrole
 
-            @hasanyrole('dosen|kemahasiswaan')
+            @hasanyrole('dpm|kemahasiswaan')
                 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="check"></i><span
                             class="menu-title text-truncate" data-i18n="Approval">Approval</span></a>
                     <ul class="menu-content">
-                        @role('dosen')
+                        @role('dpm')
                             <li class="{{ request()->is('proposal/approval_fakultas*') ? 'active' : '' }}">
                                 <a class="d-flex align-items-center" href="{{ route('proposal.approval_fakultas') }}"><i
                                         data-feather="circle"></i>
@@ -123,7 +125,7 @@
                 </li>
             @endhasrole
 
-            @hasanyrole('dosen|kemahasiswaan')
+            @hasanyrole('kemahasiswaan')
                 <li class="{{ request()->is('kompetisi/list*') ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="{{ route('kompetisi.list') }}"><i
                             data-feather="list"></i>
@@ -134,7 +136,7 @@
             @endhasanyrole
 
 
-            @hasanyrole('dosen|kemahasiswaan')
+            @hasanyrole('dosen|dpm|kemahasiswaan')
                 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i
                             data-feather="check"></i><span class="menu-title text-truncate"
                             data-i18n="Approval & Review">Approval & Review</span></a>
@@ -149,7 +151,7 @@
                                 </a>
                             </li>
                         @endrole
-                        @role('dosen')
+                        @role('dosen|dpm')
                             <li class="{{ request()->is('kompetisi/review*') ? 'active' : '' }} nav-item">
                                 <a class="d-flex align-items-center" href="{{ route('kompetisi.review.list') }}"><i
                                         data-feather="circle"></i>

@@ -20,6 +20,10 @@
             @include('dashboard.dashboard_dosen')
         @endhasrole
 
+        @hasrole('dpm')
+            @include('dashboard.dashboard_dpm')
+        @endhasrole
+
         @hasrole('kemahasiswaan')
             @include('dashboard.dashboard_kemahasiswaan')
         @endhasrole

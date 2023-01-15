@@ -41,7 +41,7 @@ class LoginController extends Controller
             // input id User model to session
             $data_user['user_id'] = $cek_user->id;
 
-            // clear roles for renew dosen/kemahasiswaan access list w/ role in application
+            // clear roles for renew dpm/dosen/kemahasiswaan access list w/ role in application
             if ($output['data']['role'] != 'mahasiswa') {
                 $cek_user->roles()->detach();
             }
@@ -52,9 +52,9 @@ class LoginController extends Controller
                 if ($output['data']['role'] == 'mahasiswa') {
                     $cek_user->assignRole('mahasiswa');
                 } else {
-                    $access_valid = false;
+                    $checking_user_access = false;
                     $user_access_list = $output['data']['user_access'];
-                    $dosen_user_access = ['korprodi', 'dpm'];
+                    $dpm_user_access = ['korprodi', 'dpm'];
                     $kemahasiswaan_user_access = ['kemahasiswaan', 'pusdatin', 'akademik'];
 
                     // handling for user access is null
@@ -62,22 +62,24 @@ class LoginController extends Controller
                         // check if user_access was valid with kemahasiswaan role
                         if ($this->strposa($user_access_list, $kemahasiswaan_user_access)) {
                             $cek_user->assignRole('kemahasiswaan');
-                            $access_valid = true;
+                            $checking_user_access = true;
                         }
-    
+
                         // check if user_access was valid with dpm role
-                        if ($this->strposa($user_access_list, $dosen_user_access)) {
-                            $cek_user->assignRole('dosen');
-                            $access_valid = true;
+                        if ($this->strposa($user_access_list, $dpm_user_access)) {
+                            $cek_user->assignRole('dpm');
+                            $checking_user_access = true;
                         }
-                    } else if ($output['data']['employee'] == 'dosen'){
-                        $cek_user->assignRole('dosen');
-                        $access_valid = true;
                     }
 
-                    if (!$access_valid) {
-                        // user_access hasn't registered or matching with role
-                        return redirect()->route('error_notauthorized');
+                    if (!$checking_user_access) {
+                        // check if user hasnt user_access and employee is edosen
+                        if ($output['data']['employee'] == 'dosen') {
+                            $cek_user->assignRole('dosen');
+                        } else {
+                            // user_access hasn't registered or matching with role
+                            return redirect()->route('error_notauthorized');
+                        }
                     }
                 }
             }
