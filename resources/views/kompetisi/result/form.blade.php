@@ -97,7 +97,7 @@
                                     <label>Lampiran File</label>
                                 </div>
                                 <div class="col-sm-9 d-flex align-items-center">
-                                    @if (isset($additional['is_pdf']))
+                                    @if ($additional['is_pdf'])
                                         <object data="{{ URL::asset($output->file_upload) }}" type="application/pdf"
                                             frameborder="0" width="100%" height="600px" style="padding: 20px;">
                                             <p>Oops! Lampiran file dalam bentuk arsip zip!</p>
@@ -105,8 +105,8 @@
                                             </p>
                                         </object>
                                     @else
-                                        <img src="{{ URL::asset($output->file_upload) }}" class="img-fluid"
-                                            style="max-height: 100%" alt="image surat tugas">
+                                    <p>File lampiran yang di upload menggunakan format arsip ZIP. Klik button dibawah untuk mendownload file arsip.</p>
+                                    <a href="{{ URL::asset($output->file_upload) }}" class="btn btn-primary"><i data-feather="download" class="mr-50"></i>Download Arsip</a>
                                     @endif
                                 </div>
                             </div>

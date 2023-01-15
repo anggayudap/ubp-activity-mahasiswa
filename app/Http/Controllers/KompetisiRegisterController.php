@@ -55,7 +55,7 @@ class KompetisiRegisterController extends Controller
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="' .
-                        route('kompetisi.show', Crypt::encrypt($row->id)) .
+                        route('kompetisi.register.preview', Crypt::encrypt($row->id)) .
                         '" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
                     $btn .= '</div>
                         </div>';
@@ -86,7 +86,36 @@ class KompetisiRegisterController extends Controller
         $data['heading'] = 'Registrasi Kompetisi';
         $data['datasource'] = 'kompetisi.register';
 
-        return view('kompetisi.index_register', compact('data'));
+        return view('kompetisi.register.index', compact('data'));
+    }
+
+    public function preview($id)
+    {
+        $data['kompetisi'] = Kompetisi::with(['skema'])->findOrFail(Crypt::decrypt($id));
+        $selected_prodi = json_decode($data['kompetisi']->list_prodi, true);
+
+        $data['prodi'] = Prodi::select('id', 'nama_prodi', 'kode_prodi')
+            ->whereIn('id', $selected_prodi)
+            ->get();
+        $data['list_penilaian'] = json_decode($data['kompetisi']->list_penilaian, true);
+
+        $data['has_registered'] = false;
+
+        // checking history registered for mahasiswa
+        $user_session = session('user');
+        if ($user_session['role'] == 'mahasiswa') {
+            $nim_mahasiswa = $user_session['id'];
+            $history = Kompetisi::whereHas('participant.member', function ($query) use ($nim_mahasiswa) {
+                $query->where('nim', '=', $nim_mahasiswa);
+            })
+                ->with(['participant.member'])
+                ->where('id', Crypt::decrypt($id));
+            if ($history->first()) {
+                $data['has_registered'] = true;
+            }
+        }
+
+        return view('kompetisi.register.detail', compact('data'));
     }
 
     public function register_form(Request $request, $id)
@@ -119,7 +148,7 @@ class KompetisiRegisterController extends Controller
 
         $additional['is_update'] = false;
 
-        return view('kompetisi.form_register', compact('data','additional'));
+        return view('kompetisi.register.form', compact('data','additional'));
     }
 
     public function edit($id) {
@@ -158,7 +187,7 @@ class KompetisiRegisterController extends Controller
 
         $additional['is_update'] = true;
 
-        return view('kompetisi.form_register', compact('data','additional'));
+        return view('kompetisi.register.form', compact('data','additional'));
     }
 
     public function register_submit(Request $request)
@@ -354,7 +383,7 @@ class KompetisiRegisterController extends Controller
         $data['heading'] = 'History Registrasi Kompetisi';
         $data['datasource'] = 'kompetisi.history';
 
-        return view('kompetisi.index_history_participant', compact('data'));
+        return view('kompetisi.index_participant', compact('data'));
     }
 
     public function detail($id)
@@ -369,10 +398,11 @@ class KompetisiRegisterController extends Controller
         $str_pieces = explode('.', $file_name);
         $extensions = end($str_pieces);
 
+        
         if ($extensions == 'pdf') {
             $additional['is_pdf'] = true;
         }
-
+        
         return view('kompetisi.modal.modal_detail', compact('output', 'additional'));
     }
 

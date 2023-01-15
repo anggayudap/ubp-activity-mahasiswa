@@ -78,7 +78,7 @@ class KompetisiReviewController extends Controller
         $data['heading'] = 'Review Kompetisi';
         $data['datasource'] = 'kompetisi.review.list';
 
-        return view('kompetisi.index_history_participant', compact('data'));
+        return view('kompetisi.index_participant', compact('data'));
     }
 
     public function review($id)
@@ -100,7 +100,7 @@ class KompetisiReviewController extends Controller
             $additional['is_pdf'] = true;
         }
 
-        return view('kompetisi.form_review', compact('output', 'additional'));
+        return view('kompetisi.review.form', compact('output', 'additional'));
     }
 
     public function submit_review(Request $request)

@@ -77,7 +77,7 @@ class KompetisiApprovalController extends Controller
         $data['heading'] = 'Approval Registrasi Kompetisi';
         $data['datasource'] = 'kompetisi.approval.list';
 
-        return view('kompetisi.index_history_participant', compact('data'));
+        return view('kompetisi.index_participant', compact('data'));
     }
 
     public function approval($id)
@@ -118,7 +118,7 @@ class KompetisiApprovalController extends Controller
                 'text' => $data_review->teks_review,
             ];
         }
-        return view('kompetisi.form_approval', compact('output', 'additional'));
+        return view('kompetisi.approval.form', compact('output', 'additional'));
     }
 
     public function submit_approval(Request $request)
@@ -150,7 +150,7 @@ class KompetisiApprovalController extends Controller
         $kompetisi_end_date = strtotime($kompetisi_participant->kompetisi->tanggal_akhir_pendaftaran);
         $current_date = strtotime(date('Y-m-d'));
 
-        
+
 
         // dd($kompetisi_end_date . ' :: ' . $current_date);
 

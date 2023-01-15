@@ -2,7 +2,6 @@
 
 @section('title', $data['heading'])
 
-
 @section('content')
     <section id="ajax-datatable">
         <div class="row">
@@ -18,6 +17,7 @@
                                     <th>{{ __('Nama Kompetisi') }}</th>
                                     <th>{{ __('Daftar Prodi') }}</th>
                                     <th>{{ __('Tanggal Pendaftaran') }}</th>
+                                    <th>{{ __('Jumlah Pendaftar') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Aksi') }}</th>
                                 </tr>
@@ -29,59 +29,6 @@
         </div>
     </section>
 
-    {{-- <div class="modal fade text-left" id="xlarge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel16">Detail Proposal Kegiatan</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="detail-proposal">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade text-left" id="xlarge-upload-laporan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel16">Upload Laporan Proposal Kegiatan</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="upload-laporan-proposal">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade text-left" id="approval-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel16">Approval Proposal Kegiatan</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="approval-proposal">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success waves-effect waves-float waves-light"
-                        onclick="approveConfirm('{{ isset($data['approval']) ? $data['approval'] : '' }}');">
-                        <i data-feather="check" class="mr-25"></i>Approve Proposal</button>
-                    <button type="button" class="btn btn-danger waves-effect waves-float waves-light"
-                        onclick="rejectConfirm('{{ isset($data['approval']) ? $data['approval'] : '' }}');">
-                        <i data-feather="x" class="mr-25"></i>Reject Proposal</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 @stop
 
 @push('styles')
@@ -112,6 +59,10 @@
                 {
                     data: 'tanggal_pendaftaran',
                     name: 'tanggal_pendaftaran'
+                },
+                {
+                    data: 'jumlah_pendaftar',
+                    name: 'jumlah_pendaftar'
                 },
                 {
                     data: 'aktif',
@@ -158,152 +109,6 @@
                     return false;
                 }
             });
-        }
-
-        // function detail(id) {
-        //     // $('#detail-proposal').remove();
-        //     $('#detail-proposal').load(base_url + '/proposal/modal_detail/' + id);
-        // }
-
-        // function upload_laporan(id) {
-        //     // $('#upload-laporan-proposal').remove();
-        //     $('#upload-laporan-proposal').load(base_url + '/proposal/upload_laporan/' + id);
-        // }
-
-        // function approval(id) {
-        //     // $('#approval-proposal').remove();
-        //     $('#approval-proposal').load(base_url + '/proposal/approval/' + id);
-        // }
-
-        // function uploadLaporan() {
-        //     event.preventDefault();
-        //     Swal.fire({
-        //         width: 680,
-        //         title: 'Konfirmasi upload file laporan proposal?',
-        //         // text: "Data yang sudah di hapus tidak bisa dikembalikan!",
-        //         icon: 'question',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Ya',
-        //         cancelButtonText: 'Tidak'
-        //     }).then((result) => {
-        //         const json_param = formConverter($('form').serializeArray());
-
-        //         // $.ajaxSetup({
-        //         //     headers: {
-        //         //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         //     }
-        //         // });
-        //         // $.ajax({
-        //         //     url: "{{ route('proposal.submit_approval') }}",
-        //         //     method: 'POST',
-        //         //     data: {
-        //         //         data: json_param,
-        //         //         type: 'approve',
-        //         //         approval : approval,
-        //         //     },
-        //         //     success: function(data) {
-        //         //         if (data.success) {
-        //         //             successMessage(data.message, data.redirect);
-        //         //         } else {
-        //         //             errorMessage(data.message);
-        //         //         }
-        //         //     }
-        //         // });
-        //         console.log(json_param);
-        //     });
-        // }
-
-        // function approveConfirm(approval) {
-        //     event.preventDefault();
-        //     Swal.fire({
-        //         width: 680,
-        //         title: 'Anda yakin approve proposal ini?',
-        //         // text: "Data yang sudah di hapus tidak bisa dikembalikan!",
-        //         icon: 'question',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Ya',
-        //         cancelButtonText: 'Tidak'
-        //     }).then((result) => {
-        //         const json_param = formConverter($('form').serializeArray());
-
-        //         $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
-        //         $.ajax({
-        //             url: "{{ route('proposal.submit_approval') }}",
-        //             method: 'POST',
-        //             data: {
-        //                 data: json_param,
-        //                 type: 'approve',
-        //                 approval : approval,
-        //             },
-        //             success: function(data) {
-        //                 if (data.success) {
-        //                     successMessage(data.message, data.redirect);
-        //                 } else {
-        //                     errorMessage(data.message);
-        //                 }
-        //             }
-        //         });
-        //     });
-        // }
-
-        // function rejectConfirm(approval) {
-        //     event.preventDefault();
-
-        //     $('#approval-modal').modal('hide');
-
-        //     Swal.fire({
-        //         width: 680,
-        //         title: 'Anda yakin reject proposal ini?',
-        //         text: 'Silahkan input note reject',
-        //         input: 'text',
-        //         showCancelButton: true,
-        //         confirmButtonText: 'Ya',
-
-
-        //     }).then((result) => {
-        //         const json_param = formConverter($('form').serializeArray());
-
-        //         $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
-        //         $.ajax({
-        //             url: "{{ route('proposal.submit_approval') }}",
-        //             method: 'POST',
-        //             data: {
-        //                 data: json_param,
-        //                 type: 'reject',
-        //                 approval : approval,
-        //                 note: result.value,
-        //             },
-        //             success: function(data) {
-        //                 if (data.success) {
-        //                     successMessage(data.message, data.redirect);
-        //                 } else {
-        //                     errorMessage(data.message);
-        //                 }
-        //             }
-        //         });
-        //     });
-
-        // }
-
-        function formConverter(form) {
-            const json = {};
-            $.each(form, function() {
-                json[this.name] = this.value || "";
-            });
-
-            return json;
         }
     </script>
 @endpush

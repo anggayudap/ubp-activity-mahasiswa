@@ -1,8 +1,8 @@
 <div class="card-body">
 
     <div class="row invoice-spacing">
-        <div class="col-md-4 col-12 p-0 mt-xl-0 mt-2">
-            <h4>Data Registrasi</h4>
+        <div class="col-md-6 col-12 p-0 mt-xl-0 mt-2">
+            <h4>Data Registrasi Kompetisi</h4>
             {{-- {{ dd($output) }} --}}
             {{-- <input type="hidden" name="proposal_id" value="{{ $output['proposal']->id }}"> --}}
             <div class="mt-2">
@@ -32,14 +32,7 @@
                 </ul>
                 </p>
             </div>
-            {{-- <div class="mt-2">
-                <h5 class="mb-75">Prodi:</h5>
-                <p class="card-text">{!! $output['proposal']->prodi_mahasiswa->nama_prodi ?? '<em class="text-danger">data Prodi tidak tersedia</em>' !!}</p>
-            </div> --}}
-
-        </div>
-        <div class="col-md-4 col-12 p-0 mt-xl-0 mt-2">
-            <h4>Data Kompetisi</h4>
+            
             <div class="row">
                 <div class="col-md-12 col-12">
                     <div class="mt-2">
@@ -60,36 +53,61 @@
                             <p class="card-text">{{ $output->note_reject }}</p>
                         </div>
                     @endif
-                    @if ($output->review)
+                    @if ($output->review && $output->status == 'completed')
                         <div class="mt-2">
-                            <h5 class="mb-75">Review:</h5>
-                            <p class="card-text">{{ $output->review }}</p>
+                            <h5 class="mb-75">Hasil Review:</h5>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Review</th>
+                                            <th>Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($output->review as $item)
+                                            <tr>
+                                                <td>{{ $item->teks_review }}</td>
+                                                <td>{{ $item->skor_review }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="3">Tidak ada review yang diplotting.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     @endif
                     @if ($output->catatan)
                         <div class="mt-2">
                             <h5 class="mb-75">Catatan:</h5>
-                            <p class="card-text">{{ $output->catatan }}</p>
+                            <p class="card-text">{!! $output->catatan !!}</p>
                         </div>
                     @endif
 
 
                 </div>
             </div>
+
         </div>
-        <div class="col-md-4 col-12 p-0 mt-xl-0 mt-2">
+        {{-- <div class="col-md-4 col-12 p-0 mt-xl-0 mt-2">
+            
+        </div> --}}
+        <div class="col-md-6 col-12 p-0 mt-xl-0 mt-2">
             <h4>Lampiran File</h4>
             <div class="row">
                 <div class="col-md-12 col-12">
-                    @if (isset($additional['is_pdf']))
+                    @if ($additional['is_pdf'])
                         <object data="{{ URL::asset($output->file_upload) }}" type="application/pdf" frameborder="0"
                             width="100%" height="600px" style="padding: 20px;">
                             <p>Oops! Lampiran file dalam bentuk arsip zip!</p>
                             <p><a href="{{ URL::asset($output->file_upload) }}">Download Instead</a></p>
                         </object>
                     @else
-                        <img src="{{ URL::asset($output->file_upload) }}" class="img-fluid" style="max-height: 100%"
-                            alt="image surat tugas">
+                        <p>File lampiran yang di upload menggunakan format arsip ZIP. Klik button dibawah untuk mendownload file arsip.</p>
+                        <a href="{{ URL::asset($output->file_upload) }}" class="btn btn-primary"><i data-feather="download" class="mr-50"></i>Download Arsip</a>
                     @endif
                 </div>
             </div>

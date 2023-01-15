@@ -77,7 +77,7 @@ class KompetisiResultController extends Controller
         $data['heading'] = 'Penilaian Akhir Kompetisi';
         $data['datasource'] = 'kompetisi.result.list';
 
-        return view('kompetisi.index_history_participant', compact('data'));
+        return view('kompetisi.index_participant', compact('data'));
     }
 
     public function result($id)
@@ -98,7 +98,7 @@ class KompetisiResultController extends Controller
         }
 
        
-        return view('kompetisi.form_result', compact('output', 'additional'));
+        return view('kompetisi.result.form', compact('output', 'additional'));
     }
 
     public function submit_result(Request $request)
