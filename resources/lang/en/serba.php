@@ -6,7 +6,7 @@ return [
     'selesai_text' => 'Selesai',
     'reject_text' => 'Rejected',
     'pending' => '<div class="badge badge-warning">Pending</div>',
-    'in_review' => '<div class="badge badge-primary">Sedang Review</div>',
+    'in_review' => '<div class="badge badge-primary">Proses Review</div>',
     'reviewed' => '<div class="badge badge-success">Sudah Direview</div>',
     'upload_laporan' => '<div class="badge badge-primary">Upload Laporan</div>',
     'laporan_diupload' => '<div class="badge badge-success">Laporan Diupload</div>',
