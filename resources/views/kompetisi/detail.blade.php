@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Detail Kompetisi')
+@section('title', 'Detail & Tracking Kompetisi')
 
 @section('content')
     <div class="content-body">
@@ -8,157 +8,161 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Detail Kompetisi</h4>
+                        </div>
                         <div class="card-body">
                             <div class="row pb-2">
-                                <div class="col-md-7 col-12">
-                                    <h2>{{ $data['kompetisi']->nama_kompetisi }}</h2>
-                                    {!! $data['kompetisi']->deskripsi_kompetisi !!}
-                                    
+                                <div class="col-md-8 col-12">
+                                    <h5 class="mb-75">Nama Kompetisi</h5>
+                                    <p class="card-text">
+                                        {{ $data['kompetisi']->nama_kompetisi }}
+                                    </p>
+                                    <h5 class="mb-75">Deskripsi Kompetisi</h5>
+                                    <p class="card-text">
+                                        {!! $data['kompetisi']->deskripsi_kompetisi !!}
+                                    </p>
+                                    <h5 class="mb-75">Tanggal Posting</h5>
+                                    <p class="card-text">
+                                        {{ get_indo_date($data['kompetisi']->created_at) }}
+                                    </p>
+                                    <h5 class="mb-75">Diposting Oleh</h5>
+                                    <p class="card-text">
+                                        {{ $data['kompetisi']->user_name_created }}
+                                    </p>
                                 </div>
-
-                                <div class="col-md-5 col-12 text-right">
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <span>Tanggal Pendaftaran</span>
-                                            <span>{{ get_indo_date($data['kompetisi']->tanggal_mulai_pendaftaran) }} s/d
-                                                {{ get_indo_date($data['kompetisi']->tanggal_akhir_pendaftaran) }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <span>Diposting oleh</span>
-                                            <span class="text-muted ml-50 mr-25">:</span>
-                                            <span>{{ $data['kompetisi']->user_name_created }}</span>
-                                        </div>
-                                    </div>
-                                    {{-- @if ($additional['prepost_vacancy']) --}}
-                                    {{-- <button
-                                        class="btn btn-block btn-secondary">Register</button> --}}
-                                    {{-- @else
-                                        @if ($vacancy['is_active'])
-                                            <button class="btn btn-block btn-primary">Lowongan ini sedang tayang</button>
-                                        @else
-                                            <button class="btn btn-block btn-danger">Lowongan ini tidak aktif</button>
-                                        @endif
-                                    @endif --}}
-                                </div>
-                            </div>
-
-                            <div class="row pb-2">
-                                <div class="col-12">
-                                    <h2>Skema Kompetisi</h2>
+                                <div class="col-md-4 col-12">
+                                    <h5 class="mb-75">Tanggal Mulai Pendaftaran</h5>
+                                    <p class="card-text">
+                                        {{ get_indo_date($data['kompetisi']->tanggal_mulai_pendaftaran) }}
+                                    </p>
+                                    <h5 class="mb-75">Tanggal Akhir Pendaftaran</h5>
+                                    <p class="card-text">
+                                        {{ get_indo_date($data['kompetisi']->tanggal_akhir_pendaftaran) }}
+                                    </p>
+                                    <h5 class="mb-75">Daftar Skema</h5>
                                     <ul>
                                         @foreach ($data['kompetisi']->skema as $skema)
-                                            <li>{{ $skema->nama_skema }}</li>
+                                            <li>
+                                                <p class="card-text">{{ $skema->nama_skema }}</p>
+                                            </li>
                                         @endforeach
                                     </ul>
-                                </div>
-                            </div>
+                                    <h5 class="mb-75">Daftar Prodi</h5>
 
-                            <div class="row pb-2">
-                                <div class="col-12">
-                                    <h2>Daftar Program Studi</h2>
                                     <ul>
                                         @foreach ($data['prodi'] as $prodi)
-                                            <li>{{ $prodi->nama_prodi }}</li>
+                                            <li>
+                                                <p class="card-text">{{ $prodi->nama_prodi }}</p>
+                                            </li>
                                         @endforeach
                                     </ul>
-                                </div>
-                            </div>
-
-                            <div class="row pb-2">
-                                <div class="col-12">
-                                    @if ($data['has_registered'])
-                                    <button type="button" class="btn btn-secondary btn-lg" disabled>Anda sudah melakukan Registrasi</button>
-                                
-                                    @else   
-                                    <a type="button" class="btn btn-success btn-lg" href="{{ route('kompetisi.register_form', Crypt::encrypt($data['kompetisi']->id)) }}">REGISTRASI</a>
-                                    @endif
-                                </div>
-                            </div>
-
-                            
-
-                            <div class="row pb-2">
-                                <div class="col-12">
-
-                                    {{-- <h2>Informasi Tambahan</h2>
-                                    <div class="row col-12">
-                                        <div class="col-12 col-md-6 mb-50">
-                                            <h5>Tingkat Pekerjaan</h5>
-                                            <span>{{ ucfirst($vacancy['level']) }}</span>
-                                        </div>
-                                        <div class="col-12 col-md-6 mb-50">
-                                            <h5>Kualifikasi Pendidikan</h5>
-                                            <span>{{ implode(', ', $additional['educationalfull_stage']) }}</span>
-                                        </div>
-                                        <div class="col-12 col-md-6 mb-50">
-                                            <h5>Pengalaman Kerja (Min)</h5>
-                                            <span>{{ $vacancy['experience_min'] }} tahun</span>
-                                        </div>
-                                        <div class="col-12 col-md-6 mb-50">
-                                            <h5>Jenis Pekerjaan</h5>
-                                            <span>{{ ucfirst($vacancy['type']) }}</span>
-                                        </div>
-                                        <div class="col-12 col-md-6 mb-50">
-                                            <h5>Spesialisasi Pekerjaan</h5>
-                                            <span>{{ $vacancy['specialization'] }}</span>
-                                        </div>
-                                    </div> --}}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Tracking Kompetisi</h4>
+                        </div>
+                        <div class="card-body">
+                            <section id="ajax-datatable">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
 
+                                            <div class="card-datatable">
+                                                <table class="datatables-ajax table dataTable" id="DataTables_Table_0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>{{ __('Tanggal') }}</th>
+                                                            <th>{{ __('Nama Kompetisi') }}</th>
+                                                            <th>{{ __('Skema Kompetisi') }}</th>
+                                                            <th>{{ __('Dosen Pembimbing') }}</th>
+                                                            <th>{{ __('Nama Ketua') }}</th>
+                                                            <th>{{ __('Prodi Ketua') }}</th>
+                                                            <th>{{ __('Jumlah Anggota') }}</th>
+                                                            <th>{{ __('Status') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-
     </div>
 
 @stop
 
 
 @push('styles')
+    <link rel="stylesheet" href="{{ URL::asset('css/table.css') }}">
 @endpush
 
 @push('scripts')
+    <script src="{{ URL::asset('js/table.js') }}"></script>
+    <script src="{{ URL::asset('js/app.js') }}"></script>
+
     <script type="text/javascript">
-        // $('.manual').on('click', function() {
-        //     $(this).tooltip('show');
-        // });
-        // $('.manual').on('mouseout', function() {
-        //     $(this).tooltip('hide');
-        // });
+        // kalau pake yajra
+        let table = $('.datatables-ajax').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('kompetisi.tracking', $data['kompetisi']->id) }}",
+            columns: [{
+                    data: 'created_at',
+                    name: 'created_at'
+                },
+                {
+                    data: 'kompetisi.nama_kompetisi',
+                    name: 'kompetisi.nama_kompetisi'
+                },
+                {
+                    data: 'nama_skema',
+                    name: 'nama_skema'
+                },
+                {
+                    data: 'nama_dosen_pembimbing',
+                    name: 'nama_dosen_pembimbing'
+                },
+                {
+                    data: 'nama_ketua',
+                    name: 'nama_ketua'
+                },
+                {
+                    data: 'prodi_ketua',
+                    name: 'prodi_ketua'
+                },
+                {
+                    data: 'jumlah_anggota',
+                    name: 'jumlah_anggota'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+            ],
+            buttons: [],
+            dom: '<"row d-flex justify-content-between align-items-center m-1"' +
+                '<"col-lg-6 d-flex align-items-center"l<"dt-action-buttons text-xl-right text-lg-left text-lg-right text-left "B>>' +
+                '<"col-lg-6 d-flex align-items-center justify-content-lg-end flex-lg-nowrap flex-wrap pr-lg-1 p-0"f<"invoice_status ml-sm-2">>' +
+                '>t' +
+                '<"d-flex justify-content-between mx-2 row"' +
+                '<"col-sm-12 col-md-6"i>' +
+                '<"col-sm-12 col-md-6"p>' +
+                '>',
+            drawCallback: function(settings) {
+                feather.replace()
+            }
 
-        // $('img').addClass('img-fluid');
-        // $('img').css({
-        //     'max-width': '70%'
-        // });
-
-        // function copyLink(idRefferal) {
-        //     let link = document.getElementById('link-' + idRefferal);
-
-        //     if (window.isSecureContext && navigator.clipboard) {
-        //         navigator.clipboard.writeText(link.value);
-        //     } else {
-        //         unsecuredCopyToClipboard(link.value);
-        //     }
-        // }
-
-        // function unsecuredCopyToClipboard(text) {
-        //     const textArea = document.createElement("textarea");
-        //     textArea.value = text;
-        //     document.body.appendChild(textArea);
-        //     textArea.focus();
-        //     textArea.select();
-        //     try {
-        //         document.execCommand('copy');
-        //     } catch (err) {
-        //         console.error('Unable to copy to clipboard', err);
-        //     }
-        //     document.body.removeChild(textArea);
-        // }
+        });
     </script>
 @endpush

@@ -133,7 +133,7 @@ Route::middleware('auth')->prefix('kompetisi')->name('kompetisi.')->group(functi
     
     
     // Route::get('create/', [KompetisiController::class, 'create'])->name('create');
-    Route::get('/{id}', [KompetisiController::class, 'show'])->name('show');
+    Route::get('tracking/{id}', [KompetisiController::class, 'tracking'])->name('tracking');
     Route::resource('/', KompetisiController::class);
 });
 

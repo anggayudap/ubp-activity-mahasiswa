@@ -9,6 +9,7 @@ use App\Models\Kompetisi;
 use Illuminate\Http\Request;
 use App\Models\KompetisiSkema;
 use App\Http\Controllers\Controller;
+use App\Models\KompetisiParticipant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -23,29 +24,28 @@ class KompetisiController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = Kompetisi::select(['id', 'nama_kompetisi', 'list_prodi', 'tanggal_mulai_pendaftaran', 'tanggal_akhir_pendaftaran', 'aktif']);
-            $user = Auth::user();
-
-            // if (!$user->hasRole('kemahasiswaan')) {
-            //     // if role only dosen
-            //     $data->where('prodi', session('user.prodi'));
-            // }
+            $data = Kompetisi::with(['participant'])->select(['id', 'nama_kompetisi', 'list_prodi', 'tanggal_mulai_pendaftaran', 'tanggal_akhir_pendaftaran', 'aktif']);
 
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('tanggal_pendaftaran', function ($row) {
                     return get_indo_date($row->tanggal_mulai_pendaftaran) . ' s/d ' . get_indo_date($row->tanggal_akhir_pendaftaran);
                 })
-                ->addColumn('action', function ($row) use ($user) {
+                ->addColumn('jumlah_pendaftar', function ($row) {
+                    return $row->participant->count();
+                })
+                ->addColumn('action', function ($row) {
+                    $current_date = strtotime(date('Y-m-d'));
+                    $end_date = strtotime($row->tanggal_akhir_pendaftaran);
+
                     $btn =
                         '<div class="dropdown">
                         <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="' .
-                        route('kompetisi.show', Crypt::encrypt($row->id)) .
-                        '" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
-
-                    if ($user->hasRole('kemahasiswaan')) {
+                        route('kompetisi.tracking', $row->id) .
+                        '" class="dropdown-item"><i data-feather="search"></i> Detail & Tracking</a>';
+                    if ($current_date <= $end_date) {
                         $btn .=
                             '<a href="' .
                             route('kompetisi.edit', Crypt::encrypt($row->id)) .
@@ -66,6 +66,7 @@ class KompetisiController extends Controller
                             ')" class="dropdown-item"><i data-feather="trash-2"></i> Delete</a>
                             </form>';
                     }
+
                     $btn .= '</div>
                         </div>';
 
@@ -161,30 +162,65 @@ class KompetisiController extends Controller
         }
     }
 
-    public function show($id)
+    public function tracking(Request $request, $id)
     {
-        $data['kompetisi'] = Kompetisi::with(['skema'])->findOrFail(Crypt::decrypt($id));
-        $selected_prodi = json_decode($data['kompetisi']->list_prodi, true);
+        
+        
+        // dd($data);
+        if ($request->ajax()) {
+            $data = KompetisiParticipant::select(['id', 'kompetisi_id', 'created_at', 'nama_skema', 'nama_dosen_pembimbing', 'status', 'is_editable'])
+                ->with(['kompetisi', 'member'])
+                ->where('kompetisi_id', $id);
+            // $data = $data_master;
 
-        $data['prodi'] = Prodi::select('id', 'nama_prodi', 'kode_prodi')
+            return Datatables::of($data)
+                ->addColumn('nama_ketua', function ($row) {
+                    // dd($row);
+                    foreach ($row->member as $member) {
+                        if ($member->status_keanggotaan == 'ketua') {
+                            return $member->nama_mahasiswa;
+                        }
+                    }
+                    return 'ketua tidak ditemukan';
+                })
+                ->addColumn('jumlah_anggota', function ($row) {
+                    $count = 0;
+                    foreach ($row->member as $member) {
+                        if ($member->status_keanggotaan == 'anggota') {
+                            $count++;
+                        }
+                    }
+                    return $count;
+                })
+                ->addColumn('prodi_ketua', function ($row) {
+                    foreach ($row->member as $member) {
+                        if ($member->status_keanggotaan == 'ketua') {
+                            $data_prodi = Prodi::select('id', 'nama_prodi')
+                                ->where('kode_prodi', $member->prodi)
+                                ->first();
+                                
+                            return ($data_prodi) ? $data_prodi->nama_prodi : '-';
+                        }
+                    }
+                    return 'prodi ketua tidak ditemukan';
+                })
+                ->editColumn('created_at', function (KompetisiParticipant $data) {
+                    return get_indo_date($data->created_at);
+                })
+                ->editColumn('status', function (KompetisiParticipant $data) {
+                    return trans('serba.' . $data->status);
+                })
+                ->rawColumns(['action', 'status'])
+                ->removeColumn('id')
+                ->make(true);
+        } else {
+            $data_master = Kompetisi::with(['skema'])->where('id', $id);
+            $data['kompetisi'] = $data_master->first();
+            $selected_prodi = json_decode($data['kompetisi']->list_prodi, true);
+            
+            $data['prodi'] = Prodi::select('id', 'nama_prodi', 'kode_prodi')
             ->whereIn('id', $selected_prodi)
             ->get();
-        $data['list_penilaian'] = json_decode($data['kompetisi']->list_penilaian, true);
-
-        $data['has_registered'] = false;
-
-        // checking history registered for mahasiswa
-        $user_session = session('user');
-        if ($user_session['role'] == 'mahasiswa') {
-            $nim_mahasiswa = $user_session['id'];
-            $history = Kompetisi::whereHas('participant.member', function ($query) use ($nim_mahasiswa) {
-                $query->where('nim', '=', $nim_mahasiswa);
-            })
-                ->with(['participant.member'])
-                ->where('id', Crypt::decrypt($id));
-            if ($history->first()) {
-                $data['has_registered'] = true;
-            }
         }
 
         return view('kompetisi.detail', compact('data'));
