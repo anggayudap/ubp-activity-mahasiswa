@@ -16,7 +16,7 @@ class CreateKompetisiParticipantsTable extends Migration
         Schema::create('kompetisi_participants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kompetisi_id');
-            $table->bigInt('id_dosen_pembimbing')->nullable();
+            $table->bigInteger('id_dosen_pembimbing')->nullable();
             $table->string('nip_dosen_pembimbing')->nullable();
             $table->string('nama_dosen_pembimbing')->nullable();
             $table->string('email_dosen_pembimbing')->nullable();

@@ -14,7 +14,7 @@ class AddDosenPenilaiColumnOnKompetisiParticipantsTable extends Migration
     public function up()
     {
         Schema::table('kompetisi_participants', function (Blueprint $table) {
-            $table->bigInt('id_dosen_penilai')->nullable()->after('file_upload');
+            $table->bigInteger('id_dosen_penilai')->nullable()->after('file_upload');
             $table->string('nip_dosen_penilai')->nullable()->after('id_dosen_penilai');
             $table->string('nama_dosen_penilai')->nullable()->after('nip_dosen_penilai');
             $table->string('email_dosen_penilai')->nullable()->after('nama_dosen_penilai');
