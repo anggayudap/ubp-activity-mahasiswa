@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <h3 class="card-title">Kegiatan Mahasiswa</h3>
                 </div>
-                
+
                 @php
                     $filtered = $result['kegiatan_kemahasiswaan']->filter(function ($value, $key) {
                         return !$value->approval;
@@ -143,10 +143,107 @@
                     </div>
                 </div> --}}
 
-                
-                
+
+
 
             </div>
+
+            {{-- KOMPETISI --}}
+            <div class="row pb-3">
+                <div class="col-12">
+                    <h3 class="card-title">Kompetisi</h3>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-2">
+                    <div class="media">
+                        <a href="{{ route('kompetisi.list') }}" class="avatar bg-light-primary mr-2">
+                            <div class="avatar-content">
+                                <i data-feather="inbox" class="font-medium-5"></i>
+                            </div>
+                        </a>
+                        <div class="media-body my-auto">
+                            <h4 class="font-weight-bolder mb-0">{{ $result['master_kompetisi']->count() }}</h4>
+                            <p class="card-text font-small-3 mb-0">Kompetisi sedang Tayang</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-2">
+                    <div class="media">
+                        <a href="{{ route('kompetisi.approval.list') }}" class="avatar bg-light-warning mr-2">
+                            <div class="avatar-content">
+                                <i data-feather="edit" class="font-medium-5"></i>
+                            </div>
+                        </a>
+                        <div class="media-body my-auto">
+                            @php
+                                $filtered = $result['kompetisi']->filter(function ($value, $key) {
+                                    return $value->status == 'pending';
+                                });
+                            @endphp
+                            <h4 class="font-weight-bolder mb-0">{{ $filtered->count() }}</h4>
+                            <p class="card-text font-small-3 mb-0">Set Approval Kompetisi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-2">
+                    <div class="media">
+                        <a href="{{ route('kompetisi.result.list') }}" class="avatar bg-light-warning mr-2">
+                            <div class="avatar-content">
+                                <i data-feather="edit" class="font-medium-5"></i>
+                            </div>
+                        </a>
+                        <div class="media-body my-auto">
+                            @php
+                                $filtered = $result['kompetisi']->filter(function ($value, $key) {
+                                    return $value->status == 'reviewed';
+                                });
+                            @endphp
+                            <h4 class="font-weight-bolder mb-0">{{ $filtered->count() }}</h4>
+                            <p class="card-text font-small-3 mb-0">Input Penilaian Akhir</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-2">
+                    <div class="media">
+                        <a href="{{ route('kompetisi.history') }}" class="avatar bg-light-info mr-2">
+                            <div class="avatar-content">
+                                <i data-feather="edit" class="font-medium-5"></i>
+                            </div>
+                        </a>
+                        <div class="media-body my-auto">
+                            @php
+                                $filtered = $result['kompetisi']->filter(function ($value, $key) {
+                                    return $value->status == 'in_review';
+                                });
+                            @endphp
+                            <h4 class="font-weight-bolder mb-0">{{ $filtered->count() }}</h4>
+                            <p class="card-text font-small-3 mb-0">Dalam proses Review</p>
+                        </div>
+                    </div>
+                </div> --}}
+
+                {{-- <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-2">
+                    <div class="media">
+                        <a href="{{ route('kompetisi.history') }}" class="avatar bg-light-primary mr-2">
+                            <div class="avatar-content">
+                                <i data-feather="check-circle" class="font-medium-5"></i>
+                            </div>
+                        </a>
+                        <div class="media-body my-auto">
+                            @php
+                                $filtered = $result['kompetisi']->filter(function ($value, $key) {
+                                    return $value->status == 'completed';
+                                });
+                            @endphp
+                            <h4 class="font-weight-bolder mb-0">{{ $filtered->count() }}</h4>
+                            <p class="card-text font-small-3 mb-0">Selesai Dinilai & Direview</p>
+                        </div>
+                    </div>
+                </div> --}}
+
+            </div>
+
         </div>
     </div>
 </div>
