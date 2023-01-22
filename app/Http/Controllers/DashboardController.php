@@ -36,6 +36,9 @@ class DashboardController extends Controller
             if ($user->hasRole('dpm')) {
                 $result['proposal_dosen'] = Proposal::where('prodi', session('user.prodi'))->get();
                 $result['kegiatan_dosen'] = Kegiatan::where('prodi', session('user.prodi'))->get();
+                $result['kompetisi_review_dosen'] = KompetisiParticipant::where('status', 'in_review')
+                    ->where('id_dosen_penilai', session('user.id'))
+                    ->get();
             }
             if ($user->hasRole('kemahasiswaan')) {
                 $result['proposal_kemahasiswaan'] = Proposal::all();
