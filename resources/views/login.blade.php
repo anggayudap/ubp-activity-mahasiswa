@@ -19,7 +19,7 @@
                         <div class="form-group">
                             <label for="email" class="form-label">Email</label>
                             <input type="text" class="form-control @error('email') is-invalid @enderror" id="email"
-                                name="email" placeholder="john@example.com" value="{{ old('email') }}"
+                                name="email" placeholder="akun@ubpkarawang.ac.id" value="{{ old('email') }}"
                                 aria-describedby="email" tabindex="1" autofocus />
                             @error('email')
                                 <div class="invalid-feedback">
