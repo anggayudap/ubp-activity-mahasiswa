@@ -17,6 +17,9 @@ return [
     'checked_kemahasiswaan' => '<div class="badge badge-success">Ditinjau Kemahasiswaan</div>',
     'checked_dosen' => '<div class="badge badge-success">Ditinjau Dosen</div>',
     'review' => '<div class="badge badge-warning">Sedang Direview</div>',
+    
+    'lolos' => '<div class="badge badge-primary">LOLOS</div>',
+    'tidak_lolos' => '<div class="badge badge-danger">TIDAK LOLOS</div>',
 
     'status_1' => '<div class="badge badge-primary">Aktif</div>',
     'status_0' => '<div class="badge badge-danger">Tidak Aktif</div>',

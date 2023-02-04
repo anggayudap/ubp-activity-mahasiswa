@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\KompetisiParticipantMember;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Prodi extends Model {
     use HasFactory;
@@ -20,4 +21,8 @@ class Prodi extends Model {
         'created_at',
         'updated_at',
     ];
+
+    public function mahasiswa_participant() {
+        return $this->hasMany(KompetisiParticipantMember::class, 'kode_prodi', 'prodi');
+    }
 }

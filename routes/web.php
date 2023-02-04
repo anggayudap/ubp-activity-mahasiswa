@@ -22,6 +22,7 @@ use App\Http\Controllers\ReportProposalController;
 use App\Http\Controllers\Master\RoleUserController;
 use App\Http\Controllers\Master\MahasiswaController;
 use App\Http\Controllers\Master\KlasifikasiKegiatanController;
+use App\Http\Controllers\ReportKompetisiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +147,9 @@ Route::prefix('report')
 
         Route::get('/kegiatan', [ReportKegiatanController::class, 'index'])->name('kegiatan');
         Route::post('/kegiatan/submit', [ReportKegiatanController::class, 'submit'])->name('kegiatan.submit');
+
+        Route::get('/kompetisi', [ReportKompetisiController::class, 'index'])->name('kompetisi');
+        Route::post('/kompetisi/submit', [ReportKompetisiController::class, 'submit'])->name('kompetisi.submit');
     });
 
 Route::prefix('master')
