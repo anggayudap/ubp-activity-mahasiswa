@@ -72,15 +72,16 @@ class LoginController extends Controller
                         }
                     }
 
-                    // if (!$checking_user_access) {
-                        // check if user hasnt user_access and employee is edosen
-                        if ($output['data']['employee'] == 'dosen') {
-                            $cek_user->assignRole('dosen');
-                        } else {
-                            // user_access hasn't registered or matching with role
-                            return redirect()->route('error_notauthorized');
-                        }
-                    // }
+                    // check if user hasnt user_access and employee is edosen
+                    if ($output['data']['employee'] == 'dosen') {
+                        $cek_user->assignRole('dosen');
+                    }
+
+                    // if user_access and employee is not matching w/ roles criteria
+                    // or user hasnt assigned any role
+                    if ($cek_user->getRoleNames()->isEmpty()) {
+                        return redirect()->route('error_notauthorized');
+                    }
                 }
             }
 
