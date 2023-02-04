@@ -8,17 +8,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
     
-    <title>@yield('title') - Sistem Pengajuan Proposal dan Kegiatan Mahasiswa UBP Karawang</title>
+    <title>@yield('title') - SIMKATMAWA UBP Karawang</title>
     <link rel="icon" type="image/png" href="{{ asset('logo-kecil.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/hasil_combine.css') }}">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @stack('styles')
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/hasil_combine.css') }}">
+    
     <script type="text/javascript">
-        var user_theme = "{{ session('user_theme') }}";
-        
+        let user_theme = "{{ session('user_theme') }}";   
     </script>
 
 </head>

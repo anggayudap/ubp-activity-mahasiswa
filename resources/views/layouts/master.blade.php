@@ -8,15 +8,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
     <meta name="author" content="anggayudap">
-    <title>@yield('title') - Sistem Pengajuan Proposal dan Kegiatan Mahasiswa UBP Karawang</title>
+    <title>@yield('title') - SIMKATMAWA UBP Karawang</title>
 
     <link rel="icon" type="image/png" href="{{ asset('logo-kecil.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
         rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/hasil_combine.css') }}">
-    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     @stack('styles')
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/hasil_combine.css') }}">
+
     <script type="text/javascript">
         let user_theme = "{{ session('user_theme') }}";
         let base_url = "{{ url('/') }}";
@@ -29,7 +29,8 @@
 <!-- BEGIN: Body-->
 
 <body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click"
-    data-menu="vertical-menu-modern" data-col="" data-framework="laravel" data-asset-path="{{ URL::asset('vuexy').'/' }}">
+    data-menu="vertical-menu-modern" data-col="" data-framework="laravel"
+    data-asset-path="{{ URL::asset('vuexy') . '/' }}">
     @include('sweetalert::alert')
 
     <!-- BEGIN: Header-->
@@ -70,8 +71,9 @@
     <!-- BEGIN: Footer-->
     <footer class="footer footer-static footer-light">
         <p class="clearfix mb-0">
-        <span class="float-md-left d-block d-md-inline-block mt-25">Universitas Buana Perjuangan Karawang &copy; {{ date('Y') }}</span>
-        <span class="float-md-right d-none d-md-block">Hand-crafted & Made with<i data-feather="heart"></i></span>
+            <span class="float-md-left d-block d-md-inline-block mt-25">Universitas Buana Perjuangan Karawang &copy;
+                {{ date('Y') }}</span>
+            <span class="float-md-right d-none d-md-block">Hand-crafted & Made with<i data-feather="heart"></i></span>
         </p>
     </footer>
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>

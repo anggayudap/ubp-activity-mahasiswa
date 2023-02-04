@@ -8,19 +8,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
     <meta name="author" content="anggayudap">
-    <title>@yield('title') - SIUBP Karawang</title>
+    <title>@yield('title') - SIMKATMAWA UBP Karawang</title>
 
     <link rel="icon" type="image/png" href="{{ asset('logo-kecil.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
         rel="stylesheet">
 
+    @stack('styles')
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/hasil_combine.css') }}">
-    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('css/auth_styles.css') }}" rel="stylesheet">
 
-    @stack('styles')
     <script type="text/javascript">
-        const current_url = "{{ url()->current() }}";
+        let current_url = "{{ url()->current() }}";
     </script>
 
 </head>
@@ -30,7 +29,8 @@
 
 
 <body class="vertical-layout vertical-menu-modern blank-page navbar-floating footer-static  " data-open="click"
-    data-menu="vertical-menu-modern" data-col="blank-page" data-framework="laravel" data-asset-path="{{ URL::asset('vuexy').'/' }}">
+    data-menu="vertical-menu-modern" data-col="blank-page" data-framework="laravel"
+    data-asset-path="{{ URL::asset('vuexy') . '/' }}">
     @include('sweetalert::alert')
     <!-- BEGIN: Content-->
     <div class="app-content content ">
