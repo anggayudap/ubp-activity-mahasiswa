@@ -25,7 +25,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <select class="select2 form-control" name="nim" id="nim">
-                                                <option value="all">SEMUA MAHASISWA</option>
+                                                <option value="all" selected>SEMUA MAHASISWA</option>
                                                 @if (isset($data['mahasiswa']))
                                                     @foreach ($data['mahasiswa'] as $nim => $value)
                                                         <option value="{{ $nim }}">
@@ -55,7 +55,7 @@
                                             <label>Status Proposal <em>(Pilih satu atau lebih)</em></label>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="form-control" name="status[]" id="status" multiple="multiple">
+                                            <select class="form-control" name="status[]" id="status" data-live-search="true" multiple="multiple">
                                                 <option value="wait_fakultas">Menunggu Approval Fakultas</option>
                                                 <option value="wait_kemahasiswaan">Menunggu Approval Kemahasiswaan</option>
                                                 <option value="upload_laporan">Upload Laporan</option>
@@ -116,6 +116,23 @@
             if (basicPickr.length) {
                 basicPickr.flatpickr();
             }
+            
+            const dropdownNim = document.querySelector('select#nim');
+            $(dropdownNim).select2({
+                width: '100%',
+                placeholder: 'Cari npm atau nama mahasiswa',
+                minimumInputLength: 3,
+            });
+
+            const dropdownStatus = document.querySelector('select#status');
+            $(dropdownStatus).multiselect({
+                nonSelectedText: 'Pilih satu atau lebih',
+                buttonTextAlignment: 'left',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                includeSelectAllOption: true,
+                buttonWidth: '400px'
+            });
         });
     </script>
 @endpush
