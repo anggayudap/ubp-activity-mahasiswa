@@ -181,7 +181,7 @@
                 enableFiltering: true,
                 enableCaseInsensitiveFiltering: true,
                 includeSelectAllOption: true,
-                buttonWidth: '550px'
+                buttonWidth: '100%'
             });
         });
     </script>

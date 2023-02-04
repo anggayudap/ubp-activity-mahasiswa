@@ -204,7 +204,7 @@
                 enableFiltering: true,
                 enableCaseInsensitiveFiltering: true,
                 includeSelectAllOption: true,
-                buttonWidth: '400px'
+                buttonWidth: '100%'
             });
 
         });

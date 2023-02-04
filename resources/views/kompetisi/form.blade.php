@@ -229,7 +229,7 @@
                 enableFiltering: true,
                 enableCaseInsensitiveFiltering: true,
                 includeSelectAllOption: true,
-                buttonWidth: '400px'
+                buttonWidth: '100%'
             });
             // clear multislect bs
             // $('#category option:selected').each(function() {
