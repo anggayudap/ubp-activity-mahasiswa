@@ -114,7 +114,9 @@
             var basicPickr = $('.flatpickr-basic');
             // load flatpickr
             if (basicPickr.length) {
-                basicPickr.flatpickr();
+                basicPickr.flatpickr({
+                    allowInput: true,
+                });
             }
             
             const dropdownNim = document.querySelector('select#nim');

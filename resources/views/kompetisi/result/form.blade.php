@@ -273,7 +273,9 @@
         $(document).ready(function() {
             const basicPickr = $('.flatpickr-basic');
             if (basicPickr.length) {
-                basicPickr.flatpickr();
+                basicPickr.flatpickr({
+                    allowInput: true,
+                });
             }
 
             // Quill : Snow Editor
