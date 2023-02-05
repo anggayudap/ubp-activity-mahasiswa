@@ -213,7 +213,7 @@
                     <a class="d-flex align-items-center" href="{{ route('report.kompetisi') }}"><i
                             data-feather="file-text"></i>
                         <span class="menu-title text-truncate"
-                            data-i18n="Kompetisi Kegiatan">{{ __('Kompetisi Kegiatan') }}</span>
+                            data-i18n="Kompetisi Kegiatan">{{ __('Kompetisi') }}</span>
                     </a>
                 </li>
 
