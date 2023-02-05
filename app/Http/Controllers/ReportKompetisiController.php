@@ -173,7 +173,7 @@ class ReportKompetisiController extends Controller
                 'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
             ]);
 
-            return $this->export_excel($request->type);
+            return $this->export_excel($request->type . '::detail_kompetisi');
         }
     }
 
@@ -280,7 +280,7 @@ class ReportKompetisiController extends Controller
                 'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
             ]);
 
-            return $this->export_excel($request->type);
+            return $this->export_excel($request->type . '::detail_review');
         }
     }
 }
