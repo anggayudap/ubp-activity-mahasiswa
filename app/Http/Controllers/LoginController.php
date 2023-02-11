@@ -22,8 +22,12 @@ class LoginController extends Controller
             'email' => $credentials['email'],
             'password' => $credentials['password'],
         ]);
-
-        $output = $response->json();
+        
+        $output = $response->throw(function ($response, $e) {
+            return back()->withErrors([
+                'email' => $e,
+            ]);
+        })->json();
 
         if ($output['status_code'] == 000) {
             // login success
