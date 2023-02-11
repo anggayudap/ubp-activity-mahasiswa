@@ -201,7 +201,7 @@ class KompetisiRegisterController extends Controller
             'dosen_pembimbing' => 'required',
             'ketua' => 'required',
             'anggota' => 'required|array',
-            'file_kompetisi' => 'sometimes|file|max:5120|mimes:pdf,zip',
+            'file_kompetisi' => 'required|file|max:5220|mimes:pdf,zip',
         ]);
 
         // dd($request);
