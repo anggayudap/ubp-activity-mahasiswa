@@ -6,23 +6,24 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\KompetisiApprovalController;
 use App\Http\Controllers\KompetisiController;
-use App\Http\Controllers\KompetisiRegisterController;
-use App\Http\Controllers\KompetisiResultController;
-use App\Http\Controllers\KompetisiReviewController;
-use App\Http\Controllers\Master\DosenController;
+use App\Http\Controllers\CRON\CommonController;
 use App\Http\Controllers\Master\UserController;
+use App\Http\Controllers\Master\DosenController;
 use App\Http\Controllers\Master\ProdiController;
 use App\Http\Controllers\Master\SkemaController;
 use App\Http\Controllers\Master\ReviewController;
 use App\Http\Controllers\Master\PeriodeController;
 use App\Http\Controllers\ReportKegiatanController;
 use App\Http\Controllers\ReportProposalController;
+use App\Http\Controllers\KompetisiResultController;
+use App\Http\Controllers\KompetisiReviewController;
 use App\Http\Controllers\Master\RoleUserController;
-use App\Http\Controllers\Master\MahasiswaController;
-use App\Http\Controllers\Master\KlasifikasiKegiatanController;
 use App\Http\Controllers\ReportKompetisiController;
+use App\Http\Controllers\Master\MahasiswaController;
+use App\Http\Controllers\KompetisiApprovalController;
+use App\Http\Controllers\KompetisiRegisterController;
+use App\Http\Controllers\Master\KlasifikasiKegiatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -195,6 +196,8 @@ Route::get('/clear', function () {
 
     dd('Cache, View & Config is cleared');
 });
+
+Route::get('/cron/update_nidn_kompetisi', [CommonController::class, 'update_nidn_kompetisi_participant']);
 
 //Route::get('/migrate', function () {
 //    \Artisan::call('migrate:fresh --seed');
