@@ -164,18 +164,31 @@ class KompetisiController extends Controller
 
     public function tracking(Request $request, $id)
     {
-        
-        
-        // dd($data);
         if ($request->ajax()) {
             $data = KompetisiParticipant::select(['id', 'kompetisi_id', 'created_at', 'nama_skema', 'nama_dosen_pembimbing', 'status', 'is_editable'])
                 ->with(['kompetisi', 'member'])
                 ->where('kompetisi_id', $id);
-            // $data = $data_master;
 
             return Datatables::of($data)
+                ->addColumn('action', function ($row) {
+                    $btn =
+                        '<div class="dropdown">
+                    <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right" style="">
+                    <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
+                        $row->id .
+                        ');" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>';
+                        
+                    if (in_array($row->status, ['pending', 'in_review', 'reviewed'])) {
+                        $btn .= '<a href="' . route('kompetisi.approval', $row->id) . '" class="dropdown-item"><i data-feather="corner-up-left"></i> Plotting Ulang</a>';
+                    }
+
+                    $btn .= '</div>
+                    </div>';
+
+                    return $btn;
+                })
                 ->addColumn('nama_ketua', function ($row) {
-                    // dd($row);
                     foreach ($row->member as $member) {
                         if ($member->status_keanggotaan == 'ketua') {
                             return $member->nama_mahasiswa;
@@ -198,8 +211,8 @@ class KompetisiController extends Controller
                             $data_prodi = Prodi::select('id', 'nama_prodi')
                                 ->where('kode_prodi', $member->prodi)
                                 ->first();
-                                
-                            return ($data_prodi) ? $data_prodi->nama_prodi : '-';
+
+                            return $data_prodi ? $data_prodi->nama_prodi : '-';
                         }
                     }
                     return 'prodi ketua tidak ditemukan';
@@ -217,10 +230,10 @@ class KompetisiController extends Controller
             $data_master = Kompetisi::with(['skema'])->where('id', $id);
             $data['kompetisi'] = $data_master->first();
             $selected_prodi = json_decode($data['kompetisi']->list_prodi, true);
-            
+
             $data['prodi'] = Prodi::select('id', 'nama_prodi', 'kode_prodi')
-            ->whereIn('id', $selected_prodi)
-            ->get();
+                ->whereIn('id', $selected_prodi)
+                ->get();
         }
 
         return view('kompetisi.detail', compact('data'));

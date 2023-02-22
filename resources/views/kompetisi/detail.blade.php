@@ -84,6 +84,7 @@
                                                             <th>{{ __('Prodi Ketua') }}</th>
                                                             <th>{{ __('Jumlah Anggota') }}</th>
                                                             <th>{{ __('Status') }}</th>
+                                                            <th>{{ __('Aksi') }}</th>
                                                         </tr>
                                                     </thead>
                                                 </table>
@@ -95,6 +96,22 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade text-left" id="xlarge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel16"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel16">Detail History Kompetisi</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="detail-kompetisi-participant">
+                    </div>
                 </div>
             </div>
         </div>
@@ -149,6 +166,12 @@
                     data: 'status',
                     name: 'status'
                 },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
             ],
             buttons: [],
             dom: '<"row d-flex justify-content-between align-items-center m-1"' +
@@ -164,5 +187,10 @@
             }
 
         });
+
+        function detail(id) {
+            // $('#detail-kompetisi-participant').remove();
+            $('#detail-kompetisi-participant').load(base_url + '/kompetisi/participant/modal_detail/' + id);
+        }
     </script>
 @endpush

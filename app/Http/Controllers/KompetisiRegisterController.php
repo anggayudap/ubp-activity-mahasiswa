@@ -124,10 +124,6 @@ class KompetisiRegisterController extends Controller
         $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
         $dosens = Dosen::select('id', 'nip', 'nama')->get();
 
-        $additional['mahasiswa'][] = [
-            'id' => '0',
-            'text' => 'Silahkan input NIM atau Nama Mahasiswa',
-        ];
         foreach ($mahasiswas as $data_mahasiswa) {
             $additional['mahasiswa'][] = [
                 'id' => $data_mahasiswa->nim,
@@ -135,10 +131,6 @@ class KompetisiRegisterController extends Controller
             ];
         }
 
-        $additional['dosen'][] = [
-            'id' => '0',
-            'text' => 'Silahkan input Nama Dosen Pembimbing',
-        ];
         foreach ($dosens as $data_dosen) {
             $additional['dosen'][] = [
                 'id' => $data_dosen->id,
@@ -163,10 +155,6 @@ class KompetisiRegisterController extends Controller
         $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_mahasiswa')->get();
         $dosens = Dosen::select('id', 'nip', 'nama')->get();
 
-        $additional['mahasiswa'][] = [
-            'id' => '0',
-            'text' => 'Silahkan input NIM atau Nama Mahasiswa',
-        ];
         foreach ($mahasiswas as $data_mahasiswa) {
             $additional['mahasiswa'][] = [
                 'id' => $data_mahasiswa->nim,
@@ -174,10 +162,6 @@ class KompetisiRegisterController extends Controller
             ];
         }
 
-        $additional['dosen'][] = [
-            'id' => '0',
-            'text' => 'Silahkan input Nama Dosen Pembimbing',
-        ];
         foreach ($dosens as $data_dosen) {
             $additional['dosen'][] = [
                 'id' => $data_dosen->id,
@@ -204,7 +188,6 @@ class KompetisiRegisterController extends Controller
             'file_kompetisi' => 'required|file|max:5220|mimes:pdf,zip',
         ]);
 
-        // dd($request);
         $data_skema = Skema::where('nama_skema', $request->skema)->first();
 
         $file_participant_path = null;
@@ -219,6 +202,7 @@ class KompetisiRegisterController extends Controller
             'kompetisi_id' => $request->kompetisi_id,
             'id_dosen_pembimbing' => $data_dosen_pembimbing->id,
             'nip_dosen_pembimbing' => $data_dosen_pembimbing->nip,
+            'nidn_dosen_pembimbing' => $data_dosen_pembimbing->nidn,
             'nama_dosen_pembimbing' => $data_dosen_pembimbing->nama,
             'email_dosen_pembimbing' => $data_dosen_pembimbing->email,
             'prodi_dosen_pembimbing' => $data_dosen_pembimbing->prodi,
@@ -253,13 +237,6 @@ class KompetisiRegisterController extends Controller
             $kompetisi_participant_id = $request->participant_id;
         }
 
-        // dd('aman');
-        // $kompetisi_participant = KompetisiParticipant::create([
-            
-        //     'file_upload' => $file_participant_path,
-            
-        //     'user_created' => session('user.user_id'),
-        // ]);
 
         // index 0 = ketua
         // index 1-2-3-dst = anggota
