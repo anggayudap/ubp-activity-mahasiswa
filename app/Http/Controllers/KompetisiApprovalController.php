@@ -91,6 +91,10 @@ class KompetisiApprovalController extends Controller
             ->where('id', $id)
             ->first();
 
+        if(in_array($output->status, ['completed', 'reject'])) {
+            return redirect()->route('dashboard')->withErrors(['Error : perintah tidak valid. Kompetisi tidak bisa diupdate.']);
+        }
+
         $additional['is_pdf'] = false;
 
         $file_name = $output->file_upload;
@@ -174,6 +178,8 @@ class KompetisiApprovalController extends Controller
                 $update_param['is_editable'] = 1;
             }
         } else {
+            // handling untuk re-plotting review
+            KompetisiParticipantReview::where('participant_id', $request->participant_id)->delete();
             // store kompetisi participants review
             $review_param = [];
             foreach ($request->review as $id) {
@@ -195,6 +201,7 @@ class KompetisiApprovalController extends Controller
             $data_dosen = Dosen::where('id', $request->dosen_penilai)->first();
             $update_param['id_dosen_penilai'] = $data_dosen->id_sipt;
             $update_param['nip_dosen_penilai'] = $data_dosen->nip;
+            $update_param['nidn_dosen_penilai'] = $data_dosen->nidn;
             $update_param['nama_dosen_penilai'] = $data_dosen->nama;
             $update_param['email_dosen_penilai'] = $data_dosen->email;
             $update_param['prodi_dosen_penilai'] = $data_dosen->prodi;
