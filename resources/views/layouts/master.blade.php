@@ -80,6 +80,7 @@
 
 
     <script src="{{ URL::asset('js/hasil_combine.js') }}"></script>
+    @stack('scripts')
 
     <script>
         $(window).on('load', function() {
@@ -92,7 +93,6 @@
         })
     </script>
 
-    @stack('scripts')
 </body>
 <!-- END: Body-->
 
