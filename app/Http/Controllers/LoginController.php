@@ -18,16 +18,28 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        $response = Http::asForm()->post('https://api-gateway.ubpkarawang.ac.id/auth/login', [
-            'email' => $credentials['email'],
-            'password' => $credentials['password'],
-        ]);
-        
-        $output = $response->throw(function ($response, $e) {
+        // not TESTED
+        try {
+            $response = Http::withOptions(['verify' => false])
+                ->asForm()
+                ->post('https://api-gateway.ubpkarawang.ac.id/auth/login', [
+                    'email' => $credentials['email'],
+                    'password' => $credentials['password'],
+                ]);
+
+            if ($response->serverError()) {
+                return back()->withErrors([
+                    'email' => 'Internal Server Error',
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Menangani exception yang mungkin terjadi
             return back()->withErrors([
-                'email' => $e,
+                'email' => 'Error saat Login: Silahkan hub administrator anda.',
             ]);
-        })->json();
+        }
+
+        $output = $response->json();
 
         if ($output['status_code'] == 000) {
             // login success
