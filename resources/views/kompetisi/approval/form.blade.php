@@ -96,6 +96,7 @@
                                         </object>
                                     @else
                                     <p>File lampiran yang di upload menggunakan format arsip ZIP. Klik button dibawah untuk mendownload file arsip.</p>
+                                    <br>
                                     <a href="{{ URL::asset($output->file_upload) }}" class="btn btn-primary"><i data-feather="download" class="mr-50"></i>Download Arsip</a>
                                     @endif
                                 </div>
