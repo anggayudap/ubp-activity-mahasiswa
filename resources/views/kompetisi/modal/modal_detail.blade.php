@@ -22,6 +22,10 @@
                 <p class="card-text">{{ $output->nama_dosen_pembimbing }}</p>
             </div>
             <div class="mt-2">
+                <h5 class="mb-75">NIDN Dosen Pembimbing:</h5>
+                <p class="card-text">{{ $output->nidn_dosen_pembimbing }}</p>
+            </div>
+            <div class="mt-2">
                 <h5 class="mb-75">Nama Anggota:</h5>
                 <p class="card-text">
                 <ul>
@@ -53,7 +57,17 @@
                             <p class="card-text">{{ $output->note_reject }}</p>
                         </div>
                     @endif
-                    @if ($output->review && $output->status == 'completed')
+                    @if ($output->nama_dosen_penilai)
+                    <div class="mt-2">
+                        <h5 class="mb-75">Nama Dosen Penilai/Reviewer:</h5>
+                        <p class="card-text">{{ $output->nama_dosen_penilai }}</p>
+                    </div>
+                    <div class="mt-2">
+                        <h5 class="mb-75">NIDN Dosen Penilai/Reviewer:</h5>
+                        <p class="card-text">{{ $output->nidn_dosen_penilai }}</p>
+                    </div>
+                    @endif
+                    @if ($output->review)
                         <div class="mt-2">
                             <h5 class="mb-75">Hasil Review:</h5>
                             <div class="table-responsive">
@@ -68,7 +82,7 @@
                                         @forelse ($output->review as $item)
                                             <tr>
                                                 <td>{{ $item->teks_review }}</td>
-                                                <td>{{ $item->skor_review }}</td>
+                                                <td>{!! ($item->skor_review) ?: '<em>(belum dinilai)</em>' !!}</td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -107,6 +121,7 @@
                         </object>
                     @else
                         <p>File lampiran yang di upload menggunakan format arsip ZIP. Klik button dibawah untuk mendownload file arsip.</p>
+                        <br>
                         <a href="{{ URL::asset($output->file_upload) }}" class="btn btn-primary"><i data-feather="download" class="mr-50"></i>Download Arsip</a>
                     @endif
                 </div>

@@ -19,6 +19,7 @@ class KompetisiParticipant extends Model {
         'kompetisi_id',
         'id_dosen_pembimbing',
         'nip_dosen_pembimbing',
+        'nidn_dosen_pembimbing',
         'nama_dosen_pembimbing',
         'email_dosen_pembimbing',
         'prodi_dosen_pembimbing',
@@ -29,6 +30,7 @@ class KompetisiParticipant extends Model {
         'file_upload',
         'id_dosen_penilai',
         'nip_dosen_penilai',
+        'nidn_dosen_penilai',
         'nama_dosen_penilai',
         'email_dosen_penilai',
         'prodi_dosen_penilai',
@@ -55,4 +57,14 @@ class KompetisiParticipant extends Model {
     public function review() {
         return $this->hasMany(KompetisiParticipantReview::class, 'participant_id');
     }
+
+    // 22/2/2023 temporary untuk fill kolom nidn
+    public function dosen_pembimbing() {
+        return $this->belongsTo(Dosen::class, 'id_dosen_pembimbing');
+    }
+
+    public function dosen_penilai() {
+        return $this->belongsTo(Dosen::class, 'id_dosen_penilai');
+    }
+    // delete jika sudah tidak terpakai
 }
