@@ -113,9 +113,9 @@ class ReportKompetisiController extends Controller
             $sheet = $this->spreadsheet->getActiveSheet();
 
             $sheet->setCellValue('A1', 'Report' . ' :: ' . 'Detail Kompetisi');
-            $header = ['NO', 'NAMA KOMPETISI', 'SKEMA KOMPETISI', 'DOSEN PEMBIMBING', 'NAMA KETUA', 'PRODI', 'NAMA ANGGOTA', 'FILE', 'DOSEN PENILAI', 'CATATAN', 'TANGGAL APPROVAL', 'NAMA APPROVAL', 'STATUS', 'KEPUTUSAN'];
+            $header = ['NO', 'NAMA KOMPETISI', 'SKEMA KOMPETISI', 'JUDUL KOMPETISI PENILAIAN', 'NIDN PEMBIMBING', 'DOSEN PEMBIMBING', 'NAMA KETUA', 'PRODI', 'NAMA ANGGOTA', 'FILE', 'NIDN PENILAI', 'DOSEN PENILAI', 'CATATAN', 'TANGGAL APPROVAL', 'NAMA APPROVAL', 'STATUS', 'KEPUTUSAN'];
 
-            for ($i = 1; $i <= 14; $i++) {
+            for ($i = 1; $i <= 17; $i++) {
                 $sheet->setCellValueByColumnAndRow($i, 3, $header[$i - 1]);
             }
 
@@ -140,7 +140,7 @@ class ReportKompetisiController extends Controller
                         $name_anggota .= $anggota->nama_mahasiswa . ' (' . $anggota->nim . ')' . ', ';
                     }
 
-                    $sheet->fromArray([$number, $kompetisi->kompetisi->nama_kompetisi, $kompetisi->nama_skema, $kompetisi->nama_dosen_pembimbing . ' (' . $kompetisi->nip_dosen_pembimbing . ')', $member_ketua->nama_mahasiswa . ' (' . $member_ketua->nim . ')', $member_ketua->prodi_mahasiswa->nama_prodi, $name_anggota, asset($kompetisi->file_upload), $kompetisi->nama_dosen_penilai . ' (' . $kompetisi->nip_dosen_penilai . ')', $kompetisi->catatan, get_indo_date($kompetisi->tanggal_approval), $kompetisi->nama_approval, $kompetisi->status, $kompetisi->keputusan], null, "A$row");
+                    $sheet->fromArray([$number, $kompetisi->kompetisi->nama_kompetisi, $kompetisi->nama_skema, $kompetisi->judul, $kompetisi->nidn_dosen_pembimbing, $kompetisi->nama_dosen_pembimbing . ' (' . $kompetisi->nip_dosen_pembimbing . ')', $member_ketua->nama_mahasiswa . ' (' . $member_ketua->nim . ')', ($member_ketua->prodi_mahasiswa) ? $member_ketua->prodi_mahasiswa->nama_prodi : $member_ketua->prodi, $name_anggota, asset($kompetisi->file_upload), $kompetisi->nidn_dosen_penilai, $kompetisi->nama_dosen_penilai . ' (' . $kompetisi->nip_dosen_penilai . ')', $kompetisi->catatan, get_indo_date($kompetisi->tanggal_approval), $kompetisi->nama_approval, $kompetisi->status, $kompetisi->keputusan], null, "A$row");
                     $row++;
                     $number++;
                 }
@@ -206,9 +206,9 @@ class ReportKompetisiController extends Controller
             $sheet = $this->spreadsheet->getActiveSheet();
 
             $sheet->setCellValue('A1', 'Report' . ' :: ' . 'Detail Review');
-            $header = ['NO', 'NAMA KOMPETISI', 'SKEMA KOMPETISI', 'DOSEN PEMBIMBING', 'NAMA KETUA', 'PRODI', 'NAMA ANGGOTA', 'FILE', 'DOSEN PENILAI', 'ASPEK REVIEW', 'PENILAIAN REVIEW'];
+            $header = ['NO', 'NAMA KOMPETISI', 'SKEMA KOMPETISI', 'JUDUL KOMPETISI PENILAIAN', 'DOSEN PEMBIMBING', 'NAMA KETUA', 'PRODI', 'NAMA ANGGOTA', 'FILE', 'DOSEN PENILAI', 'ASPEK REVIEW', 'PENILAIAN REVIEW'];
 
-            for ($i = 1; $i <= 11; $i++) {
+            for ($i = 1; $i <= 12; $i++) {
                 $sheet->setCellValueByColumnAndRow($i, 3, $header[$i - 1]);
             }
 
@@ -236,9 +236,9 @@ class ReportKompetisiController extends Controller
                     $total = $kompetisi->review->count();
                     foreach ($kompetisi->review as $index => $review) {
                         if ($index > 0) {
-                            $sheet->fromArray([null, null, null, null, null, null, null, null, null, $review->teks_review, $review->skor_review], null, "A$row");
+                            $sheet->fromArray([null, null, null, null, null, null, null, null, null, null, $review->teks_review, $review->skor_review], null, "A$row");
                         } else {
-                            $sheet->fromArray([$number, $kompetisi->kompetisi->nama_kompetisi, $kompetisi->nama_skema, $kompetisi->nama_dosen_pembimbing . ' (' . $kompetisi->nip_dosen_pembimbing . ')', $member_ketua->nama_mahasiswa . ' (' . $member_ketua->nim . ')', $member_ketua->prodi_mahasiswa->nama_prodi, $name_anggota, asset($kompetisi->file_upload), $kompetisi->nama_dosen_penilai . ' (' . $kompetisi->nip_dosen_penilai . ')', $review->teks_review, $review->skor_review], null, "A$row");
+                            $sheet->fromArray([$number, $kompetisi->kompetisi->nama_kompetisi, $kompetisi->nama_skema, $kompetisi->judul, $kompetisi->nama_dosen_pembimbing . ' (' . $kompetisi->nip_dosen_pembimbing . ')', $member_ketua->nama_mahasiswa . ' (' . $member_ketua->nim . ')', ($member_ketua->prodi_mahasiswa) ? $member_ketua->prodi_mahasiswa->nama_prodi : $member_ketua->prodi, $name_anggota, asset($kompetisi->file_upload), $kompetisi->nama_dosen_penilai . ' (' . $kompetisi->nip_dosen_penilai . ')', $review->teks_review, $review->skor_review], null, "A$row");
                             $sheet->mergeCells('A' . $row . ':A' . ($row + $total - 1));
                             $sheet->mergeCells('B' . $row . ':B' . ($row + $total - 1));
                             $sheet->mergeCells('C' . $row . ':C' . ($row + $total - 1));
@@ -248,6 +248,7 @@ class ReportKompetisiController extends Controller
                             $sheet->mergeCells('G' . $row . ':G' . ($row + $total - 1));
                             $sheet->mergeCells('H' . $row . ':H' . ($row + $total - 1));
                             $sheet->mergeCells('I' . $row . ':I' . ($row + $total - 1));
+                            $sheet->mergeCells('J' . $row . ':J' . ($row + $total - 1));
                             $number++;
                         }
 

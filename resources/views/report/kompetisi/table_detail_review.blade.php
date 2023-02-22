@@ -20,6 +20,7 @@
                                 <th>#</th>
                                 <th>Nama Kompetisi</th>
                                 <th>Skema Kompetisi</th>
+                                <th>Judul Kompetisi Penilaian</th>
                                 <th>Dosen Pembimbing</th>
                                 <th>Nama Ketua</th>
                                 <th>Prodi</th>
@@ -33,7 +34,7 @@
                         <tbody>
                             @php
                                 $i = 1;
-                                $rowspan = 0;
+                                $rowspan = 1;
                             @endphp
                             @forelse ($output['result'] as $participant)
                                 @php
@@ -48,18 +49,24 @@
                                     });
                                     $member_anggota = $member_anggota->all();
                                     
-                                    $rowspan = $participant->review->count();
+                                    if ($participant->review->count()) {
+                                        $rowspan = $participant->review->count();
+                                    }
                                 @endphp
+
                                 <tr>
                                     <td rowspan="{{ $rowspan }}" class="text-nowrap">{{ $i }}</td>
                                     <td rowspan="{{ $rowspan }}">{{ $participant->kompetisi->nama_kompetisi }}</td>
                                     <td rowspan="{{ $rowspan }}">{{ $participant->nama_skema }}</td>
+                                    <td rowspan="{{ $rowspan }}">{{ $participant->judul }}</td>
                                     <td rowspan="{{ $rowspan }}">
                                         {{ $participant->nama_dosen_pembimbing }}<br>({{ $participant->nip_dosen_pembimbing }})
                                     </td>
                                     <td rowspan="{{ $rowspan }}">
-                                        {{ $member_ketua->nama_mahasiswa }}<br>({{ $member_ketua->nim }})</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $member_ketua->prodi_mahasiswa->nama_prodi }}
+                                        {{ $member_ketua->nama_mahasiswa }}<br>({{ $member_ketua->nim }})
+                                    </td>
+                                    <td rowspan="{{ $rowspan }}">
+                                        {{ $member_ketua->prodi_mahasiswa ? $member_ketua->prodi_mahasiswa->nama_prodi : $member_ketua->prodi }}
                                     </td>
                                     <td rowspan="{{ $rowspan }}">
                                         <ul>
@@ -75,25 +82,29 @@
                                     <td rowspan="{{ $rowspan }}">
                                         {{ $participant->nama_dosen_penilai }}<br>({{ $participant->nip_dosen_penilai }})
                                     </td>
-                                    @foreach ($participant->review as $index => $item)
-                                        @if ($index > 0)
+                                    {{-- not tested --}}
+                                    @if ($participant->review->count() > 0)
+                                        @foreach ($participant->review as $index => $item)
+                                            @if ($index > 0)
                                 <tr>
                             @endif
                             <td>({{ $index + 1 }}) {{ $item->teks_review }}</td>
                             <td>{{ $item->skor_review }}</td>
-                            @if ($index > 0)
-                                </tr>
+                            </tr>
+                            @if ($index == $participant->review->count())
                             @endif
                             @endforeach
-
-
+                        @else
+                            <td class="font-italic" rowspan="{{ $rowspan }}">belum ploting review & dosen penilai</td>
+                            <td class="font-italic" rowspan="{{ $rowspan }}">belum ploting review & dosen penilai</td>
                             </tr>
+                            @endif
                             @php
                                 $i++;
                             @endphp
                         @empty
                             <tr>
-                                <td colspan="14" class="text-center">
+                                <td colspan="12" class="text-center">
                                     <h4 class="text-danger">Tidak ada data yang dapat ditampilkan.</h4>
                                 </td>
                             </tr>

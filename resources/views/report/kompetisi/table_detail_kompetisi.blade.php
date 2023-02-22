@@ -20,11 +20,14 @@
                                 <th>#</th>
                                 <th>Nama Kompetisi</th>
                                 <th>Skema Kompetisi</th>
+                                <th>Judul Kompetisi Penilaian</th>
+                                <th>NIDN Pembimbing</th>
                                 <th>Dosen Pembimbing</th>
                                 <th>Nama Ketua</th>
                                 <th>Prodi</th>
                                 <th>Nama Anggota</th>
                                 <th>File</th>
+                                <th>NIDN Penilai</th>
                                 <th>Dosen Penilai</th>
                                 <th>Catatan</th>
                                 <th>Tanggal Approval</th>
@@ -55,10 +58,12 @@
                                     <td class="text-nowrap">{{ $i }}</td>
                                     <td>{{ $participant->kompetisi->nama_kompetisi }}</td>
                                     <td>{{ $participant->nama_skema }}</td>
+                                    <td>{{ $participant->judul }}</td>
+                                    <td>{{ $participant->nidn_dosen_pembimbing }}</td>
                                     <td>{{ $participant->nama_dosen_pembimbing }}<br>({{ $participant->nip_dosen_pembimbing }})
                                     </td>
                                     <td>{{ $member_ketua->nama_mahasiswa }}<br>({{ $member_ketua->nim }})</td>
-                                    <td>{{ $member_ketua->prodi_mahasiswa->nama_prodi }}</td>
+                                    <td>{{ ($member_ketua->prodi_mahasiswa) ? $member_ketua->prodi_mahasiswa->nama_prodi : $member_ketua->prodi }}</td>
                                     <td>
                                         <ul>
 
@@ -69,6 +74,7 @@
                                     </td>
                                     <td><a target="_blank" href="{{ asset($participant->file_upload) }}"
                                             class="btn btn-success"><i data-feather="file"></i></a></td>
+                                    <td>{{ $participant->nidn_dosen_penilai }}</td>
                                     <td>{{ $participant->nama_dosen_penilai }}<br>({{ $participant->nip_dosen_penilai }})
                                     </td>
                                     <td>{!! $participant->catatan !!}</td>
