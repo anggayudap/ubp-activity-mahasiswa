@@ -174,7 +174,7 @@ Route::prefix('master')
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', function () {
         return view('login');
-    })->name('login');
+    })->middleware('guest')->name('login');
     Route::post('/login', 'authenticate')->name('login_submit');
     Route::get('/logout', 'logout')->name('logout');
 });
