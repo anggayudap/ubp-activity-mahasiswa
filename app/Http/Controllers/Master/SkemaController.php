@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Master;
 
-use App\Http\Controllers\Controller;
-use App\Models\Skema;
-use Illuminate\Http\Request;
 use DataTables;
+use App\Models\Skema;
+use App\Models\Review;
+use App\Models\SkemaReview;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -14,14 +17,20 @@ class SkemaController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Skema::select(['id', 'nama_skema', 'deskripsi_skema', 'aktif']);
+            $data = Skema::select(['id', 'nama_skema', 'deskripsi_skema', 'aktif'])->with(['assigned_review']);
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('jumlah_review', function ($row) {
+                    return $row->assigned_review->count();
+                })
                 ->addColumn('action', function ($row) {
                     $btn =
                         '<div class="dropdown">
-                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="menu"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
+                        <a href="' .
+                        route('master.skema.show', [$row->id]) .
+                        '" class="dropdown-item"><i data-feather="file-text"></i> Detail</a>
                         <a href="' .
                         route('master.skema.edit', Crypt::encrypt($row->id)) .
                         '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
@@ -57,7 +66,9 @@ class SkemaController extends Controller
 
     public function create()
     {
-        return view('master.skema.form');
+        $output['data_review'] = Review::where('aktif', 1)->get();
+
+        return view('master.skema.form', compact('output'));
     }
 
     public function store(Request $request)
@@ -94,9 +105,11 @@ class SkemaController extends Controller
 
     public function edit($id)
     {
-        $data = Skema::findOrFail(Crypt::decrypt($id));
-
-        return view('master.skema.form', compact('data'));
+        $output['data'] = Skema::with(['assigned_review'])->findOrFail(Crypt::decrypt($id));
+        $output['data_review'] = Review::where('aktif', 1)->get();
+        $output['assigned_review'] =  $output['data']->assigned_review->groupBy('review_id'); 
+        
+        return view('master.skema.form', compact('output'));
     }
 
     public function update(Request $request, $id)
@@ -105,6 +118,7 @@ class SkemaController extends Controller
             'nama_skema' => 'required|string',
             'deskripsi_skema' => 'nullable|string',
             'aktif' => 'required|in:0,1',
+            'review' => 'array|required',
         ]);
 
         $update = Skema::findOrFail($id);
@@ -115,7 +129,20 @@ class SkemaController extends Controller
             'aktif' => $request->aktif,
         ]);
 
-        if ($update) {
+        // store data skema_reviews
+        SkemaReview::where('skema_id', $id)->delete();
+
+        $param = [];
+        foreach ($request->review as $id_review) {
+            $param[] = [
+                'skema_id' => $id,
+                'review_id' => $id_review,
+                'created_at' => Carbon::now(),
+            ];
+        }
+        $store_review = SkemaReview::insert($param);
+
+        if ($update && $store_review) {
             Alert::success('Berhasil!', 'Data skema berhasil diupdate!');
             return redirect(route('master.skema.index'));
         } else {

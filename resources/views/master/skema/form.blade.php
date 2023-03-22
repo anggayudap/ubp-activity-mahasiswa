@@ -9,14 +9,13 @@
         <div class="col-md-12 col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">{{ isset($data) ? 'Edit' : 'Tambah' }} Data Skema</h4>
+                    <h4 class="card-title">{{ isset($output['data']) ? 'Edit' : 'Tambah' }} Data Skema</h4>
                 </div>
                 <div class="card-body">
-                    <form
-                        action="{{ isset($data) ? route('master.skema.update', $data->id) : route('master.skema.store') }}"
+                    <form action="{{ isset($output['data']) ? route('master.skema.update', $output['data']->id) : route('master.skema.store') }}"
                         method="post" class="form form-horizontal need-validation" novalidate>
                         @csrf
-                        @if (isset($data))
+                        @if (isset($output['data']))
                             @method('PUT')
                         @endif
 
@@ -28,7 +27,7 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <input type="text" id="nama-skema" class="form-control" name="nama_skema"
-                                            placeholder="Nama Skema" value="{{ isset($data) ? $data->nama_skema : '' }}">
+                                            placeholder="Nama Skema" value="{{ isset($output['data']) ? $output['data']->nama_skema : '' }}">
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +39,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" id="deskripsi-skema" class="form-control"
                                             name="deskripsi_skema" placeholder="Deskripsi Skema"
-                                            value="{{ isset($data) ? $data->deskripsi_skema : '' }}">
+                                            value="{{ isset($output['data']) ? $output['data']->deskripsi_skema : '' }}">
                                     </div>
                                 </div>
                             </div>
@@ -52,11 +51,50 @@
                                     <div class="col-sm-9">
                                         <select name="aktif" id="aktif" class="form-control">
                                             <option value="1"
-                                                {{ isset($data) && $data->aktif == 1 ? 'selected' : '' }}>Aktif</option>
+                                                {{ isset($output['data']) && $output['data']->aktif == 1 ? 'selected' : '' }}>Aktif</option>
                                             <option value="0"
-                                                {{ isset($data) && $data->aktif == 0 ? 'selected' : '' }}>Tidak Aktif
+                                                {{ isset($output['data']) && $output['data']->aktif == 0 ? 'selected' : '' }}>Tidak Aktif
                                             </option>
                                         </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label for="code">Daftar Review</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Pilih</th>
+                                                        <th>Teks Review</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($output['data_review'] as $item)
+                                                        <tr>
+                                                            <td>
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input class="custom-control-input" type="checkbox"
+                                                                        id="review-{{ $item->id }}" name="review[{{ $item->id }}]"
+                                                                        value="{{ $item->id }}" {{ isset($output['assigned_review'][$item->id]) ? 'checked' : '' }}/>
+                                                                    <label class="custom-control-label"
+                                                                        for="review-{{ $item->id }}">&nbsp;</label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                {{ $item->teks_review }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+
+                                                </tbody>
+                                            </table>
+                                        </div>
 
                                     </div>
                                 </div>

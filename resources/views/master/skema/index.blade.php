@@ -18,6 +18,7 @@
                                 <tr>
                                     <th>Nama Skema</th>
                                     <th>Deskripsi Skema</th>
+                                    <th>Jumlah Review</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -51,6 +52,10 @@
                 {
                     data: 'deskripsi_skema',
                     name: 'deskripsi_skema'
+                },
+                {
+                    data: 'jumlah_review',
+                    name: 'jumlah_review'
                 },
                 {
                     data: 'aktif',
