@@ -95,9 +95,11 @@
                                             </p>
                                         </object>
                                     @else
-                                    <p>File lampiran yang di upload menggunakan format arsip ZIP. Klik button dibawah untuk mendownload file arsip.</p>
-                                    <br>
-                                    <a href="{{ URL::asset($output->file_upload) }}" class="btn btn-primary"><i data-feather="download" class="mr-50"></i>Download Arsip</a>
+                                        <p>File lampiran yang di upload menggunakan format arsip ZIP. Klik button dibawah
+                                            untuk mendownload file arsip.</p>
+                                        <br>
+                                        <a href="{{ URL::asset($output->file_upload) }}" class="btn btn-primary"><i
+                                                data-feather="download" class="mr-50"></i>Download Arsip</a>
                                     @endif
                                 </div>
                             </div>
@@ -113,7 +115,7 @@
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
                                         <select class="select2-data-dosen form-control" name="dosen_penilai"
-                                        id="select2-ajax">
+                                            id="select2-ajax">
                                             @foreach ($additional['dosen'] as $id => $item)
                                                 <option value="{{ $item['id'] }}">{{ $item['text'] }}</option>
                                             @endforeach
@@ -122,23 +124,42 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-3 col-form-label">
-                                        <label>Review</label>
+                                        <label>Skema Terpilih</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
-                                        <select id="review" name="review[]" multiple data-live-search="true" class="form-control" required>
-                                            @foreach ($additional['review'] as $id => $item)
-                                                <option value="{{ $item['id'] }}">{{ $item['text'] }}</option>
-                                            @endforeach
-                                        </select>
+                                        <p class="card-text">{{ $output->nama_skema }}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-3 col-form-label">
+                                        <label>Daftar Review</label>
+                                    </div>
+                                    <div class="col-sm-9 d-flex align-items-center">
+                                        @if ($additional['review'])
+                                            <ol class="list-group list-group-flush">
+                                                @foreach ($additional['review'] as $id => $item)
+                                                    <li class="list-group-item">{{ ++$id }}&#41;. {{ $item->review->teks_review }}</li>   
+                                                @endforeach
+                                            </ol>
+                                        @else
+                                            <p class="text-danger">Maaf, belum ada daftar review yang ditambahkan pada skema berikut : {{ $output->nama_skema }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12 col-form-label">
+                                        <em>Note : untuk mengelola data daftar review silahkan akses menu <a target="_blank"
+                                                href="{{ route('master.skema.index') }}">Master Skema</a></em>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6 offset-sm-3">
-                                    <button type="submit"
+                                    <button type="submit" {{ !$additional['review'] ? 'disabled' : '' }}
                                         class="btn btn-success waves-effect waves-float waves-light"
                                         onclick="approveConfirm();">
                                         <i data-feather="check" class="mr-25"></i>Approve</button>
-                                    <button type="submit" name="approval_   reject" value="reject"
+                                    <button type="submit" {{ !$additional['review'] ? 'disabled' : '' }}
+                                        name="approval_   reject" value="reject"
                                         class="btn btn-danger waves-effect waves-float waves-light"
                                         onclick="rejectConfirm();">
                                         <i data-feather="x" class="mr-25"></i>Reject</button>
@@ -269,7 +290,5 @@
                 });
             });
         }
-
-        
     </script>
 @endpush

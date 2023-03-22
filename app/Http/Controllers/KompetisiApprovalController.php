@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use DataTables;
 use App\Models\Dosen;
+use App\Models\Skema;
 use App\Models\Review;
+use App\Models\Kompetisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
-use App\Models\Kompetisi;
 use App\Models\KompetisiParticipant;
 use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -54,7 +55,7 @@ class KompetisiApprovalController extends Controller
 
                     $btn =
                         '<div class="dropdown">
-                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="menu"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="' .
                         route('kompetisi.approval', $row->id) .
@@ -83,9 +84,6 @@ class KompetisiApprovalController extends Controller
     public function approval($id)
     {
         $dosens = Dosen::select('id', 'nip', 'nama')->get();
-        $reviews = Review::select('id', 'teks_review')
-            ->where('aktif', '1')
-            ->get();
 
         $output = KompetisiParticipant::with(['kompetisi', 'member'])
             ->where('id', $id)
@@ -116,12 +114,13 @@ class KompetisiApprovalController extends Controller
             ];
         }
 
-        foreach ($reviews as $data_review) {
-            $additional['review'][] = [
-                'id' => $data_review->id,
-                'text' => $data_review->teks_review,
-            ];
+        $list_reviews = Skema::where('nama_skema',$output->nama_skema)->with(['assigned_review.review'])->first();
+        $additional['review'] = null;
+        
+        if($list_reviews->assigned_review->count() > 0){
+            $additional['review'] = $list_reviews->assigned_review;
         }
+        
         return view('kompetisi.approval.form', compact('output', 'additional'));
     }
 
@@ -131,19 +130,16 @@ class KompetisiApprovalController extends Controller
             [
                 'participant_id' => 'required',
                 'dosen_penilai' => 'sometimes',
-                'review' => 'sometimes|array',
                 'approval' => 'required|in:approve,reject',
                 'note' => 'sometimes|required|string',
             ],
             [
                 'note.sometimes' => 'note is required when approval is reject',
                 'dosen_penilai.sometimes' => 'dosen_penilai is required when approval is approve',
-                'review.sometimes' => 'review is required when approval is approve',
             ],
             [
                 'note' => 'required_if:approval,reject',
                 'dosen_penilai' => 'required_if:approval,approve',
-                'review' => 'required_if:approval,approve',
             ],
         );
 
@@ -182,15 +178,12 @@ class KompetisiApprovalController extends Controller
             KompetisiParticipantReview::where('participant_id', $request->participant_id)->delete();
             // store kompetisi participants review
             $review_param = [];
-            foreach ($request->review as $id) {
-                $data_review = Review::select('id', 'teks_review')
-                    ->where('id', $id)
-                    ->first();
-
+            $skema = Skema::where('nama_skema',$kompetisi_participant->nama_skema)->with(['assigned_review.review'])->first();
+            foreach($skema->assigned_review as $data_review) {
                 $review_param[] = [
                     'participant_id' => $request->participant_id,
-                    'review_id' => $data_review->id,
-                    'teks_review' => $data_review->teks_review,
+                    'review_id' => $data_review->review->id,
+                    'teks_review' => $data_review->review->teks_review,
                     'created_at' => Carbon::now(),
                 ];
             }
