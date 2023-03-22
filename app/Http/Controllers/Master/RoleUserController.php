@@ -17,7 +17,7 @@ class RoleUserController extends Controller {
             return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
-                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="menu"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <em class="dropdown-item">No action required.</em>
                         </div>

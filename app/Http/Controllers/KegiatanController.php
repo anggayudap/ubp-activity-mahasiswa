@@ -37,7 +37,7 @@ class KegiatanController extends Controller
                     // dd($row);
                     $btn =
                         '<div class="dropdown">
-                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="menu"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
                         $row->id .
@@ -87,7 +87,7 @@ class KegiatanController extends Controller
                     // dd($row);
                     $btn =
                         '<div class="dropdown">
-                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="menu"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="#" data-toggle="modal" data-target="#xlarge" onclick="javascript:detail(' .
                         $row->id .

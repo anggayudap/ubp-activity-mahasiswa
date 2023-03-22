@@ -16,7 +16,7 @@ class KlasifikasiKegiatanController extends Controller {
             return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
-                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="more-vertical"></i></a>
+                        <a class="btn btn-sm btn-icon px-0" data-toggle="dropdown" aria-expanded="false"><i data-feather="menu"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" style="">
                         <a href="' . route("master.klasifikasi.edit", Crypt::encrypt($row->id)) . '" class="dropdown-item"><i data-feather="edit"></i> Edit</a>
                         <form action="' . route("master.klasifikasi.destroy", [$row->id]) . '" method="POST" id="form-delete-' . $row->id . '" style="display: inline">
