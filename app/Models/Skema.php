@@ -20,4 +20,9 @@ class Skema extends Model
     {
         return $this->hasMany(KompetisiSkema::class, 'skema_id');
     }
+
+    public function assigned_review()
+    {
+        return $this->hasMany(SkemaReview::class, 'skema_id');
+    }
 }
